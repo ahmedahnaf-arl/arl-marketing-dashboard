@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Campaign PO Request Portal | ATL & BTL | AKIJ Resource</title>
+<style>
+:root{--bg:#060b14;--card:#0d1321;--border:#1a2540;--accent:#3b82f6;--btl:#f59e0b;--green:#10b981;--red:#ef4444;--text:#e2e8f0;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;justify-content:space-between;align-items:center}
+.topbar h1{font-size:1.1rem;color:#f1f5f9}.topbar span{font-size:.75rem;color:var(--muted)}
+.container{max-width:1200px;margin:0 auto;padding:20px 24px}
+.stepper{display:flex;gap:0;margin-bottom:24px;background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.step{flex:1;padding:14px;text-align:center;font-size:.8rem;color:var(--muted);cursor:pointer;border-right:1px solid var(--border);transition:.2s;position:relative}
+.step:last-child{border-right:none}
+.step.active{background:rgba(59,130,246,.1);color:var(--accent);font-weight:600}
+.step.done{color:var(--green)}
+.step .step-num{display:block;font-size:1.2rem;font-weight:700;margin-bottom:2px}
+.form-section{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:20px;display:none}
+.form-section.active{display:block}
+.form-section h2{font-size:1rem;color:#f1f5f9;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-row.col3{grid-template-columns:1fr 1fr 1fr}
+.form-row.col1{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.form-group select,.form-group input,.form-group textarea{background:#0a0f1a;border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:6px;font-size:.85rem;outline:none;font-family:'Segoe UI',system-ui,sans-serif}
+.form-group select:focus,.form-group input:focus,.form-group textarea:focus{border-color:var(--accent)}
+.form-group textarea{resize:vertical;min-height:60px}
+.form-group .hint{font-size:.65rem;color:var(--muted);margin-top:2px}
+.line-items{margin-top:10px}
+.line-item{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 40px;gap:8px;margin-bottom:8px;align-items:end}
+.line-item input{background:#0a0f1a;border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:6px;font-size:.8rem;outline:none}
+.line-item input:focus{border-color:var(--accent)}
+.btn{padding:10px 20px;border-radius:6px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;transition:.2s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#2563eb}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-outline:hover{background:var(--border)}
+.btn-danger{background:transparent;border:1px solid var(--red);color:var(--red)}
+.btn-success{background:var(--green);color:#fff}
+.btn-sm{padding:6px 12px;font-size:.7rem}
+.budget-bar{height:8px;background:#1e293b;border-radius:4px;margin-top:6px;overflow:hidden}
+.budget-fill{height:100%;border-radius:4px;transition:.3s}
+.budget-fill.safe{background:var(--green)}
+.budget-fill.warn{background:var(--btl)}
+.budget-fill.danger{background:var(--red)}
+.budget-info{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-top:3px}
+.flash{padding:10px 16px;border-radius:6px;font-size:.8rem;margin-bottom:14px;display:none}
+.flash.error{background:rgba(239,68,68,.1);border:1px solid var(--red);color:#fca5a5}
+.flash.success{background:rgba(16,185,129,.1);border:1px solid var(--green);color:#6ee7b7}
+.submission-list{margin-top:20px}
+.submission-card{background:#0a0f1a;border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px}
+.submission-card .sub-header{display:flex;justify-content:space-between;margin-bottom:6px}
+.submission-card .sub-id{color:var(--accent);font-family:monospace;font-size:.8rem;font-weight:600}
+.submission-card .sub-status{font-size:.7rem;padding:2px 8px;border-radius:4px;font-weight:600}
+.submission-card .sub-meta{font-size:.75rem;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
+.status-pending{background:rgba(245,158,11,.2);color:var(--btl)}
+.status-approved{background:rgba(16,185,129,.2);color:var(--green)}
+.status-rejected{background:rgba(239,68,68,.2);color:var(--red)}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.summary-card{background:#0a0f1a;border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.summary-card .s-val{font-size:1.3rem;font-weight:700;color:#f1f5f9}
+.summary-card .s-lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;margin-top:2px}
+@media(max-width:768px){.form-row,.line-item{grid-template-columns:1fr}.summary-grid{grid-template-columns:repeat(2,1fr)}}
+.gap-mitigation{background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:14px;margin-top:16px;font-size:.8rem;color:#6ee7b7;line-height:1.6}
+.gap-mitigation strong{color:var(--green)}
+</style>
+</head>
+<body>
+<div class="topbar">
+<div><h1>Campaign PO Request Portal</h1><span>ATL & BTL | AKIJ Resource | ERP-Ready Metadata</span></div>
+<div style="font-size:.75rem;color:var(--muted)">v1.0 — Bridges Gap Analysis Blockers</div>
+</div>
+
+<div class="container">
+<div class="stepper">
+<div class="step active" data-step="1"><span class="step-num">1</span>Campaign Details</div>
+<div class="step" data-step="2"><span class="step-num">2</span>Line Items</div>
+<div class="step" data-step="3"><span class="step-num">3</span>Budget Check</div>
+<div class="step" data-step="4"><span class="step-num">4</span>Review & Submit</div>
+</div>
+
+<div id="flash" class="flash"></div>
+
+<!-- STEP 1: Campaign Details -->
+<div class="form-section active" id="step1">
+<h2>Campaign Details</h2>
+<div class="form-row">
+<div class="form-group"><label>SBU / Business Unit *</label><select id="sbu" onchange="updateBudget()"><option value="">Select SBU...</option></select></div>
+<div class="form-group"><label>Campaign Type *</label><select id="campType" onchange="updateSubTypes()"><option value="">Select Type...</option><option value="ATL">ATL (Above The Line)</option><option value="BTL">BTL (Below The Line)</option></select></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Campaign Sub-Type *</label><select id="campSubType"><option value="">Select campaign type first...</option></select></div>
+<div class="form-group"><label>Vendor / Supplier *</label><select id="vendor"><option value="">Select Vendor...</option></select></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Campaign Name *</label><input type="text" id="campName" placeholder="e.g., Q1 ACCL Dealer Meet 2026"></div>
+<div class="form-group"><label>Campaign Period Start *</label><input type="date" id="campStart"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Campaign Period End *</label><input type="date" id="campEnd"></div>
+<div class="form-group"><label>Target Geography / Region</label><input type="text" id="region" placeholder="e.g., Dhaka, Chattogram, Nationwide"></div>
+</div>
+<div class="form-group"><label>Campaign Description / Objective</label><textarea id="description" placeholder="Brief description of campaign goals, target audience, expected reach..."></textarea></div>
+<div class="form-group"><label>GL Account Code</label><input type="text" id="glCode" value="4210001 - Marketing Expenses" readonly style="opacity:.6"></div>
+<div style="margin-top:14px;display:flex;gap:10px">
+<button class="btn btn-primary" onclick="nextStep(2)">Next: Line Items →</button>
+</div>
+</div>
+
+<!-- STEP 2: Line Items -->
+<div class="form-section" id="step2">
+<h2>Line Items <span style="font-size:.7rem;color:var(--muted);font-weight:400"> — Add each item/service being procured</span></h2>
+<div class="line-items" id="lineItems">
+<div class="line-item">
+<input type="text" placeholder="Item description (e.g., T-Shirt Polo, Branding Service)" class="item-desc">
+<input type="number" placeholder="Qty" class="item-qty" min="1" oninput="calcTotal()">
+<input type="number" placeholder="Unit Price (BDT)" class="item-price" step="0.01" oninput="calcTotal()">
+<input type="text" placeholder="Subtotal" class="item-sub" readonly style="opacity:.7">
+<button class="btn btn-danger btn-sm" onclick="this.closest('.line-item').remove();calcTotal()" style="font-size:.9rem">&times;</button>
+</div>
+</div>
+<button class="btn btn-outline btn-sm" onclick="addLineItem()">+ Add Line Item</button>
+<div style="display:flex;justify-content:flex-end;margin-top:12px;font-size:.9rem;color:var(--muted)">
+Total Amount: <strong style="color:#f1f5f9;margin-left:10px;font-size:1.1rem" id="grandTotal">0.00 BDT</strong>
+</div>
+<div style="margin-top:14px;display:flex;gap:10px">
+<button class="btn btn-outline" onclick="nextStep(1)">← Back</button>
+<button class="btn btn-primary" onclick="nextStep(3)">Next: Budget Check →</button>
+</div>
+</div>
+
+<!-- STEP 3: Budget Check -->
+<div class="form-section" id="step3">
+<h2>Budget Validation</h2>
+<div class="summary-grid">
+<div class="summary-card"><div class="s-val" id="budFY">—</div><div class="s-lbl">FY Budget</div></div>
+<div class="summary-card"><div class="s-val" id="budQ1">—</div><div class="s-lbl">Q1 Allocation</div></div>
+<div class="summary-card"><div class="s-val" id="budSpent">—</div><div class="s-lbl">Already Committed</div></div>
+<div class="summary-card"><div class="s-val" id="budRemain">—</div><div class="s-lbl">Remaining</div></div>
+</div>
+<div class="form-group"><label>Budget Utilization</label>
+<div class="budget-bar"><div class="budget-fill safe" id="budgetBar" style="width:0%"></div></div>
+<div class="budget-info"><span>Spent + This PO</span><span id="budgetPct">0%</span></div>
+</div>
+<div class="form-group" style="margin-top:10px"><label>Requested Amount</label>
+<input type="text" id="poAmount" readonly style="font-size:1.1rem;font-weight:600;color:#f1f5f9">
+</div>
+<div class="gap-mitigation">
+<strong>Gap Mitigation:</strong> This step enforces budget check before PO creation — addressing the <em>"No Campaign Taxonomy"</em> and <em>"Budget Phasing Not Enforced"</em> process gaps. The SBU ID, campaign type, and GL code are auto-tagged for <em>"Generic GL Sub-Codes"</em> technology gap. Approval routing is logged for <em>"No Data Steward"</em> people gap.
+</div>
+<div style="margin-top:14px;display:flex;gap:10px">
+<button class="btn btn-outline" onclick="nextStep(2)">← Back</button>
+<button class="btn btn-primary" id="btnSubmit" onclick="nextStep(4)">Review & Submit →</button>
+</div>
+</div>
+
+<!-- STEP 4: Review & Submit -->
+<div class="form-section" id="step4">
+<h2>Review & Submit</h2>
+<div class="submission-card" style="background:var(--card)">
+<div class="sub-header"><span class="sub-id" id="reviewPO">PO-REQ-0000</span><span class="sub-status status-pending">Pending Review</span></div>
+<div class="sub-meta" id="reviewMeta"></div>
+<div style="margin-top:10px;font-size:.8rem;color:var(--muted);line-height:1.6" id="reviewItems"></div>
+</div>
+<div class="gap-mitigation">
+<strong>Metadata Captured for AI Analytics:</strong> SBU ID, Journal SBU ID, Campaign Type/Sub-Type, Vendor, Campaign Period, Region, GL Code, Line Items with quantities/prices, Budget Allocation Check, Timestamp, Submitter. All fields are structured for future ML/AI pipeline ingestion.
+</div>
+<div style="margin-top:14px;display:flex;gap:10px">
+<button class="btn btn-outline" onclick="nextStep(3)">← Back</button>
+<button class="btn btn-success" onclick="submitPO()">Submit PO Request</button>
+</div>
+</div>
+
+<!-- SUBMISSION LOG -->
+<div class="form-section" id="submissions" style="background:var(--card)">
+<h2>Submission History <span style="font-size:.7rem;color:var(--muted);font-weight:400"> — All submitted PO requests</span></h2>
+<div class="submission-list" id="submissionList">
+<p style="color:var(--muted);font-size:.8rem">No submissions yet. Create your first PO request above.</p>
+</div>
+</div>
+</div>
+
+<script>
+const SBUS = [{"id": 4, "name": "ACCL (Akij Cement)", "journal": 58, "budget_fy": 22.98, "budget_q1": 2.12, "atl_q1": 0.34, "btl_q1": 0.62}, {"id": 144, "name": "AEL (Akij Essential)", "journal": 36, "budget_fy": 19.48, "budget_q1": 6.3, "atl_q1": 1.64, "btl_q1": 1.37}, {"id": 224, "name": "AAIL (Akij Ispat)", "journal": 102, "budget_fy": 18.86, "budget_q1": 3.33, "atl_q1": 0.26, "btl_q1": 0.91}, {"id": 232, "name": "AAFL (Akij Feed)", "journal": 109, "budget_fy": 17.55, "budget_q1": 3.07, "atl_q1": 0.69, "btl_q1": 0.82}, {"id": 237, "name": "ALEL (ENOVAR)", "journal": 114, "budget_fy": 11.22, "budget_q1": 1.5, "atl_q1": 0.6, "btl_q1": 0.3}, {"id": 238, "name": "BENZOL (Lubricant)", "journal": 115, "budget_fy": 3.46, "budget_q1": 0.87, "atl_q1": 0.2, "btl_q1": 0.3}, {"id": 249, "name": "ACEL (Consumer Elec)", "journal": 126, "budget_fy": 4.55, "budget_q1": 0.49, "atl_q1": 0.14, "btl_q1": 0.33}, {"id": 175, "name": "ARMCL (ReadyMix)", "journal": 69, "budget_fy": 2.59, "budget_q1": 0.22, "atl_q1": 0.09, "btl_q1": 0.02}, {"id": 252, "name": "Next Jobz", "journal": 129, "budget_fy": 3.49, "budget_q1": 0.87, "atl_q1": 0.2, "btl_q1": 0.29}, {"id": 253, "name": "AKIJ Pharmacy", "journal": 130, "budget_fy": 1.42, "budget_q1": 0.45, "atl_q1": 0.1, "btl_q1": 0.15}, {"id": 255, "name": "Mediplex", "journal": 132, "budget_fy": 0.5, "budget_q1": 0.13, "atl_q1": 0.04, "btl_q1": 0.1}, {"id": 245, "name": "Akij Air", "journal": 122, "budget_fy": 2.0, "budget_q1": 0.35, "atl_q1": 0.2, "btl_q1": 0.15}, {"id": 221, "name": "AKIJ Commodities", "journal": 99, "budget_fy": 0.13, "budget_q1": 0.04, "atl_q1": 0.01, "btl_q1": 0.01}, {"id": 220, "name": "ABSL (Building Sol)", "journal": 98, "budget_fy": 1.38, "budget_q1": 0.52, "atl_q1": 0.15, "btl_q1": 0.15}, {"id": 241, "name": "AKIJ Telecom", "journal": 118, "budget_fy": 1.2, "budget_q1": 0.99, "atl_q1": 0.01, "btl_q1": 0.03}];
+const ATL_SUB = ["TVC / Television Commercial", "Radio Spot", "Newspaper / Print Ad", "Magazine Ad", "Digital / Social Media Ads", "Google Ads / SEM", "Facebook / Meta Ads", "YouTube / Video Ads", "OOH / Billboard", "LED Screen", "Outdoor Signage", "Bus Branding", "Media Buying", "Creative Agency Fee", "PR & Communications", "Event Sponsorship", "Brand Launch", "Influencer Marketing", "Cinema Ad", "Other ATL"];
+const BTL_SUB = ["T-Shirt / Polo / Merchandise", "Dealer Gift / Incentive", "Dinner Set / Premium Gift", "Electrician Kit / Tools", "Hardware / Mechanic Tools", "Farmer Training Kit", "Oxygen Meter / Hygrometer", "Consumer Sampling / Giveaway", "POSM / Signage", "Profile Light Box", "X Banner / Backdrop", "Product Cutout / Standee", "Brochure / Leaflet", "Folder / Notebook", "Invitation Card / Event Material", "Gift Voucher / Loyalty", "Jersey / Sports Sponsorship", "Wall Painting / Shop Sign", "Umbrella / Cap / Bag", "Dealer Meet / Conference", "Roadshow / Activation", "Exhibition / Trade Fair", "Other BTL"];
+const VENDORS = ["Unimex", "Fabrilife", "S M Communication", "MOHAMMAD ENTERPRISE", "POWER POINT", "APPLEGADGETS LTD", "SYNERGY", "WALTON HI-TECH INDUSTRIES", "PRINT SOURCE", "B Baria General Store", "Asia Hotel & Resorts", "TS RAIMENT", "SIGN HOUSE", "BRAC AARONG", "RFL Electronics Ltd", "AKIJ CONSUMER ELECTRONICS LIMITED", "Other"];
+let submissions = JSON.parse(localStorage.getItem('poSubmissions')||'[]');
+let currentStep = 1;
+let grandTotalBDT = 0;
+
+// Init dropdowns
+(function(){
+  let s='', v='';
+  SBUS.forEach(function(b){ s+='<option value="'+b.id+'" data-json=''+JSON.stringify(b)+''>'+b.name+'</option>'; });
+  VENDORS.forEach(function(vn){ v+='<option value="'+vn+'">'+vn+'</option>'; });
+  document.getElementById('sbu').innerHTML='<option value="">Select SBU...</option>'+s;
+  document.getElementById('vendor').innerHTML='<option value="">Select Vendor...</option>'+v;
+  renderSubmissions();
+})();
+
+function updateSubTypes(){
+  var t=document.getElementById('campType').value;
+  var list=t==='ATL'?ATL_SUB:BTL_SUB;
+  var o='<option value="">Select sub-type...</option>';
+  list.forEach(function(i){ o+='<option value="'+i+'">'+i+'</option>'; });
+  document.getElementById('campSubType').innerHTML=o;
+}
+
+function updateBudget(){
+  var sel=document.getElementById('sbu');
+  var opt=sel.options[sel.selectedIndex];
+  if(!opt||!opt.dataset.json) return;
+  var b=JSON.parse(opt.dataset.json);
+  var t=document.getElementById('campType').value;
+  var q1bud=t==='ATL'?b.atl_q1:b.btl_q1;
+  var fyb=t==='ATL'?(b.atl_q1*4):(b.btl_q1*4);
+  document.getElementById('budFY').textContent=fyb.toFixed(2)+' Cr';
+  document.getElementById('budQ1').textContent=q1bud.toFixed(2)+' Cr';
+  // Calculate already committed from submissions
+  var committed=0;
+  submissions.forEach(function(s){ if(s.sbu_id===b.id&&s.campType===t) committed+=s.total_cr; });
+  document.getElementById('budSpent').textContent=committed.toFixed(4)+' Cr';
+  var remain=Math.max(0,q1bud-committed);
+  document.getElementById('budRemain').textContent=remain.toFixed(2)+' Cr';
+  updateBudgetBar(q1bud, committed);
+}
+
+function updateBudgetBar(q1bud, committed){
+  var poAmt=grandTotalBDT/10000000;
+  var total=committed+poAmt;
+  var pct=q1bud>0?Math.min(100,total/q1bud*100):0;
+  var bar=document.getElementById('budgetBar');
+  bar.style.width=pct+'%';
+  bar.className='budget-fill '+(pct>90?'danger':(pct>70?'warn':'safe'));
+  document.getElementById('budgetPct').textContent=pct.toFixed(1)+'%';
+  document.getElementById('poAmount').value=poAmt.toFixed(4)+' Cr ('+grandTotalBDT.toLocaleString()+ ' BDT)';
+}
+
+function addLineItem(){
+  var div=document.createElement('div');
+  div.className='line-item';
+  div.innerHTML='<input type="text" placeholder="Item description" class="item-desc"><input type="number" placeholder="Qty" class="item-qty" min="1" oninput="calcTotal()"><input type="number" placeholder="Unit Price (BDT)" class="item-price" step="0.01" oninput="calcTotal()"><input type="text" placeholder="Subtotal" class="item-sub" readonly style="opacity:.7"><button class="btn btn-danger btn-sm" onclick="this.closest('.line-item').remove();calcTotal()" style="font-size:.9rem">&times;</button>';
+  document.getElementById('lineItems').appendChild(div);
+}
+
+function calcTotal(){
+  grandTotalBDT=0;
+  document.querySelectorAll('.line-item').forEach(function(li){
+    var qty=parseFloat(li.querySelector('.item-qty').value)||0;
+    var price=parseFloat(li.querySelector('.item-price').value)||0;
+    var sub=qty*price;
+    li.querySelector('.item-sub').value=sub.toLocaleString();
+    grandTotalBDT+=sub;
+  });
+  document.getElementById('grandTotal').textContent=grandTotalBDT.toLocaleString()+' BDT';
+  if(currentStep>=3) updateBudget();
+}
+
+function nextStep(n){
+  // Validate
+  if(n>1){
+    var sbu=document.getElementById('sbu').value;
+    var type=document.getElementById('campType').value;
+    var sub=document.getElementById('campSubType').value;
+    var name=document.getElementById('campName').value;
+    var start=document.getElementById('campStart').value;
+    var end=document.getElementById('campEnd').value;
+    if(!sbu||!type||!sub||!name||!start||!end){
+      flash('Please fill all required fields (*)','error'); return;
+    }
+    if(n>=3&&grandTotalBDT<=0){ flash('Please add at least one line item','error'); return; }
+  }
+  document.querySelectorAll('.form-section').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('step'+n).classList.add('active');
+  document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); if(parseInt(s.dataset.step)===n) s.classList.add('active'); if(parseInt(s.dataset.step)<n) s.classList.add('done'); });
+  currentStep=n;
+  if(n===3){ updateBudget(); }
+  if(n===4) generateReview();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function generateReview(){
+  var sbu=document.getElementById('sbu');
+  var sbuName=sbu.options[sbu.selectedIndex].text;
+  var bdata=sbu.options[sbu.selectedIndex].dataset.json?JSON.parse(sbu.options[sbu.selectedIndex].dataset.json):{};
+  var type=document.getElementById('campType').value;
+  var sub=document.getElementById('campSubType').value;
+  var name=document.getElementById('campName').value;
+  var start=document.getElementById('campStart').value;
+  var end=document.getElementById('campEnd').value;
+  var vendor=document.getElementById('vendor').value;
+  var region=document.getElementById('region').value;
+  var desc=document.getElementById('description').value;
+  var poNo='PO-REQ-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'-'+Math.floor(Math.random()*9000+1000);
+  document.getElementById('reviewPO').textContent=poNo;
+  document.getElementById('reviewMeta').innerHTML='<span>SBU: <b>'+sbuName+'</b></span><span>Type: <b>'+type+'/'+sub+'</b></span><span>Vendor: <b>'+vendor+'</b></span><span>Period: <b>'+start+' to '+end+'</b></span><span>Region: <b>'+(region||'N/A')+'</b></span><span>Total: <b>'+(grandTotalBDT/10000000).toFixed(4)+' Cr</b></span>';
+  var items='';
+  document.querySelectorAll('.line-item').forEach(function(li,i){
+    var d=li.querySelector('.item-desc').value;
+    var q=li.querySelector('.item-qty').value;
+    var p=li.querySelector('.item-price').value;
+    var s=li.querySelector('.item-sub').value;
+    if(d) items+='<div>#'+(i+1)+' <b>'+d+'</b> — Qty: '+q+' x '+Number(p).toLocaleString()+' = '+s+' BDT</div>';
+  });
+  document.getElementById('reviewItems').innerHTML=items;
+  // Store for submit
+  window._pendingPO={poNo:poNo,sbu_id:bdata.id||0,sbu_name:sbuName,journal_id:bdata.journal||0,campType:type,campSubType:sub,campName:name,campStart:start,campEnd:end,vendor:vendor,region:region,description:desc,total_cr:grandTotalBDT/10000000,total_bdt:grandTotalBDT,items:[],timestamp:new Date().toISOString()};
+  document.querySelectorAll('.line-item').forEach(function(li){
+    var d=li.querySelector('.item-desc').value;
+    var q=parseFloat(li.querySelector('.item-qty').value)||0;
+    var p=parseFloat(li.querySelector('.item-price').value)||0;
+    if(d) window._pendingPO.items.push({desc:d,qty:q,price:p,subtotal:q*p});
+  });
+}
+
+function submitPO(){
+  if(!window._pendingPO) return;
+  submissions.unshift(window._pendingPO);
+  localStorage.setItem('poSubmissions',JSON.stringify(submissions));
+  window._pendingPO=null;
+  flash('PO Request submitted successfully! ERP integration ready.','success');
+  renderSubmissions();
+  document.getElementById('submissions').classList.add('active');
+  window.scrollTo({top:document.getElementById('submissions').offsetTop,behavior:'smooth'});
+}
+
+function renderSubmissions(){
+  var list=document.getElementById('submissionList');
+  if(submissions.length===0){ list.innerHTML='<p style="color:var(--muted);font-size:.8rem">No submissions yet.</p>'; return; }
+  var h='';
+  submissions.forEach(function(s,i){
+    var statusCls=s.approved?'status-approved':(s.rejected?'status-rejected':'status-pending');
+    var statusText=s.approved?'Approved':(s.rejected?'Rejected':'Pending');
+    h+='<div class="submission-card"><div class="sub-header"><span class="sub-id">'+s.poNo+'</span><span class="sub-status '+statusCls+'">'+statusText+'</span></div><div class="sub-meta"><span>'+s.sbu_name+'</span><span>'+s.campType+'/'+s.campSubType+'</span><span>'+s.vendor+'</span><span>'+s.total_cr.toFixed(4)+' Cr</span><span>'+new Date(s.timestamp).toLocaleDateString()+'</span></div><div style="font-size:.75rem;color:var(--muted);margin-top:4px">'+s.campName+' | '+s.items.length+' line items</div></div>';
+  });
+  list.innerHTML=h;
+}
+
+function flash(msg,type){ var f=document.getElementById('flash'); f.textContent=msg; f.className='flash '+type; f.style.display='block'; setTimeout(function(){f.style.display='none'},4000); }
+
+// Show submissions tab always
+document.getElementById('submissions').classList.add('active');
+</script>
+</body>
+</html>
