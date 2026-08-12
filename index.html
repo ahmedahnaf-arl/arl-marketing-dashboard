@@ -4,6 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Marketing Campaign Portal FY 2026-27</title>
+<script>
+function openKPI(idx) {
+  var atlRows=""; if(typeof sbu_data_for_modal!=='undefined') sbu_data_for_modal.forEach(function(s){ if(s.act_atl>0) atlRows+='<tr><td>'+s.name+'</td><td class="r">'+s.act_atl.toFixed(2)+'</td></tr>'; });
+  var revRows=""; if(typeof sbu_data_for_modal!=='undefined') sbu_data_for_modal.filter(function(s){return s.rev>0}).sort(function(a,b){return b.rev-a.rev}).forEach(function(s){ revRows+='<tr><td>'+s.name+'</td><td class="r">'+s.rev.toFixed(2)+'</td></tr>'; });
+  var ajs=typeof atl_total_js!=='undefined'?atl_total_js:7.17; var bjs=typeof btl_total_js!=='undefined'?btl_total_js:1.61;
+  var details=[
+    {title:'FY Budget', content:'<table class="modal-tbl"><tr><th>Category</th><th>Amount (Cr)</th></tr><tr><td>ATL (Adv+Digital+OOH)</td><td class="r">65.32</td></tr><tr><td>BTL (Events+POSM+Gifts)</td><td class="r">40.87</td></tr><tr><td class="bold">Total AR Budget</td><td class="r bold">111.06</td></tr></table><p class="modal-sub">Source: AR Marketing Budget (26-27).xlsx</p>'},
+    {title:'Q1 Allocation', content:'<table class="modal-tbl"><tr><th>Quarter</th><th>Period</th><th>Budget (Cr)</th></tr><tr><td>Q1</td><td>Jul-Sep 26</td><td class="r">21.57</td></tr><tr><td>Q2</td><td>Oct-Dec 26</td><td class="r">30.24</td></tr><tr><td>Q3</td><td>Jan-Mar 27</td><td class="r">33.25</td></tr><tr><td>Q4</td><td>Apr-Jun 27</td><td class="r">26.00</td></tr></table>'},
+    {title:'Expected Burn', content:'<p class="modal-sub">Q1 Budget: 21.57 Cr</p><p class="modal-sub">Days elapsed: 41 of 92 (44.6%)</p><p class="modal-sub">Expected Burn = 21.57 x 41/92 = <b>9.61 Cr</b></p>'},
+    {title:'ATL Spend Breakdown', content:'<table class="modal-tbl"><tr><th>SBU</th><th>ATL (Cr)</th></tr>'+atlRows+'<tr><td class="bold">Total</td><td class="r bold">'+ajs.toFixed(2)+'</td></tr></table>'},
+    {title:'BTL Spend Breakdown', content:'<table class="modal-tbl"><tr><th>Campaign Type</th><th>Value (Cr)</th></tr><tr><td>Dealer Merchandise</td><td class="r">0.57</td></tr><tr><td>Farmer Training Kits</td><td class="r">0.13</td></tr><tr><td>Consumer Sampling</td><td class="r">0.10</td></tr><tr><td>Electrician/Mechanic Kits</td><td class="r">0.09</td></tr><tr><td>POSM &amp; Signage</td><td class="r">0.04</td></tr><tr><td>Event &amp; Dealer Meet</td><td class="r">0.03</td></tr><tr><td>Dealer Incentive Gifts</td><td class="r">0.01</td></tr></table>'},
+    {title:'Campaign Spend Split', content:'<table class="modal-tbl"><tr><th>Channel</th><th>Spend (Cr)</th><th>Share</th></tr><tr><td>ATL</td><td class="r">'+ajs.toFixed(2)+'</td><td class="r">'+(ajs/(ajs+bjs)*100).toFixed(1)+'%</td></tr><tr><td>BTL</td><td class="r">'+bjs.toFixed(2)+'</td><td class="r">'+(bjs/(ajs+bjs)*100).toFixed(1)+'%</td></tr><tr><td class="bold">Total</td><td class="r bold">'+(ajs+bjs).toFixed(2)+'</td><td class="r bold">100%</td></tr></table>'},
+    {title:'Revenue Breakdown', content:'<table class="modal-tbl"><tr><th>SBU</th><th>Revenue (Cr)</th></tr>'+revRows+'<tr><td class="bold">Total (Group)</td><td class="r bold">930.17</td></tr></table>'},
+  ];
+  var d=details[idx], m=document.getElementById('kpiModal');
+  if(!m) return;
+  document.getElementById('kpiModalTitle').innerHTML=d.title;
+  document.getElementById('kpiModalBody').innerHTML=d.content;
+  m.style.display='flex';
+}
+function closeKPI(){ var m=document.getElementById('kpiModal'); if(m) m.style.display='none'; }
+document.addEventListener('DOMContentLoaded',function(){ var m=document.getElementById('kpiModal'); if(m) m.addEventListener('click',function(e){ if(e.target===m) closeKPI(); }); });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root {
@@ -2256,32 +2279,6 @@ function initRevenueTrendChart() {
     }
   });
 }
-
-// ── KPI Click Modal ──
-function openKPI(idx) {
-  var atlRows = "";
-  sbu_data_for_modal.forEach(function(s){ if(s.act_atl>0) atlRows += '<tr><td>'+s.name+'</td><td class="r">'+s.act_atl.toFixed(2)+'</td></tr>'; });
-  var revRows = "";
-  sbu_data_for_modal.filter(function(s){return s.rev>0}).sort(function(a,b){return b.rev-a.rev}).forEach(function(s){ revRows += '<tr><td>'+s.name+'</td><td class="r">'+s.rev.toFixed(2)+'</td></tr>'; });
-  var poRows = "";
-  sbu_data_for_modal.forEach(function(s){ if(s.pos>0) poRows += '<tr><td>'+s.name+'</td><td class="r">'+s.pos+'</td><td class="r">'+(s.btl_po_val||0).toFixed(4)+'</td><td class="r">'+(s.btl_po_val>0?((s.btl_po_recv||0)/s.btl_po_val*100).toFixed(1):'0.0')+'%</td></tr>'; });
-  var details = [
-    {title:'FY Budget', content:'<table class="modal-tbl"><tr><th>Category</th><th>Amount (Cr)</th></tr><tr><td>ATL (Adv+Digital+OOH)</td><td class="r">65.32</td></tr><tr><td>BTL (Events+POSM+Gifts)</td><td class="r">40.87</td></tr><tr><td class="bold">Total AR Budget</td><td class="r bold">111.06</td></tr></table><p class="modal-sub">Source: AR Marketing Budget (26-27).xlsx</p>'},
-    {title:'Q1 Allocation', content:'<table class="modal-tbl"><tr><th>Quarter</th><th>Period</th><th>Budget (Cr)</th></tr><tr><td>Q1</td><td>Jul-Sep 26</td><td class="r">21.57</td></tr><tr><td>Q2</td><td>Oct-Dec 26</td><td class="r">30.24</td></tr><tr><td>Q3</td><td>Jan-Mar 27</td><td class="r">33.25</td></tr><tr><td>Q4</td><td>Apr-Jun 27</td><td class="r">26.00</td></tr></table>'},
-    {title:'Expected Burn (Jul 1 - Aug 10)', content:'<p class="modal-sub">Q1 Budget: 21.57 Cr</p><p class="modal-sub">Days elapsed: 41 of 92 (44.6%)</p><p class="modal-sub">Expected Burn = 21.57 x 41/92 = <b>9.61 Cr</b></p>'},
-    {title:'ATL Spend Breakdown', content:'<table class="modal-tbl"><tr><th>SBU</th><th>ATL (Cr)</th></tr>'+atlRows+'<tr><td class="bold">Total</td><td class="r bold">'+atl_total_js.toFixed(2)+'</td></tr></table>'},
-    {title:'BTL Spend Breakdown', content:'<table class="modal-tbl"><tr><th>Campaign Type</th><th>Value (Cr)</th></tr><tr><td>Dealer Merchandise</td><td class="r">0.57</td></tr><tr><td>Farmer Training Kits</td><td class="r">0.13</td></tr><tr><td>Consumer Sampling</td><td class="r">0.10</td></tr><tr><td>Electrician/Mechanic Kits</td><td class="r">0.09</td></tr><tr><td>POSM &amp; Signage</td><td class="r">0.04</td></tr><tr><td>Event &amp; Dealer Meet</td><td class="r">0.03</td></tr><tr><td>Dealer Incentive Gifts</td><td class="r">0.01</td></tr><tr><td class="bold">Total PO Committed</td><td class="r bold">0.79</td></tr></table>'},
-    {title:'Campaign Spend Split', content:'<table class="modal-tbl"><tr><th>Channel</th><th>Spend (Cr)</th><th>Share</th></tr><tr><td>ATL (Journal + POs)</td><td class="r">'+atl_total_js.toFixed(2)+'</td><td class="r">'+(atl_total_js/(atl_total_js+btl_total_js)*100).toFixed(1)+'%</td></tr><tr><td>BTL (PO Committed)</td><td class="r">'+btl_total_js.toFixed(2)+'</td><td class="r">'+(btl_total_js/(atl_total_js+btl_total_js)*100).toFixed(1)+'%</td></tr><tr><td class="bold">Total</td><td class="r bold">'+(atl_total_js+btl_total_js).toFixed(2)+'</td><td class="r bold">100%</td></tr></table>'},
-    {title:'Revenue Breakdown', content:'<table class="modal-tbl"><tr><th>SBU</th><th>Revenue (Cr)</th></tr>'+revRows+'<tr><td class="bold">Total (Group)</td><td class="r bold">930.17</td></tr><tr><td class="bold">Mapped to Budget SBUs</td><td class="r bold">633.57</td></tr></table>'},
-    {title:'Active Campaign POs', content:'<table class="modal-tbl"><tr><th>SBU</th><th>POs</th><th>Value (Cr)</th><th>GRN%</th></tr>'+poRows+'<tr><td class="bold">Total</td><td class="r bold">27</td><td class="r bold">1.19</td><td class="r bold">0.6%</td></tr></table>'},
-  ];
-  var d = details[idx];
-  var m = document.getElementById('kpiModal');
-  document.getElementById('kpiModalTitle').innerHTML = d.title;
-  document.getElementById('kpiModalBody').innerHTML = d.content;
-  m.style.display = 'flex';
-}
-function closeKPI() { document.getElementById('kpiModal').style.display = 'none'; }
 
 // ── Initialize on page load ──
 document.addEventListener('DOMContentLoaded', function() {
