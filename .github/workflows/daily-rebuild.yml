@@ -1,21 +1,16 @@
-name: Daily Marketing Dashboard Rebuild
+name: Daily Dashboard Rebuild & Deploy
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # 8:00 AM Bangladesh Time
+    - cron: '0 2 * * *'  # 8:00 AM BDT
   workflow_dispatch:
 
 jobs:
-  rebuild-and-deploy:
-    runs-on: ubuntu-latest
+  rebuild:
+    runs-on: self-hosted
     timeout-minutes: 15
-
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
 
       - name: Install dependencies
         run: pip install pymssql openpyxl requests
