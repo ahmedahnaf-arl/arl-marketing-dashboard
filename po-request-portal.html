@@ -194,12 +194,19 @@ let grandTotalBDT = 0;
 // Init dropdowns
 (function(){
   let s='', v='';
-  SBUS.forEach(function(b){ s+='<option value="'+b.id+'" data-json="'+JSON.stringify(b).replace(/"/g,'&quot;')+'">'+b.name+'</option>'; });
+  SBUS.forEach(function(b){ s+='<option value="'+b.id+'">'+b.name+'</option>'; });
   VENDORS.forEach(function(vn){ v+='<option value="'+vn+'">'+vn+'</option>'; });
   document.getElementById('sbu').innerHTML='<option value="">Select SBU...</option>'+s;
   document.getElementById('vendor').innerHTML='<option value="">Select Vendor...</option>'+v;
   renderSubmissions();
 })();
+
+// SBU data lookup
+function getSBUData(){
+  var id=parseInt(document.getElementById('sbu').value);
+  for(var i=0;i<SBUS.length;i++){ if(SBUS[i].id===id) return SBUS[i]; }
+  return null;
+}
 
 function updateSubTypes(){
   var t=document.getElementById('campType').value;
@@ -210,10 +217,8 @@ function updateSubTypes(){
 }
 
 function updateBudget(){
-  var sel=document.getElementById('sbu');
-  var opt=sel.options[sel.selectedIndex];
-  if(!opt||!opt.dataset.json) return;
-  var b=JSON.parse(opt.dataset.json);
+  var b=getSBUData();
+  if(!b) return;
   var t=document.getElementById('campType').value;
   var q1bud=t==='ATL'?b.atl_q1:b.btl_q1;
   var fyb=t==='ATL'?(b.atl_q1*4):(b.btl_q1*4);
@@ -283,9 +288,9 @@ function nextStep(n){
 }
 
 function generateReview(){
-  var sbu=document.getElementById('sbu');
-  var sbuName=sbu.options[sbu.selectedIndex].text;
-  var bdata=sbu.options[sbu.selectedIndex].dataset.json?JSON.parse(sbu.options[sbu.selectedIndex].dataset.json):{};
+  var sbuEl=document.getElementById('sbu');
+  var sbuName=sbuEl.options[sbuEl.selectedIndex].text;
+  var bdata=getSBUData()||{};
   var type=document.getElementById('campType').value;
   var sub=document.getElementById('campSubType').value;
   var name=document.getElementById('campName').value;
