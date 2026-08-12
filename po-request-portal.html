@@ -194,7 +194,7 @@ let grandTotalBDT = 0;
 // Init dropdowns
 (function(){
   let s='', v='';
-  SBUS.forEach(function(b){ s+='<option value="'+b.id+'" data-json=''+JSON.stringify(b)+''>'+b.name+'</option>'; });
+  SBUS.forEach(function(b){ s+='<option value="'+b.id+'" data-json="'+JSON.stringify(b).replace(/"/g,'&quot;')+'">'+b.name+'</option>'; });
   VENDORS.forEach(function(vn){ v+='<option value="'+vn+'">'+vn+'</option>'; });
   document.getElementById('sbu').innerHTML='<option value="">Select SBU...</option>'+s;
   document.getElementById('vendor').innerHTML='<option value="">Select Vendor...</option>'+v;
