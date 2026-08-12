@@ -84,6 +84,21 @@ table .text-right { text-align:right; }
 @media(max-width:1200px){ .eff-grid{grid-template-columns:repeat(4,1fr);} }
 @media(max-width:768px){ .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;} .eff-grid{grid-template-columns:repeat(2,1fr);} .kpi-row{grid-template-columns:repeat(2,1fr);} }
 .filter-note { display:none; font-size:0.78rem; color:var(--accent); background:rgba(0,212,170,0.08); border:1px solid rgba(0,212,170,0.2); border-radius:6px; padding:8px 14px; margin-bottom:16px; }
+.kpi-card { cursor:pointer; transition:transform .15s,box-shadow .15s; }
+.kpi-card:hover { transform:translateY(-2px); box-shadow:0 4px 20px rgba(0,0,0,.3); }
+.modal-overlay { display:none; position:fixed; top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center; }
+.modal-box { background:#111827;border:1px solid #1e293b;border-radius:12px;padding:24px;max-width:650px;width:92%;max-height:80vh;overflow-y:auto;animation:modalIn .2s ease; }
+@keyframes modalIn { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
+.modal-box h3 { color:#f1f5f9;font-size:1.1rem;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #1e293b;display:flex;justify-content:space-between; }
+.modal-close { background:none;border:none;color:#64748b;font-size:1.4rem;cursor:pointer;padding:2px 8px;border-radius:4px; }
+.modal-close:hover { color:#f1f5f9;background:#1e293b; }
+.modal-tbl { width:100%;border-collapse:collapse;font-size:.8rem; }
+.modal-tbl th { background:#0f172a;color:#64748b;padding:6px 10px;text-align:left;font-size:.7rem;text-transform:uppercase; }
+.modal-tbl td { padding:5px 10px;border-bottom:1px solid #1e293b;color:#cbd5e1; }
+.modal-tbl .r { text-align:right;font-family:monospace; }
+.modal-tbl .bold { font-weight:700;color:#f1f5f9; }
+.modal-sub { color:#94a3b8;font-size:.8rem;line-height:1.6; }
+.modal-sub b { color:#f1f5f9; }
 </style>
 </head>
 <body>
@@ -127,14 +142,14 @@ table .text-right { text-align:right; }
 
 <div class="tab-content active" id="tab-all">
 <div class="kpi-row" id="kpi-exec">
-<div class="kpi-card"><div class="label">FY Budget</div><div class="value">111.06 Cr</div></div>
-<div class="kpi-card"><div class="label">Q1 Allocation</div><div class="value">21.57 Cr</div></div>
-<div class="kpi-card"><div class="label">Expected Burn</div><div class="value">9.61 Cr</div></div>
-<div class="kpi-card"><div class="label">ATL Spend</div><div class="value">6.93 Cr</div></div>
-<div class="kpi-card"><div class="label">BTL Spend</div><div class="value">1.61 Cr</div></div>
-<div class="kpi-card"><div class="label">Total Campaign</div><div class="value">8.54 Cr</div></div>
-<div class="kpi-card"><div class="label">Revenue</div><div class="value">720.16 Cr</div></div>
-<div class="kpi-card"><div class="label">Active POs</div><div class="value">39</div></div>
+<div class="kpi-card" onclick="openKPI(0)"><div class="label">FY Budget</div><div class="value">111.06 Cr</div></div>
+<div class="kpi-card" onclick="openKPI(1)"><div class="label">Q1 Allocation</div><div class="value">21.57 Cr</div></div>
+<div class="kpi-card" onclick="openKPI(2)"><div class="label">Expected Burn</div><div class="value">9.61 Cr</div></div>
+<div class="kpi-card" onclick="openKPI(3)"><div class="label">ATL Spend</div><div class="value">6.93 Cr</div></div>
+<div class="kpi-card" onclick="openKPI(4)"><div class="label">BTL Spend</div><div class="value">1.61 Cr</div></div>
+<div class="kpi-card" onclick="openKPI(5)"><div class="label">Total Campaign</div><div class="value">8.54 Cr</div></div>
+<div class="kpi-card" onclick="openKPI(6)"><div class="label">Revenue</div><div class="value">720.16 Cr</div></div>
+<div class="kpi-card" onclick="openKPI(7)"><div class="label">Active POs</div><div class="value">39</div></div>
 </div>
 <div class="kpi-row" id="kpi-eff-top">
 <div class="kpi-card"><div class="label">CAC</div><div class="value accent">46,893 BDT</div></div>
@@ -2239,10 +2254,32 @@ function initRevenueTrendChart() {
   });
 }
 
+// ── KPI Click Modal ──
+function openKPI(idx) {
+  const details = [
+    {title:'FY Budget', content:'<table class="modal-tbl"><tr><th>Category</th><th>Amount (Cr)</th></tr><tr><td>ATL (Adv+Digital+OOH)</td><td class="r">65.32</td></tr><tr><td>BTL (Events+POSM+Gifts)</td><td class="r">40.87</td></tr><tr><td>Total AR Budget</td><td class="r bold">111.06</td></tr></table><br><p class="modal-sub">Source: AR Marketing Budget (26-27).xlsx — 15 SBUs</p>'},
+    {title:'Q1 Allocation', content:'<table class="modal-tbl"><tr><th>Quarter</th><th>Period</th><th>Budget (Cr)</th></tr><tr><td>Q1</td><td>Jul-Sep 26</td><td class="r">21.57</td></tr><tr><td>Q2</td><td>Oct-Dec 26</td><td class="r">30.24</td></tr><tr><td>Q3</td><td>Jan-Mar 27</td><td class="r">33.25</td></tr><tr><td>Q4</td><td>Apr-Jun 27</td><td class="r">26.00</td></tr></table>'},
+    {title:'Expected Burn (Jul 1 - Aug 10)', content:'<p class="modal-sub">Q1 Budget: 21.57 Cr</p><p class="modal-sub">Days elapsed: 41 of 92 (44.6%)</p><p class="modal-sub">Expected Burn = 21.57 x 41/92 = <b>9.61 Cr</b></p><br><p class="modal-sub">This represents the prorated Q1 budget that should have been consumed by Aug 10, 2026.</p>'},
+    {title:'ATL Spend Breakdown', content:'<table class="modal-tbl"><tr><th>SBU</th><th>ATL Spend (Cr)</th></tr>' + sbu_data.filter(function(s){return s.act_atl>0}).map(function(s){return '<tr><td>'+s.name+'</td><td class="r">'+s.act_atl.toFixed(2)+'</td></tr>'}).join('') + '<tr><td class="bold">Total</td><td class="r bold">'+sbu_data.reduce(function(a,s){return a+s.act_atl},0).toFixed(2)+'</td></tr></table>'},
+    {title:'BTL Spend Breakdown', content:'<table class="modal-tbl"><tr><th>Campaign Type</th><th>Value (Cr)</th></tr><tr><td>Dealer Merchandise</td><td class="r">0.57</td></tr><tr><td>Farmer Training Kits</td><td class="r">0.13</td></tr><tr><td>Consumer Sampling</td><td class="r">0.10</td></tr><tr><td>Electrician/Mechanic Kits</td><td class="r">0.09</td></tr><tr><td>POSM & Signage</td><td class="r">0.04</td></tr><tr><td>Event & Dealer Meet</td><td class="r">0.03</td></tr><tr><td>Dealer Incentive Gifts</td><td class="r">0.01</td></tr><tr><td class="bold">Total PO Committed</td><td class="r bold">0.79</td></tr></table>'},
+    {title:'Total Campaign', content:'<table class="modal-tbl"><tr><th>Channel</th><th>Spend (Cr)</th><th>Share</th></tr><tr><td>ATL (Journal + POs)</td><td class="r">7.17</td><td class="r">89.4%</td></tr><tr><td>BTL (PO Committed)</td><td class="r">1.61</td><td class="r">10.6%</td></tr><tr><td class="bold">Total</td><td class="r bold">8.80</td><td class="r bold">100%</td></tr></table>'},
+    {title:'Revenue Breakdown', content:'<table class="modal-tbl"><tr><th>SBU</th><th>Revenue (Cr)</th></tr>' + sbu_data.filter(function(s){return s.rev>0}).sort(function(a,b){return b.rev-a.rev}).map(function(s){return '<tr><td>'+s.name+'</td><td class="r">'+s.rev.toFixed(2)+'</td></tr>'}).join('') + '<tr><td class="bold">Total (Group)</td><td class="r bold">930.17</td></tr><tr><td class="bold">Mapped to Budget SBUs</td><td class="r bold">633.57</td></tr></table>'},
+    {title:'Active Campaign POs', content:'<table class="modal-tbl"><tr><th>SBU</th><th>POs</th><th>Value (Cr)</th><th>GRN%</th></tr>' + sbu_data.filter(function(s){return s.pos>0}).map(function(s){return '<tr><td>'+s.name+'</td><td class="r">'+s.pos+'</td><td class="r">'+s.btl_po_val.toFixed(4)+'</td><td class="r">'+(s.btl_po_val>0?((s.btl_po_recv||0)/s.btl_po_val*100).toFixed(1):'0.0')+'%</td></tr>'}).join('') + '<tr><td class="bold">Total</td><td class="r bold">27</td><td class="r bold">1.19</td><td class="r bold">0.6%</td></tr></table>'},
+  ];
+  var d = details[idx];
+  var m = document.getElementById('kpiModal');
+  document.getElementById('kpiModalTitle').innerHTML = d.title;
+  document.getElementById('kpiModalBody').innerHTML = d.content;
+  m.style.display = 'flex';
+}
+function closeKPI() { document.getElementById('kpiModal').style.display = 'none'; }
+document.getElementById('kpiModal').addEventListener('click', function(e){ if(e.target===this) closeKPI(); });
+
 // ── Initialize on page load ──
 document.addEventListener('DOMContentLoaded', function() {
   initBudgetActualChart();
 });
 </script>
+<div class="modal-overlay" id="kpiModal"><div class="modal-box"><h3><span id="kpiModalTitle"></span><button class="modal-close" onclick="closeKPI()">&times;</button></h3><div id="kpiModalBody"></div></div></div>
 </body>
 </html>
