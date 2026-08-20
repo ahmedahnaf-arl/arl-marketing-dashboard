@@ -1,0 +1,38 @@
+name: Deploy SPA Control Tower
+
+on:
+  schedule:
+    - cron: '30 2 * * *'   # 8:30 AM BDT daily (T-1 data)
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    timeout-minutes: 15
+    steps:
+      - name: Clone SPA tower
+        run: |
+          rm -rf spa-tower
+          git clone https://x-access-token:${{ secrets.SPA_TOWER_PUSH_TOKEN }}@github.com/ahmedahnaf-arl/arl-spa-control-tower.git spa-tower
+
+      - name: Decode Sheets service account
+        run: echo "${{ secrets.SHEETS_SA_JSON }}" | base64 -d > /tmp/sa.json
+
+      - name: Build tower
+        working-directory: spa-tower
+        env:
+          DWH_SERVER: ${{ secrets.DWH_SERVER }}
+          DWH_USER: ${{ secrets.DWH_USER }}
+          DWH_PASSWORD: ${{ secrets.DWH_PASSWORD }}
+          SHEETS_SA_PATH: /tmp/sa.json
+        run: |
+          pip install pymssql google-auth requests
+          python build.py
+
+      - name: Push refresh
+        working-directory: spa-tower
+        run: |
+          git config user.name "SPA Tower Bot"
+          git config user.email "bot@akijresource.com"
+          git add index.html
+          if git diff --cached --quiet; then echo "No change"; else git commit -m "Auto-refresh T-1 data"; git push origin main; fi
