@@ -1,0 +1,54 @@
+name: Deploy SPA Control Tower (Pages)
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'Control Towers/Strategic Planning & Analysis/**'
+      - '.github/workflows/deploy-spa-tower.yml'
+  schedule:
+    - cron: '30 2 * * *'   # 8:30 AM BDT daily refresh (T-1 data)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: self-hosted
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: pip install pymssql google-auth
+
+      - name: Build Control Tower
+        env:
+          DWH_SERVER: ${{ secrets.DWH_SERVER }}
+          DWH_USER: ${{ secrets.DWH_USER }}
+          DWH_PASSWORD: ${{ secrets.DWH_PASSWORD }}
+        run: python "Control Towers/Strategic Planning & Analysis/build.py"
+
+      - name: Stage site
+        shell: bash
+        run: |
+          mkdir -p _site
+          cp "Control Towers/Strategic Planning & Analysis/index.html" _site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
