@@ -14,7 +14,7 @@ jobs:
         run: |
           rm -rf flash-src flash-live
           git clone https://github.com/ahmedahnaf-arl/arl-flash-report.git flash-src
-          git clone https://x-access-token:${{ secrets.FLASH_PUSH_TOKEN }}@github.com/ahmedahnaf-arl/arl-flash-report-live.git flash-live
+          git clone https://x-access-token:${{ secrets.SPA_TOWER_PUSH_TOKEN }}@github.com/ahmedahnaf-arl/arl-flash-report-live.git flash-live
 
       - name: Build report (T-1)
         working-directory: flash-src
