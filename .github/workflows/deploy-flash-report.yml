@@ -1,0 +1,35 @@
+name: Deploy ARL Flash Report
+
+on:
+  schedule:
+    - cron: '45 2 * * *'   # 8:45 AM BDT daily (T-1 data)
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    timeout-minutes: 20
+    steps:
+      - name: Clone flash report source + live pages
+        run: |
+          rm -rf flash-src flash-live
+          git clone https://github.com/ahmedahnaf-arl/arl-flash-report.git flash-src
+          git clone https://x-access-token:${{ secrets.FLASH_PUSH_TOKEN }}@github.com/ahmedahnaf-arl/arl-flash-report-live.git flash-live
+
+      - name: Build report (T-1)
+        working-directory: flash-src
+        env:
+          DWH_SERVER: ${{ secrets.DWH_SERVER }}
+          DWH_USER: ${{ secrets.DWH_USER }}
+          DWH_PASSWORD: ${{ secrets.DWH_PASSWORD }}
+        run: |
+          pip install pymssql
+          python deploy_cloud.py ../flash-live/index.html
+
+      - name: Push refresh
+        working-directory: flash-live
+        run: |
+          git config user.name "Flash Report Bot"
+          git config user.email "bot@akijresource.com"
+          git add index.html
+          if git diff --cached --quiet; then echo "No change"; else git commit -m "Auto-refresh T-1 data"; git push origin main; fi
