@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACCL Engineering Program — Live ROI &amp; IRR Portal</title>
+<style>
+  :root {
+    --primary:#1d4ed8; --primary-light:#dbeafe;
+    --success:#059669; --success-light:#d1fae5;
+    --warning:#d97706; --warning-light:#fef3c7;
+    --danger:#dc2626; --danger-light:#fee2e2;
+    --ink:#0f172a; --muted:#64748b;
+    --bg:#f1f5f9; --card:#ffffff; --border:#e2e8f0;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--ink); line-height:1.5; }
+  .container { max-width:1500px; margin:0 auto; padding:20px; }
+
+  .header { background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 45%,#1d4ed8 100%); color:#fff; border-radius:14px; padding:28px 32px; margin-bottom:20px; position:relative; overflow:hidden; }
+  .header::after { content:""; position:absolute; top:-70px; right:-70px; width:240px; height:240px; border-radius:50%; background:rgba(255,255,255,0.04); }
+  .header h1 { font-size:24px; font-weight:800; letter-spacing:-0.5px; }
+  .header .sub { font-size:13px; opacity:0.85; margin-top:4px; }
+  .header .row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px; }
+  .live-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.14); border-radius:20px; padding:4px 14px; font-size:11px; font-weight:600; }
+  .live-dot { width:7px; height:7px; border-radius:50%; background:#10b981; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .chip { background:rgba(255,255,255,0.12); border-radius:20px; padding:4px 14px; font-size:11px; font-weight:600; }
+
+  .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin-bottom:20px; }
+  .stat-card { background:var(--card); border-radius:12px; padding:18px 20px; box-shadow:0 1px 3px rgba(0,0,0,0.07); border-left:4px solid transparent; }
+  .stat-card.success { border-left-color:var(--success); }
+  .stat-card.warning { border-left-color:var(--warning); }
+  .stat-card.info { border-left-color:var(--primary); }
+  .stat-card.danger { border-left-color:var(--danger); }
+  .stat-card .label { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; font-weight:700; }
+  .stat-card .value { font-size:28px; font-weight:800; margin-top:3px; line-height:1.05; }
+  .stat-card .sub { font-size:11px; color:var(--muted); margin-top:4px; }
+
+  .grid-2 { display:grid; grid-template-columns:340px 1fr; gap:20px; align-items:start; }
+  @media (max-width:1000px){ .grid-2 { grid-template-columns:1fr; } }
+
+  .panel { background:var(--card); border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.07); margin-bottom:20px; }
+  .panel-title { padding:14px 18px; font-size:14px; font-weight:700; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
+  .panel-title .dot { width:9px; height:9px; border-radius:3px; background:var(--primary); }
+  .panel-body { padding:16px 18px; }
+
+  .input-group { margin-bottom:14px; }
+  .input-group label { display:block; font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px; }
+  .input-group .val { display:flex; align-items:center; gap:8px; }
+  input[type=number] { width:100%; padding:9px 11px; border:1px solid var(--border); border-radius:8px; font-size:14px; font-weight:600; font-family:'Consolas',monospace; color:var(--ink); background:#f8fafc; }
+  input[type=number]:focus { outline:none; border-color:var(--primary); background:#fff; box-shadow:0 0 0 3px var(--primary-light); }
+  input[type=range] { flex:1; accent-color:var(--primary); }
+  .inline-6 { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+  .inline-6 input { text-align:center; }
+  .section-hint { font-size:11px; color:var(--muted); margin-bottom:8px; }
+  .mini-tag { font-size:10px; font-weight:700; color:var(--primary); background:var(--primary-light); padding:1px 8px; border-radius:10px; }
+
+  .divider { height:1px; background:var(--border); margin:16px 0; }
+
+  table { width:100%; border-collapse:collapse; font-size:12.5px; background:#fff; }
+  thead { background:#f8fafc; }
+  th { padding:9px 12px; text-align:right; font-size:10.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.4px; border-bottom:2px solid var(--border); white-space:nowrap; }
+  th:first-child, td:first-child { text-align:left; }
+  td { padding:9px 12px; border-bottom:1px solid var(--border); text-align:right; font-variant-numeric:tabular-nums; }
+  tr:last-child td { border-bottom:none; }
+  tr.tot td { border-top:2px solid var(--border); font-weight:800; background:#fbfcfe; }
+  tr.hl td { background:#f5f9ff; }
+  .num { font-family:'Consolas','Courier New',monospace; font-weight:600; }
+  .pos { color:var(--success); }
+  .neg { color:var(--danger); }
+  .muted { color:var(--muted); }
+
+  .badge { display:inline-block; padding:2px 10px; border-radius:12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
+  .badge.ok { background:var(--success-light); color:var(--success); }
+  .badge.warn { background:var(--warning-light); color:var(--warning); }
+  .badge.info { background:var(--primary-light); color:var(--primary); }
+  .badge.crit { background:var(--danger-light); color:var(--danger); }
+
+  .chart-box { background:var(--card); border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.07); padding:16px 18px; margin-bottom:20px; }
+  .chart-box h3 { font-size:13px; font-weight:700; margin-bottom:4px; }
+  .chart-box .cap { font-size:11px; color:var(--muted); margin-bottom:12px; }
+
+  .note { font-size:11.5px; color:var(--muted); background:#f8fafc; border-left:3px solid var(--warning); padding:12px 14px; border-radius:6px; margin-top:8px; }
+  .foot { text-align:center; font-size:11px; color:var(--muted); padding:18px 0 30px; }
+  .kbd { background:#eef2f7; border:1px solid var(--border); border-radius:5px; padding:0 5px; font-family:monospace; font-size:11px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>ACCL Engineering Program — Live ROI &amp; IRR Portal</h1>
+    <div class="sub">Akij Cement Company Ltd · Engineer Tour &amp; Gift Program 2026-27 · 3-tier retention model (Baseline → Retention → Program)</div>
+    <div class="row">
+      <span class="live-badge"><span class="live-dot"></span> LIVE MODEL</span>
+      <span class="chip">Evaluation window: Oct 2026 – Mar 2027</span>
+      <span class="chip">Cohort: <b id="hdrCohort">40,000</b> MT/mo</span>
+      <span class="chip">Budget: <b id="hdrBudget">23,950,000</b> BDT</span>
+    </div>
+  </div>
+
+  <div class="stats-row" id="kpis"></div>
+
+  <div class="grid-2">
+    <!-- ===================== INPUTS ===================== -->
+    <div class="panel">
+      <div class="panel-title"><span class="dot"></span> Model Inputs <span class="mini-tag" style="margin-left:auto">edit &amp; recalc</span></div>
+      <div class="panel-body">
+
+        <div class="input-group">
+          <label>Program Budget / Expense (BDT)</label>
+          <div class="val"><input type="number" id="budget" value="23950000" step="100000"></div>
+        </div>
+        <div class="input-group">
+          <label>Program Output Target (engineers)</label>
+          <div class="val"><input type="number" id="engineers" value="461" step="1"></div>
+        </div>
+        <div class="input-group">
+          <label>Base cohort volume (MT / month)</label>
+          <div class="val"><input type="number" id="cohort" value="40000" step="100"></div>
+        </div>
+        <div class="input-group">
+          <label>Total SBU reference volume (MT / month)</label>
+          <div class="val"><input type="number" id="totalRef" value="140500" step="100"></div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-hint">Retention rates (monthly %)</div>
+        <div class="inline-6">
+          <div class="input-group"><label>Baseline</label><input type="number" id="rBase" value="80" step="0.1"></div>
+          <div class="input-group"><label>Retention</label><input type="number" id="rMid" value="85.2" step="0.1"></div>
+          <div class="input-group"><label>Program</label><input type="number" id="rProg" value="90" step="0.1"></div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="input-group"><label>Revenue per MT (BDT)</label><input type="number" id="revMT" value="11600" step="10"></div>
+        <div class="input-group"><label>Contribution per MT (BDT)</label><input type="number" id="contribMT" value="4800" step="10"></div>
+
+        <div class="divider"></div>
+        <div class="section-hint">Seasonality index (Oct → Mar, avg = 1.00)</div>
+        <div class="inline-6" id="seasonInputs"></div>
+
+        <div class="divider"></div>
+        <div class="section-hint">Monthly SBU volume TARGET (MT) — for target scenario</div>
+        <div class="inline-6" id="targetInputs"></div>
+
+        <div class="divider"></div>
+        <div class="section-hint">Monthly SBU volume ACTUAL (MT) — for actual scenario</div>
+        <div class="inline-6" id="actualInputs"></div>
+
+        <button id="resetBtn" style="width:100%; margin-top:14px; padding:10px; border:1px solid var(--border); background:#f8fafc; border-radius:8px; font-weight:700; font-size:12px; color:var(--muted); cursor:pointer;">↺ Reset to program-plan defaults</button>
+      </div>
+    </div>
+
+    <!-- ===================== RESULTS ===================== -->
+    <div>
+      <div class="panel">
+        <div class="panel-title"><span class="dot"></span> 1 · Retention model — volume (MT) <span class="mini-tag" style="margin-left:auto">cohort-based</span></div>
+        <div class="panel-body" style="overflow-x:auto;">
+          <table id="tblVolume"></table>
+          <div class="note">Retention compounds against the <b>cohort</b> (engineer-scheme volume), not total SBU volume. Total SBU volume is a non-decaying seasonal reference line. Program incremental = <b id="pctOfTotal"></b> of total SBU volume.</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="dot"></span> 2 · Financial — program incremental (BDT)</div>
+        <div class="panel-body" style="overflow-x:auto;">
+          <table id="tblFinancial"></table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="dot"></span> 3 · Three parallel scenarios (Model / Target / Actual)</div>
+        <div class="panel-body" style="overflow-x:auto;">
+          <table id="tblScenarios"></table>
+          <div class="note">Target &amp; Actual scale the model's cohort incremental by (scenario SBU volume ÷ seasonal reference volume). Payback + Net ROI are primary; IRR is shown for completeness (not informative when payback is very fast).</div>
+        </div>
+      </div>
+
+      <div class="chart-box">
+        <h3>Monthly program incremental contribution (BDT)</h3>
+        <div class="cap">Model-projected — (Program − Retained) × contribution/MT</div>
+        <div id="barChart"></div>
+      </div>
+
+      <div class="chart-box">
+        <h3>Cumulative cash flow (BDT)</h3>
+        <div class="cap">t0 = −Program Budget (1-Sep-2026), then month-end program incremental contribution</div>
+        <div id="lineChart"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">ACCL Engineering Program ROI/IRR Portal · DWH-sourced inputs (oms delivered volume; fin GL 3010001 / 4810001) · Cohort from ACCL Engineer Tour &amp; Gift Program 2026-27 (461 engineers, 240,000 MT)</div>
+</div>
+
+<script>
+"use strict";
+const MONTHS = ["Oct","Nov","Dec","Jan","Feb","Mar"];
+const DATES = [new Date(2026,8,1), new Date(2026,9,31), new Date(2026,10,30), new Date(2026,11,31),
+               new Date(2027,0,31), new Date(2027,1,28), new Date(2027,2,31)];
+
+const DEFAULTS = {
+  budget:23950000, engineers:461, cohort:40000, totalRef:140500,
+  rBase:80, rMid:85.2, rProg:90, revMT:11600, contribMT:4800,
+  season:[0.89,1.00,0.97,1.10,0.99,1.04],
+  target:["","","","","",""], actual:["","","","","",""]
+};
+
+function num(id){ return parseFloat(document.getElementById(id).value) || 0; }
+function getSeason(){ return Array.from(document.querySelectorAll("#seasonInputs input")).map(i=>parseFloat(i.value)||0); }
+function getArr(prefix){ return Array.from(document.querySelectorAll(`#${prefix} input`)).map(i=>i.value); }
+
+// ---- build seasonal / target / actual input cells once ----
+function buildMiniInputs(id, values){
+  const wrap = document.getElementById(id);
+  MONTHS.forEach((m,i)=>{
+    const d = document.createElement("div");
+    d.className = "input-group";
+    const l = document.createElement("label"); l.textContent = m;
+    const inp = document.createElement("input"); inp.type="number"; inp.value = values[i];
+    if(id==="seasonInputs"){ inp.step="0.01"; }
+    d.appendChild(l); d.appendChild(inp); wrap.appendChild(d);
+  });
+}
+buildMiniInputs("seasonInputs", DEFAULTS.season);
+buildMiniInputs("targetInputs", DEFAULTS.target);
+buildMiniInputs("actualInputs", DEFAULTS.actual);
+
+function xirr(values, dates){
+  if(values.length !== dates.length) return null;
+  const t0 = dates[0].getTime();
+  const days = dates.map(d => (d.getTime()-t0)/(1000*3600*24));
+  function npv(rate){ let s=0; for(let i=0;i<values.length;i++) s += values[i]/Math.pow(1+rate, days[i]/365); return s; }
+  let lo=-0.9999, hi=100.0;
+  let npvLo = npv(lo);
+  if(npvLo * npv(hi) > 0) return null;
+  let r=0;
+  for(let i=0;i<300;i++){
+    r=(lo+hi)/2;
+    const v=npv(r);
+    if(Math.abs(v)<1e-7) return r;
+    if(npvLo*v<0) hi=r; else { lo=r; npvLo=v; }
+  }
+  return r;
+}
+
+function paybackMonths(budget, inflows){
+  if(!budget || budget<=0) return null;
+  let cum=0;
+  for(let i=0;i<inflows.length;i++){
+    const prev=cum; cum+=inflows[i];
+    if(cum>=budget) return i + (budget-prev)/inflows[i];
+  }
+  return null;
+}
+
+function fmt(n, dec=0){ if(n===null||n===undefined||isNaN(n)) return "—"; return n.toLocaleString("en-US",{minimumFractionDigits:dec, maximumFractionDigits:dec}); }
+function fmtCr(n){ return (n/1e7).toFixed(2) + " Cr"; }
+function pct(n, dec=1){ if(n===null||n===undefined||isNaN(n)) return "—"; return (n*100).toFixed(dec)+"%"; }
+
+function compute(){
+  const budget=num("budget"), cohort=num("cohort"), totalRef=num("totalRef");
+  const rB=num("rBase")/100, rM=num("rMid")/100, rP=num("rProg")/100;
+  const rev=num("revMT"), contrib=num("contribMT");
+  const season=getSeason();
+  const target=getArr("targetInputs").map(v=>v===""?null:parseFloat(v));
+  const actual=getArr("actualInputs").map(v=>v===""?null:parseFloat(v));
+
+  const ref=[], base=[], mid=[], prog=[], retInc=[], progInc=[], contribM=[];
+  for(let m=1;m<=6;m++){
+    const s=season[m-1]||0;
+    ref.push(totalRef*s);
+    base.push(cohort*Math.pow(rB,m)*s);
+    mid.push(cohort*Math.pow(rM,m)*s);
+    prog.push(cohort*Math.pow(rP,m)*s);
+    retInc.push(mid[m-1]-base[m-1]);
+    progInc.push(prog[m-1]-mid[m-1]);
+    contribM.push(progInc[m-1]*contrib);
+  }
+  const sum=a=>a.reduce((x,y)=>x+y,0);
+  const totProgIncVol=sum(progInc);
+  const totProgIncContrib=sum(contribM);
+  const totRetIncVol=sum(retInc);
+  const totRetIncRev=sum(retInc.map(v=>v*rev));
+  const totProgIncRev=sum(progInc.map(v=>v*rev));
+  const totRef=sum(ref);
+
+  // scenarios
+  function scenario(tarOrAct){
+    const vols=progInc.map((v,i)=>{ const r=tarOrAct[i]; return (r===null||r===undefined)?null:(v*r/ref[i]); });
+    const cont=vols.map((v,i)=> v===null?null:v*contrib);
+    const retVols=retInc.map((v,i)=>{ const r=tarOrAct[i]; return (r===null||r===undefined)?null:(v*r/ref[i]); });
+    const anyNull=vols.some(v=>v===null);
+    const sumC = anyNull?null:sum(cont);
+    const sumV = anyNull?null:sum(vols);
+    const sumR = anyNull?null:sum(retVols);
+    return {vols, cont, retVols, sumC, sumV, sumR, anyNull};
+  }
+  const scModel = {vols:progInc, cont:contribM, retVols:retInc, sumC:totProgIncContrib, sumV:totProgIncVol, sumR:totRetIncVol, anyNull:false};
+  const scTarget = scenario(target);
+  const scActual = scenario(actual);
+
+  function metrics(sc){
+    const roi = (budget>0 && sc.sumC!==null) ? sc.sumC/budget : null;
+    let pb=null, irr=null;
+    if(budget>0 && sc.sumC!==null){
+      pb = paybackMonths(budget, sc.cont);
+      irr = xirr([-budget].concat(sc.cont), DATES);
+    }
+    return {roi, pb, irr};
+  }
+  const mModel=metrics(scModel), mTarget=metrics(scTarget), mActual=metrics(scActual);
+
+  // header chips
+  document.getElementById("hdrCohort").textContent = fmt(cohort);
+  document.getElementById("hdrBudget").textContent = fmt(budget);
+
+  // ---- KPIs (model) ----
+  const kpis = [
+    {cls:"success", label:"Net ROI (6m)", value: pct(mModel.roi), sub:"contribution ÷ budget"},
+    {cls:"info", label:"Payback period", value: mModel.pb===null?"—":fmt(mModel.pb,1)+" mo", sub:"first month cash flow ≥ 0"},
+    {cls:"warning", label:"IRR (XIRR annualized)", value: mModel.irr===null?"—":pct(mModel.irr), sub:"real calendar dates"},
+    {cls:"success", label:"Program inc. contribution (6m)", value: fmtCr(totProgIncContrib), sub:fmt(totProgIncVol)+" MT incremental"},
+    {cls:"info", label:"Retention revenue (6m)", value: fmtCr(totRetIncRev), sub:fmt(totRetIncVol)+" MT retained"}
+  ];
+  document.getElementById("kpis").innerHTML = kpis.map(k=>
+    `<div class="stat-card ${k.cls}"><div class="label">${k.label}</div><div class="value">${k.value}</div><div class="sub">${k.sub}</div></div>`).join("");
+
+  // ---- volume table ----
+  let vt = `<thead><tr><th>Metric</th>${MONTHS.map(m=>`<th>${m}</th>`).join("")}<th>Total</th></tr></thead><tbody>`;
+  function vrow(label, arr, bold, hl){
+    return `<tr class="${bold?'tot':''} ${hl?'hl':''}"><td>${label}</td>${arr.map(v=>`<td class="num">${fmt(v)}</td>`).join("")}<td class="num">${fmt(sum(arr))}</td></tr>`;
+  }
+  vt += vrow("Total SBU volume (reference, non-decaying)", ref, false, false);
+  vt += vrow("Cohort baseline (no program)", base, false, false);
+  vt += vrow("Cohort retained (retention efforts)", mid, false, false);
+  vt += vrow("Cohort program (loyalty program)", prog, false, false);
+  vt += vrow("Revenue from retention (MT)", retInc, false, false);
+  vt += vrow("Incremental from program (MT)", progInc, true, true);
+  vt += "</tbody>";
+  document.getElementById("tblVolume").innerHTML = vt;
+  document.getElementById("pctOfTotal").textContent = totRef>0 ? pct(totProgIncVol/totRef) : "—";
+
+  // ---- financial table ----
+  let ft = `<thead><tr><th>Metric</th>${MONTHS.map(m=>`<th>${m}</th>`).join("")}<th>Total</th></tr></thead><tbody>`;
+  ft += vrow("Program incremental contribution (BDT)", contribM, true, true);
+  ft += `<tr class="tot"><td>Cumulative cash flow (BDT)</td>`;
+  let cum=0; const cumArr=[];
+  contribM.forEach(c=>{ cum+=c; cumArr.push(cum); });
+  ft += cumArr.map(c=>`<td class="num">${fmt(c)}</td>`).join("")+`<td class="num">${fmt(cum)}</td></tr>`;
+  ft += "</tbody>";
+  document.getElementById("tblFinancial").innerHTML = ft;
+
+  // ---- scenarios table ----
+  function srow(label, m,t,a, fmtFn, bold){
+    return `<tr class="${bold?'tot':''}"><td>${label}</td><td class="num">${m===null?"—":fmtFn(m)}</td><td class="num">${t===null?"—":fmtFn(t)}</td><td class="num">${a===null?"—":fmtFn(a)}</td></tr>`;
+  }
+  let st = `<thead><tr><th>Metric (6-month)</th><th>Model</th><th>Target</th><th>Actual</th></tr></thead><tbody>`;
+  st += srow("Retention incremental volume (MT)", scModel.sumR, scTarget.sumR, scActual.sumR, v=>fmt(v));
+  st += srow("Retention incremental revenue (BDT)", scModel.sumR*rev, scTarget.sumR===null?null:scTarget.sumR*rev, scActual.sumR===null?null:scActual.sumR*rev, v=>fmt(v));
+  st += srow("Program incremental volume (MT)", scModel.sumV, scTarget.sumV, scActual.sumV, v=>fmt(v));
+  st += srow("Program incremental revenue (BDT)", scModel.sumV*rev, scTarget.sumV===null?null:scTarget.sumV*rev, scActual.sumV===null?null:scActual.sumV*rev, v=>fmt(v));
+  st += srow("Program incremental contribution (BDT)", scModel.sumC, scTarget.sumC, scActual.sumC, v=>fmt(v), true);
+  st += srow("Net ROI (contribution ÷ budget)", mModel.roi, mTarget.roi, mActual.roi, v=>pct(v));
+  st += srow("Payback period (months)", mModel.pb, mTarget.pb, mActual.pb, v=>v===null?"—":fmt(v,1));
+  st += srow("IRR (XIRR annualized)", mModel.irr, mTarget.irr, mActual.irr, v=>v===null?"—":pct(v));
+  st += "</tbody>";
+  document.getElementById("tblScenarios").innerHTML = st;
+
+  // ---- bar chart ----
+  drawBar(contribM);
+  // ---- line chart ----
+  const cf = [-budget].concat(contribM);
+  drawLine(cf);
+}
+
+function drawBar(vals){
+  const W=720, H=240, pad=34, max=Math.max(...vals,1)*1.12;
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}px">`;
+  const bw = (W-pad*2)/6;
+  vals.forEach((v,i)=>{
+    const bh = v/max*(H-pad*2);
+    const x = pad + i*bw + bw*0.15, y = H-pad-bh, w = bw*0.7;
+    svg += `<rect x="${x}" y="${y}" width="${w}" height="${bh}" rx="4" fill="#2563eb" opacity="0.9"/>`;
+    svg += `<text x="${x+w/2}" y="${y-7}" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">${(v/1e6).toFixed(1)}M</text>`;
+    svg += `<text x="${x+w/2}" y="${H-12}" text-anchor="middle" font-size="11" fill="#64748b">${MONTHS[i]}</text>`;
+  });
+  svg += "</svg>";
+  document.getElementById("barChart").innerHTML = svg;
+}
+
+function drawLine(vals){
+  const W=720, H=240, pad=40;
+  const min=Math.min(...vals,0), max=Math.max(...vals,1);
+  const range = (max-min)||1;
+  const X=i=> pad + i*(W-pad*2)/(vals.length-1);
+  const Y=v=> H-pad - (v-min)/range*(H-pad*2);
+  let pts = vals.map((v,i)=>`${X(i)},${Y(v)}`).join(" ");
+  let zeroY = Y(0);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}px">`;
+  svg += `<line x1="${pad}" y1="${zeroY}" x2="${W-pad}" y2="${zeroY}" stroke="#cbd5e1" stroke-dasharray="4"/>`;
+  svg += `<polyline points="${pts}" fill="none" stroke="#059669" stroke-width="2.5" stroke-linejoin="round"/>`;
+  vals.forEach((v,i)=>{
+    const c = v<0?"#dc2626":"#059669";
+    svg += `<circle cx="${X(i)}" cy="${Y(v)}" r="4" fill="${c}"/>`;
+    if(i===0 || i===vals.length-1){
+      svg += `<text x="${X(i)}" y="${Y(v)-9}" text-anchor="middle" font-size="10" fill="#1e293b" font-weight="600">${(v/1e6).toFixed(1)}M</text>`;
+    }
+  });
+  svg += `<text x="${X(0)}" y="${H-10}" text-anchor="middle" font-size="10" fill="#64748b">t0 (1-Sep)</text>`;
+  vals.forEach((v,i)=>{ if(i>0) svg += `<text x="${X(i)}" y="${H-10}" text-anchor="middle" font-size="10" fill="#64748b">${MONTHS[i-1]}</text>`; });
+  svg += "</svg>";
+  document.getElementById("lineChart").innerHTML = svg;
+}
+
+function reset(){
+  document.getElementById("budget").value=DEFAULTS.budget;
+  document.getElementById("engineers").value=DEFAULTS.engineers;
+  document.getElementById("cohort").value=DEFAULTS.cohort;
+  document.getElementById("totalRef").value=DEFAULTS.totalRef;
+  document.getElementById("rBase").value=DEFAULTS.rBase;
+  document.getElementById("rMid").value=DEFAULTS.rMid;
+  document.getElementById("rProg").value=DEFAULTS.rProg;
+  document.getElementById("revMT").value=DEFAULTS.revMT;
+  document.getElementById("contribMT").value=DEFAULTS.contribMT;
+  document.querySelectorAll("#seasonInputs input").forEach((inp,i)=>inp.value=DEFAULTS.season[i]);
+  document.querySelectorAll("#targetInputs input").forEach(inp=>inp.value="");
+  document.querySelectorAll("#actualInputs input").forEach(inp=>inp.value="");
+  compute();
+}
+
+document.addEventListener("input", compute);
+document.getElementById("resetBtn").addEventListener("click", reset);
+compute();
+</script>
+</body>
+</html>
