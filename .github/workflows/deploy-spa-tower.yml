@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Clone SPA tower
@@ -17,6 +17,10 @@ jobs:
 
       - name: Decode Sheets service account
         run: echo "${{ secrets.SHEETS_SA_JSON }}" | base64 -d > /tmp/sa.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
       - name: Build tower
         working-directory: spa-tower
