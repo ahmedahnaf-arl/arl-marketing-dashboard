@@ -42,6 +42,18 @@ jobs:
             '{siteID:$sid, token:$tok}' > calendar-portal/netlify/functions/blobs-config.json
           echo "blobs-config.json written (server-side only, gitignored)"
 
+      - name: Diagnose deploy API
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+        run: |
+          echo "--- GET /user ---"
+          curl -s -o /dev/null -w "status=%{http_code}\n" "https://api.netlify.com/api/v1/user" -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN"
+          echo "--- GET /sites/\$SITE_ID ---"
+          curl -s -o /dev/null -w "status=%{http_code}\n" "https://api.netlify.com/api/v1/sites/$SITE_ID" -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN"
+          echo "--- POST createDeploy (empty) ---"
+          curl -s -w "\nstatus=%{http_code}\n" -X POST "https://api.netlify.com/api/v1/sites/$SITE_ID/deploys" \
+            -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" -H "Content-Type: application/json" -d '{"files":{}}'
+
       - name: Deploy to Netlify (production)
         working-directory: calendar-portal
         env:
