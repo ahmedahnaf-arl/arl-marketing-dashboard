@@ -22,16 +22,31 @@ jobs:
         working-directory: calendar-portal
         run: npm install --no-audit --no-fund
 
+      - name: Resolve or create Netlify site
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+        run: |
+          npm i -g netlify-cli
+          SITE_ID=$(netlify sites:list --json 2>/dev/null | jq -r '.[] | select(.name=="akij-growth-calendar") | .id' | head -1)
+          if [ -z "$SITE_ID" ]; then
+            SITE_ID=$(netlify sites:create --name akij-growth-calendar --json | jq -r '.id')
+          fi
+          echo "SITE_ID=$SITE_ID" >> "$GITHUB_ENV"
+          echo "Resolved SITE_ID=$SITE_ID"
+
       - name: Deploy to Netlify (production)
         working-directory: calendar-portal
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
         run: |
-          npm i -g netlify-cli
-          # find an existing site, else create one
-          SITE_ID=$(netlify sites:list --json 2>/dev/null | jq -r '.[] | select(.name=="akij-growth-calendar") | .id' | head -1)
-          if [ -z "$SITE_ID" ]; then
-            SITE_ID=$(netlify sites:create --name akij-growth-calendar --json | jq -r '.id')
-          fi
-          echo "SITE_ID=$SITE_ID"
-          netlify deploy --prod --dir=public --functions=netlify/functions --site="$SITE_ID" --message "Growth Calendar deploy $GITHUB_SHA"
+          netlify deploy --prod --dir=public --functions=netlify/functions --site="$SITE_ID" --message "Growth Calendar $GITHUB_SHA"
+
+      - name: Make site public (remove Netlify site protection)
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+        run: |
+          curl -s -X PATCH "https://api.netlify.com/api/v1/sites/$SITE_ID" \
+            -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"password":""}'
+          echo "Site public: https://akij-growth-calendar.netlify.app"
