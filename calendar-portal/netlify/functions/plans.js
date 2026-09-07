@@ -32,7 +32,12 @@ function seedRows() {
 let memStore = null;
 
 function getStoreSafe() {
-  try { return getStore("plans"); } catch (_) { return null; }
+  try {
+    return getStore("plans", {
+      siteID: process.env.NETLIFY_SITE_ID,
+      token: process.env.NETLIFY_BLOBS_TOKEN,
+    });
+  } catch (_) { return null; }
 }
 
 async function loadPlans() {
