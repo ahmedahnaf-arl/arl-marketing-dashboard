@@ -1,6 +1,7 @@
 const { getStore } = require("@netlify/blobs");
 const crypto = require("node:crypto");
 const SEED = require("./seed.json");
+const CONFIG = (() => { try { return require("./blobs-config.json"); } catch (_) { return null; } })();
 
 const KEY = "plans-data";
 
@@ -27,12 +28,10 @@ let memStore = null;
 let lastError = null;
 
 function getStoreSafe() {
-  try {
-    return getStore("plans", {
-      siteID: process.env.NETLIFY_SITE_ID,
-      token: process.env.NETLIFY_BLOBS_TOKEN,
-    });
-  } catch (e) { lastError = "getStore: " + e.message; return null; }
+  if (CONFIG && CONFIG.siteID && CONFIG.token) {
+    try { return getStore("plans", { siteID: CONFIG.siteID, token: CONFIG.token }); } catch (e) { lastError = "getStore: " + e.message; }
+  }
+  return null;
 }
 
 async function loadPlans() {
@@ -99,7 +98,6 @@ exports.handler = async () => {
         byMonth: Object.entries(byMonthMap).map(([month, count]) => ({ month, count })).sort((a, b) => a.month.localeCompare(b.month)),
         budget: { budget, spend },
         totals: { total, planned, in_progress, completed, on_hold, cancelled, avg_progress: total ? progressSum / total : 0 },
-        _debug: { blobError: lastError, hasSiteId: !!process.env.NETLIFY_SITE_ID, hasToken: !!process.env.NETLIFY_BLOBS_TOKEN, tokenLen: (process.env.NETLIFY_BLOBS_TOKEN||"").length },
       }),
     };
   } catch (e) {

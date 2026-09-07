@@ -1,6 +1,7 @@
 const { getStore } = require("@netlify/blobs");
 const crypto = require("node:crypto");
 const SEED = require("./seed.json");
+const CONFIG = (() => { try { return require("./blobs-config.json"); } catch (_) { return null; } })();
 
 const KEY = "plans-data";
 const UPDATABLE = [
@@ -32,12 +33,10 @@ function seedRows() {
 let memStore = null;
 
 function getStoreSafe() {
-  try {
-    return getStore("plans", {
-      siteID: process.env.NETLIFY_SITE_ID,
-      token: process.env.NETLIFY_BLOBS_TOKEN,
-    });
-  } catch (_) { return null; }
+  if (CONFIG && CONFIG.siteID && CONFIG.token) {
+    try { return getStore("plans", { siteID: CONFIG.siteID, token: CONFIG.token }); } catch (_) {}
+  }
+  return null;
 }
 
 async function loadPlans() {

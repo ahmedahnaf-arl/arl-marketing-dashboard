@@ -34,22 +34,13 @@ jobs:
           echo "SITE_ID=$SITE_ID" >> "$GITHUB_ENV"
           echo "Resolved SITE_ID=$SITE_ID"
 
-      - name: Configure environment variables (before deploy)
+      - name: Bake Blobs runtime config into functions
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
         run: |
-          ACCOUNT_ID=$(curl -s "https://api.netlify.com/api/v1/sites/$SITE_ID" \
-            -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" | jq -r '.account_id')
-          echo "ACCOUNT_ID=$ACCOUNT_ID"
-          PAYLOAD=$(jq -n --arg sid "$SITE_ID" --arg tok "$NETLIFY_AUTH_TOKEN" '[
-            {key:"NETLIFY_SITE_ID", values:[{value:$sid, context:"all"}]},
-            {key:"NETLIFY_BLOBS_TOKEN", values:[{value:$tok, context:"all"}], is_secret:true}
-          ]')
-          RESP=$(curl -s -X POST "https://api.netlify.com/api/v1/accounts/$ACCOUNT_ID/env" \
-            -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "$PAYLOAD")
-          echo "env response: $RESP"
+          jq -n --arg sid "$SITE_ID" --arg tok "$NETLIFY_AUTH_TOKEN" \
+            '{siteID:$sid, token:$tok}' > calendar-portal/netlify/functions/blobs-config.json
+          echo "blobs-config.json written (server-side only, gitignored)"
 
       - name: Deploy to Netlify (production)
         working-directory: calendar-portal
