@@ -34,6 +34,23 @@ jobs:
           echo "SITE_ID=$SITE_ID" >> "$GITHUB_ENV"
           echo "Resolved SITE_ID=$SITE_ID"
 
+      - name: Configure environment variables (before deploy)
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+        run: |
+          ACCOUNT_ID=$(curl -s "https://api.netlify.com/api/v1/sites/$SITE_ID" \
+            -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" | jq -r '.account_id')
+          echo "ACCOUNT_ID=$ACCOUNT_ID"
+          PAYLOAD=$(jq -n --arg sid "$SITE_ID" --arg tok "$NETLIFY_AUTH_TOKEN" '[
+            {key:"NETLIFY_SITE_ID", values:[{value:$sid, context:"all"}]},
+            {key:"NETLIFY_BLOBS_TOKEN", values:[{value:$tok, context:"all"}], is_secret:true}
+          ]')
+          RESP=$(curl -s -X POST "https://api.netlify.com/api/v1/accounts/$ACCOUNT_ID/env" \
+            -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD")
+          echo "env response: $RESP"
+
       - name: Deploy to Netlify (production)
         working-directory: calendar-portal
         env:
@@ -50,19 +67,3 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"password":"","sso_login":false}'
           echo "Site public: https://akij-growth-calendar.netlify.app"
-
-      - name: Configure Blobs environment variables
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
-        run: |
-          ACCOUNT_ID=$(curl -s "https://api.netlify.com/api/v1/sites/$SITE_ID" \
-            -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" | jq -r '.account_id')
-          PAYLOAD=$(jq -n --arg sid "$SITE_ID" --arg tok "$NETLIFY_AUTH_TOKEN" '[
-            {key:"NETLIFY_SITE_ID", values:[{value:$sid, context:"all"}]},
-            {key:"NETLIFY_BLOBS_TOKEN", values:[{value:$tok, context:"all"}], is_secret:true}
-          ]')
-          curl -s -X POST "https://api.netlify.com/api/v1/accounts/$ACCOUNT_ID/env" \
-            -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "$PAYLOAD" >/dev/null
-          echo "Blobs env vars configured (NETLIFY_SITE_ID, NETLIFY_BLOBS_TOKEN)"
