@@ -46,13 +46,11 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
         run: |
-          echo "--- GET /user ---"
-          curl -s -o /dev/null -w "status=%{http_code}\n" "https://api.netlify.com/api/v1/user" -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN"
-          echo "--- GET /sites/\$SITE_ID ---"
-          curl -s -o /dev/null -w "status=%{http_code}\n" "https://api.netlify.com/api/v1/sites/$SITE_ID" -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN"
-          echo "--- POST createDeploy (empty) ---"
-          curl -s -w "\nstatus=%{http_code}\n" -X POST "https://api.netlify.com/api/v1/sites/$SITE_ID/deploys" \
-            -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" -H "Content-Type: application/json" -d '{"files":{}}'
+          echo "--- POST createDeploy headers+body ---"
+          curl -s -D - -o /tmp/dep.json -w "\nstatus=%{http_code}\n" -X POST "https://api.netlify.com/api/v1/sites/$SITE_ID/deploys" \
+            -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" -H "Content-Type: application/json" -d '{"files":{}}' | grep -i "x-ratelimit\|retry-after\|http/\|status="
+          echo "--- body ---"
+          cat /tmp/dep.json 2>/dev/null | head -c 500; echo
 
       - name: Deploy to Netlify (production)
         working-directory: calendar-portal
