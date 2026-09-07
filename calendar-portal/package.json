@@ -1,0 +1,23 @@
+{
+  "name": "akij-growth-calendar-portal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AKIJ Resource — Marketing, BD & Growth Activity Calendar live portal (entry + analytics dashboard)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "db:schema": "node scripts/schema.js",
+    "db:seed": "node scripts/seed.js"
+  },
+  "dependencies": {
+    "next": "^15.1.12",
+    "pg": "8.13.1",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}
