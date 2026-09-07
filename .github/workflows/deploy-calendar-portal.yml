@@ -18,14 +18,20 @@ jobs:
         with:
           node-version: 20
 
-      - name: Deploy to Vercel (production)
+      - name: Install function dependencies
+        working-directory: calendar-portal
+        run: npm install --no-audit --no-fund
+
+      - name: Deploy to Netlify (production)
         working-directory: calendar-portal
         env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
         run: |
-          npm i -g vercel
-          vercel pull --yes --environment=production --token=$VERCEL_TOKEN
-          vercel build --prod --token=$VERCEL_TOKEN
-          vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+          npm i -g netlify-cli
+          # find an existing site, else create one
+          SITE_ID=$(netlify sites:list --json 2>/dev/null | jq -r '.[] | select(.name=="akij-growth-calendar") | .id' | head -1)
+          if [ -z "$SITE_ID" ]; then
+            SITE_ID=$(netlify sites:create --name akij-growth-calendar --json | jq -r '.id')
+          fi
+          echo "SITE_ID=$SITE_ID"
+          netlify deploy --prod --dir=public --functions=netlify/functions --site="$SITE_ID" --message "Growth Calendar deploy $GITHUB_SHA"

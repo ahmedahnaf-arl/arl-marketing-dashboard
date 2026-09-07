@@ -4,72 +4,54 @@ A lightweight, link-shareable web portal for the **Marketing, Business Developme
 Activity Calendar (FY 2026-27)**. Team members open a link, submit / update campaign or activity
 plans, and everyone sees a live analytics dashboard and monthly calendar.
 
-Built with **Next.js (App Router) + PostgreSQL** — deployable to **Vercel** in minutes.
+**Stack:** static site + Netlify Functions + Netlify Blobs (no external database, no login).
+Deployed to **Netlify** and auto-built via GitHub Actions using the org's existing Netlify secrets.
 
 ## Features
 
 - **Add Activity** — anyone with the link can submit a plan (Date, SBU, Activity, Category,
-  Goal, Budget, KPI, Responsible, Status, Progress, Actual Spend, Notes). Duplicate
+  Goal, Budget Cr, KPI, Responsible, Status, Progress %, Actual Spend, Notes, Name). Duplicate
   (date + SBU + activity) entries update the existing row instead of duplicating.
 - **Analytics Dashboard** — live stat cards, activities & budget by category / SBU, status
-  distribution, monthly pipeline, and a filterable tracker with inline status editing.
+  distribution, monthly pipeline, and a filterable tracker with inline status editing + delete.
 - **Calendar** — monthly view (Jul-26 → Jun-27) with SBU / category filters.
-- **56 baseline activities** pre-loaded via a seed script.
+- **56 baseline activities** auto-seeded on first load (from `netlify/functions/seed.json`).
 
-## Quick start (local)
+## Architecture
+
+```
+public/index.html            → static single-page app (Dashboard / Add / Calendar)
+netlify/functions/plans.js   → GET/POST/PATCH/DELETE  /api/plans  (Netlify Blobs store)
+netlify/functions/analytics.js → GET  /api/analytics    (aggregates computed in-function)
+netlify/functions/seed.json  → 56 baseline FY26-27 activities
+netlify.toml                → build config + /api/* redirects
+```
+
+Data is persisted in a single **Netlify Blob** (`plans-data`), seeded automatically when empty.
+No external database or credentials are required.
+
+## Local development
 
 ```bash
 cd calendar-portal
 npm install
-copy .env.example .env      # then fill in DATABASE_URL
-npm run dev                  # http://localhost:3000
+npx netlify dev          # http://localhost:8888  (proxies /api/* to the functions)
 ```
 
-The table and the 56 baseline FY26-27 activities are created automatically on the
-first request (lazy bootstrap) — no manual migration/seed step is required. The
-`npm run db:schema` and `npm run db:seed` scripts are provided only if you want to run them manually.
+## Deploy (already wired)
 
-## Deploy to Vercel + hosted Postgres (≈ 3 minutes)
+A GitHub Actions workflow (`.github/workflows/deploy-calendar-portal.yml`) deploys on every push
+to `calendar-portal/**` using the repo's existing `NETLIFY_TOKEN` secret. It finds or creates a
+site named `akij-growth-calendar` and deploys `public/` + `netlify/functions/` to production.
 
-1. **Create a free Postgres database** — [Neon](https://neon.tech) (recommended) or
-   [Supabase](https://supabase.com):
-   - Neon: Create project → copy the connection string from the **Connect** panel
-     (it ends with `?sslmode=require`).
-   - Supabase: Project → Settings → Database → copy the **Session pooler** connection string.
-2. **Push this folder** to a GitHub repo (already committed under `calendar-portal/`).
-3. **Import to Vercel**: vercel.com → Add New → Project → select the repo →
-   set **Root Directory = `calendar-portal`** → Vercel auto-detects Next.js.
-4. **Add one environment variable** in Vercel → Settings → Environment Variables:
-   - `DATABASE_URL` = the Postgres connection string (with `?sslmode=require`).
-5. **Deploy** — share the URL. The table + 56 baseline activities are created on first load.
-
-No build step, no migration, no seed step needed beyond pasting `DATABASE_URL`.
-
-## Database
-
-Single table `plans`:
-
-| column | type | notes |
-| --- | --- | --- |
-| id | text | UUID |
-| activity_date | date | scheduled date |
-| sbu | text | SBU code (ACCL, AIL, …) |
-| activity | text | description |
-| category | text | one of 10 growth categories |
-| goal | text | business / marketing goal |
-| budget_cr | numeric | approved budget in Crore |
-| kpi | text | expected outcome / KPI |
-| responsible | text | owner |
-| status | text | Planned / In Progress / Completed / On Hold / Cancelled |
-| progress | int | 0–100 |
-| actual_spend | numeric | BDT |
-| notes | text | tracker notes |
-| created_by | text | optional submitter name |
+The site is created on first run → the live URL is `https://akij-growth-calendar.netlify.app`.
 
 ## Notes & caveats
 
-- **Open by design** — the link is public; there is no login. If you need to restrict writes,
-  add an access key check in `app/api/plans/route.js` (POST) and pass it from the entry form.
+- **Open by design** — the link is public; there is no login. To restrict writes, add a shared
+  access-code check inside `netlify/functions/plans.js` (POST/PATCH/DELETE) and pass it from the form.
+- **Concurrency** — the store does read-modify-write on a single JSON blob; fine for a team
+  calendar (low write volume). For very high write concurrency, migrate to a real database.
 - Budget figures for several SBUs in the source DWH (`bgt` schema, GL 4210001) were
-  negative / zero / inflated — the baseline seed uses indicative allocations and flags are not
-  carried here. Confirm approved budgets before spend commitment.
+  negative / zero / inflated — the baseline seed uses indicative allocations. Confirm approved
+  budgets before spend commitment.
