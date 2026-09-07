@@ -48,5 +48,5 @@ jobs:
           curl -s -X PATCH "https://api.netlify.com/api/v1/sites/$SITE_ID" \
             -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{"password":""}'
+            -d '{"password":"","sso_login":false}'
           echo "Site public: https://akij-growth-calendar.netlify.app"
