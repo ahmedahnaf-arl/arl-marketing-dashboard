@@ -42,22 +42,12 @@ jobs:
             '{siteID:$sid, token:$tok}' > calendar-portal/netlify/functions/blobs-config.json
           echo "blobs-config.json written (server-side only, gitignored)"
 
-      - name: Diagnose deploy API
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
-        run: |
-          echo "--- POST createDeploy headers+body ---"
-          curl -s -D - -o /tmp/dep.json -w "\nstatus=%{http_code}\n" -X POST "https://api.netlify.com/api/v1/sites/$SITE_ID/deploys" \
-            -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" -H "Content-Type: application/json" -d '{"files":{}}' | grep -i "x-ratelimit\|retry-after\|http/\|status="
-          echo "--- body ---"
-          cat /tmp/dep.json 2>/dev/null | head -c 500; echo
-
       - name: Deploy to Netlify (production)
         working-directory: calendar-portal
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
         run: |
-          netlify deploy --prod --dir=public --functions=netlify/functions --site="$SITE_ID" --message "Growth Calendar $GITHUB_SHA" --debug
+          netlify deploy --prod --dir=public --functions=netlify/functions --site="$SITE_ID" --message "Growth Calendar $GITHUB_SHA"
 
       - name: Make site public (remove Netlify site protection)
         env:
