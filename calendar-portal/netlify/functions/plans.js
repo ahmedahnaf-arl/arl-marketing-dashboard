@@ -25,6 +25,7 @@ function seedRows() {
     actual_spend: 0,
     notes: null,
     created_by: null,
+    last_edited_by: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   }));
@@ -115,6 +116,7 @@ exports.handler = async (event) => {
         actual_spend: num(body.actual_spend),
         notes: body.notes || null,
         created_by: body.created_by || null,
+        last_edited_by: body.created_by || body.edited_by || null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
@@ -147,6 +149,9 @@ exports.handler = async (event) => {
           if (f === "budget_cr" || f === "actual_spend" || f === "progress") v = num(v);
           plans[idx][f] = v;
         }
+      }
+      if (body.edited_by !== undefined && body.edited_by) {
+        plans[idx].last_edited_by = body.edited_by;
       }
       plans[idx].updated_at = new Date().toISOString();
       await savePlans(plans);

@@ -21,6 +21,7 @@ function seedRows() {
     actual_spend: 0,
     notes: null,
     created_by: null,
+    last_edited_by: null,
   }));
 }
 

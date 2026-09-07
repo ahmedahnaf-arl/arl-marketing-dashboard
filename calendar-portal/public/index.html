@@ -80,6 +80,22 @@ table.tbl tr:hover td{background:rgba(47,129,247,.05)}
 @media(max-width:980px){.two-col{grid-template-columns:1fr}}
 .muted{color:var(--muted)}.small{font-size:12px}
 .tab{display:none}.tab.active{display:block}
+.whoami{display:flex;align-items:center;gap:6px}
+.whoami label{font-size:11px;color:var(--muted)}
+.whoami input{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:6px 9px;border-radius:8px;font-size:12px;width:130px;outline:none}
+.month-item{cursor:pointer;transition:background .12s}
+.month-item:hover{background:#24314b}
+.modal-backdrop{position:fixed;inset:0;background:rgba(5,8,15,.72);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:640px;width:100%;max-height:88vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}
+.modal-head h3{font-size:16px;font-weight:700;margin:0}
+.modal-body{padding:16px 18px}
+.modal-foot{display:flex;gap:10px;align-items:center;padding:12px 18px;border-top:1px solid var(--line);flex-wrap:wrap}
+.modal-foot select{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:7px 10px;border-radius:8px;font-size:13px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:8px 12px;margin-bottom:14px}
+.kv .k{color:var(--muted);font-size:12px;text-align:right;padding-top:2px}
+.kv .v{font-size:13px;color:var(--txt);word-break:break-word}
+.badge2{display:inline-block;padding:2px 9px;border-radius:6px;font-size:12px;font-weight:600}
 </style>
 </head>
 <body>
@@ -91,6 +107,10 @@ table.tbl tr:hover td{background:rgba(47,129,247,.05)}
         <h1>Growth Activity Calendar</h1>
         <div class="sub">Marketing · Business Development · Growth — FY 2026-27</div>
       </div>
+    </div>
+    <div class="whoami">
+      <label>You:</label>
+      <input id="userName" type="text" placeholder="Your name" title="Your name — recorded as the editor of any changes you make">
     </div>
     <nav class="nav-links">
       <button data-tab="dashboard" class="active">Dashboard</button>
@@ -127,10 +147,11 @@ table.tbl tr:hover td{background:rgba(47,129,247,.05)}
       <select id="fStatus"><option value="">All Status</option></select>
       <input type="text" id="fQ" placeholder="Search activity / goal / KPI / owner…">
       <span class="count" id="count"></span>
+      <button class="btn ghost sm" id="exportCsv" title="Download the current view as CSV">⬇ Export CSV</button>
     </div>
     <div class="tbl-scroll" style="max-height:70vh;overflow-y:auto">
       <table class="tbl"><thead><tr>
-        <th>Date</th><th>SBU</th><th>Activity</th><th>Category</th><th>Goal</th><th>Budget</th><th>KPI / Outcome</th><th>Owner</th><th>Status</th><th></th>
+        <th>Date</th><th>SBU</th><th>Activity</th><th>Category</th><th>Goal</th><th>Budget</th><th>KPI / Outcome</th><th>Owner</th><th>Status</th><th>Last Edited</th><th></th>
       </tr></thead><tbody id="tbody"></tbody></table>
     </div>
   </section>
@@ -173,6 +194,24 @@ table.tbl tr:hover td{background:rgba(47,129,247,.05)}
   </section>
 
 </div>
+
+<!-- campaign detail modal -->
+<div class="modal-backdrop" id="modalBackdrop" style="display:none">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="mTitle">Campaign detail</h3>
+      <button class="btn ghost sm" id="mClose">✕</button>
+    </div>
+    <div class="modal-body" id="mBody"></div>
+    <div class="modal-foot">
+      <span class="muted small">Status:</span>
+      <select id="mStatus"></select>
+      <button class="btn sm" id="mSave">Save</button>
+      <button class="btn sm danger" id="mDelete">Delete</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" style="display:none"></div>
 
 <script>
@@ -186,6 +225,36 @@ const mLabel = ym => { const [y,m]=ym.split("-").map(Number); return MONTHS[m-1]
 const fmtCr = n => { n=Number(n); return (!n||isNaN(n)) ? "—" : n.toLocaleString("en-US",{maximumFractionDigits:1})+" Cr"; };
 
 let plans = [], analytics = null;
+
+let currentModalId = null;
+const userNameEl = document.getElementById("userName");
+userNameEl.value = localStorage.getItem("akij_user_name") || "";
+userNameEl.addEventListener("change", () => localStorage.setItem("akij_user_name", userNameEl.value.trim()));
+function who() { return userNameEl.value.trim() || "Anonymous"; }
+
+function editedLabel(p) {
+  const whoStr = p.last_edited_by || p.created_by || "";
+  const t = p.updated_at ? new Date(p.updated_at) : null;
+  const ts = t ? t.toLocaleDateString("en-GB", { day: "2-digit", month: "short" }) + " " + t.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : "";
+  if (!whoStr && !ts) return "—";
+  return (whoStr ? whoStr + (ts ? " · " : "") : "") + ts;
+}
+
+function downloadCsv(rows) {
+  const cols = ["Date","SBU","Activity","Category","Goal","Budget (Cr)","KPI / Outcome","Responsible","Status","Progress %","Actual Spend (BDT)","Notes","Created By","Last Edited By","Last Edited At"];
+  const esc = (v) => { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const lines = [cols.join(",")];
+  rows.forEach((p) => lines.push([
+    p.activity_date, p.sbu, p.activity, p.category, p.goal, p.budget_cr, p.kpi, p.responsible,
+    p.status, p.progress, p.actual_spend, p.notes, p.created_by, p.last_edited_by || p.created_by, p.updated_at,
+  ].map(esc).join(",")));
+  const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "akij-growth-calendar.csv";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 500);
+}
 
 function fillSelect(el, items, val) {
   el.innerHTML = items.map(x => `<option value="${x[0]}">${x[0]} — ${x[1]}</option>`).join("");
@@ -291,8 +360,9 @@ function renderTable() {
           ${STATUSES.map(s=>`<option ${s===p.status?"selected":""}>${s}</option>`).join("")}
         </select>
       </td>
+      <td class="small" style="white-space:nowrap">${editedLabel(p)}</td>
       <td><button class="btn sm danger" data-del="${p.id}">✕</button></td>
-    </tr>`).join("") || `<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px">No activities match the filters.</td></tr>`;
+    </tr>`).join("") || `<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:24px">No activities match the filters.</td></tr>`;
 }
 
 function renderCalendar() {
@@ -304,7 +374,7 @@ function renderCalendar() {
   const keys = Object.keys(groups).sort();
   document.getElementById("calGrid").innerHTML = keys.map(ym => `
     <div class="month-card"><h4>${mLabel(ym)} <span class="muted small">(${groups[ym].length})</span></h4>
-      ${groups[ym].map(p=>`<div class="month-item" style="border-left-color:${SCOLOR[p.status]||"#2f81f7"}"><div class="sbu">${p.sbu}</div><div>${p.activity}</div><div class="c">${p.category} · ${p.status}</div></div>`).join("")}
+      ${groups[ym].map(p=>`<div class="month-item" data-id="${p.id}" style="border-left-color:${SCOLOR[p.status]||"#2f81f7"}"><div class="sbu">${p.sbu}</div><div>${p.activity}</div><div class="c">${p.category} · ${p.status}</div></div>`).join("")}
     </div>`).join("") || `<div class="card muted" style="grid-column:1/-1">No activities match the filter.</div>`;
 }
 
@@ -321,7 +391,7 @@ document.querySelectorAll(".nav-links button").forEach(b => b.addEventListener("
 
 document.getElementById("tbody").addEventListener("change", async e => {
   if (e.target.classList.contains("stsel")) {
-    try { await api("/api/plans?id=" + e.target.dataset.id, { method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify({status:e.target.value}) }); toast("Status updated ✓"); loadAll(); }
+    try { await api("/api/plans?id=" + e.target.dataset.id, { method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify({status:e.target.value, edited_by: who()}) }); toast("Status updated ✓"); loadAll(); }
     catch(err){ toast(err.message, true); }
   }
 });
@@ -339,11 +409,69 @@ document.getElementById("entryForm").addEventListener("submit", async e => {
   fd.forEach((v,k) => body[k] = v);
   document.getElementById("formErr").textContent = "";
   try {
+    if (body.created_by) { localStorage.setItem("akij_user_name", body.created_by.trim()); userNameEl.value = body.created_by.trim(); }
     await api("/api/plans", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body) });
     toast("Activity saved ✓"); e.target.reset(); document.querySelector('[name="progress"]').value = 0;
+    document.querySelector('[name="created_by"]').value = who();
     loadAll();
   } catch (err) { document.getElementById("formErr").textContent = err.message; }
 });
+
+// CSV export
+document.getElementById("exportCsv").addEventListener("click", () => {
+  downloadCsv(filtered());
+  toast("CSV exported ✓");
+});
+
+// Calendar card -> detail modal
+function openModal(p) {
+  currentModalId = p.id;
+  document.getElementById("mTitle").textContent = p.activity;
+  document.getElementById("mStatus").innerHTML = STATUSES.map(s => `<option ${s === p.status ? "selected" : ""}>${s}</option>`).join("");
+  const rows = [
+    ["SBU", p.sbu],
+    ["Date", p.activity_date],
+    ["Category", p.category],
+    ["Status", p.status],
+    ["Budget", fmtCr(p.budget_cr)],
+    ["Actual Spend", p.actual_spend ? "BDT " + Number(p.actual_spend).toLocaleString() : "—"],
+    ["Progress", (p.progress || 0) + "%"],
+    ["Responsible", p.responsible || "—"],
+    ["Goal", p.goal || "—"],
+    ["KPI / Outcome", p.kpi || "—"],
+    ["Notes", p.notes || "—"],
+    ["Created By", p.created_by || "—"],
+    ["Last Edited", editedLabel(p)],
+  ];
+  document.getElementById("mBody").innerHTML = `<div class="kv">${rows.map(([k, v]) => `<div class="k">${k}</div><div class="v">${v}</div>`).join("")}</div>`;
+  document.getElementById("modalBackdrop").style.display = "flex";
+}
+function closeModal() { document.getElementById("modalBackdrop").style.display = "none"; currentModalId = null; }
+
+document.getElementById("calGrid").addEventListener("click", (e) => {
+  const item = e.target.closest(".month-item");
+  if (item && item.dataset.id) {
+    const p = plans.find((x) => x.id === item.dataset.id);
+    if (p) openModal(p);
+  }
+});
+document.getElementById("mClose").addEventListener("click", closeModal);
+document.getElementById("modalBackdrop").addEventListener("click", (e) => { if (e.target.id === "modalBackdrop") closeModal(); });
+document.getElementById("mSave").addEventListener("click", async () => {
+  if (!currentModalId) return;
+  const status = document.getElementById("mStatus").value;
+  try { await api("/api/plans?id=" + currentModalId, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status, edited_by: who() }) }); toast("Saved ✓"); loadAll(); closeModal(); }
+  catch (err) { toast(err.message, true); }
+});
+document.getElementById("mDelete").addEventListener("click", async () => {
+  if (!currentModalId) return;
+  if (!confirm("Delete this activity?")) return;
+  try { await api("/api/plans?id=" + currentModalId, { method: "DELETE" }); toast("Deleted ✓"); loadAll(); closeModal(); }
+  catch (err) { toast(err.message, true); }
+});
+
+// pre-fill name in entry form
+document.querySelector('[name="created_by"]').value = localStorage.getItem("akij_user_name") || "";
 
 initSelects();
 loadAll();
