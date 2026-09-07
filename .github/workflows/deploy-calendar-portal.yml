@@ -47,7 +47,7 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
         run: |
-          netlify deploy --prod --dir=public --functions=netlify/functions --site="$SITE_ID" --message "Growth Calendar $GITHUB_SHA" --debug 2>&1 | tail -40
+          netlify deploy --prod --dir=public --functions=netlify/functions --site="$SITE_ID" --message "Growth Calendar $GITHUB_SHA" --debug
 
       - name: Make site public (remove Netlify site protection)
         env:
