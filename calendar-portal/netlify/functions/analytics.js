@@ -24,9 +24,10 @@ function seedRows() {
 }
 
 let memStore = null;
+let lastError = null;
 
 function getStoreSafe() {
-  try { return getStore("plans"); } catch (_) { return null; }
+  try { return getStore("plans"); } catch (e) { lastError = "getStore: " + e.message; return null; }
 }
 
 async function loadPlans() {
@@ -38,7 +39,7 @@ async function loadPlans() {
       const seeded = seedRows();
       await store.setJSON(KEY, seeded);
       return seeded;
-    } catch (_) { /* fall through to memory */ }
+    } catch (e) { lastError = "blob: " + (e && e.message ? e.message : String(e)); }
   }
   if (!memStore) memStore = seedRows();
   return memStore;
@@ -93,6 +94,7 @@ exports.handler = async () => {
         byMonth: Object.entries(byMonthMap).map(([month, count]) => ({ month, count })).sort((a, b) => a.month.localeCompare(b.month)),
         budget: { budget, spend },
         totals: { total, planned, in_progress, completed, on_hold, cancelled, avg_progress: total ? progressSum / total : 0 },
+        _debug: { blobError: lastError, hasSiteId: !!process.env.NETLIFY_SITE_ID, hasBlobsContext: !!process.env.NETLIFY_BLOBS_CONTEXT, nodeEnv: process.env.NODE_ENV },
       }),
     };
   } catch (e) {
