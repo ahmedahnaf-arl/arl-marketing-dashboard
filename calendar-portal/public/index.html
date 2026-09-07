@@ -233,21 +233,42 @@ userNameEl.addEventListener("change", () => localStorage.setItem("akij_user_name
 function who() { return userNameEl.value.trim() || "Anonymous"; }
 
 function editedLabel(p) {
-  const whoStr = p.last_edited_by || p.created_by || "";
-  const t = p.updated_at ? new Date(p.updated_at) : null;
-  const ts = t ? t.toLocaleDateString("en-GB", { day: "2-digit", month: "short" }) + " " + t.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : "";
+  const a = parseAudit(p);
+  const whoStr = (a && a.who) || p.last_edited_by || p.created_by || "";
+  const ts = fmtTs((a && a.at) || p.updated_at);
   if (!whoStr && !ts) return "—";
   return (whoStr ? whoStr + (ts ? " · " : "") : "") + ts;
 }
+
+const API_BASE = "https://akij-growth-calendar.netlify.app";
+const AUDIT_PREFIX = "⟪edited⟫";
+function fmtTs(iso) {
+  const t = iso ? new Date(iso) : null;
+  if (!t || isNaN(t)) return "";
+  return t.toLocaleDateString("en-GB", { day: "2-digit", month: "short" }) + " " + t.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+}
+function stripAudit(notes) { return (notes || "").split("\n").filter((l) => !l.startsWith(AUDIT_PREFIX)).join("\n").trim(); }
+function parseAudit(p) {
+  const lines = (p.notes || "").split("\n").filter((l) => l.startsWith(AUDIT_PREFIX));
+  if (!lines.length) return null;
+  const body = lines[lines.length - 1].slice(AUDIT_PREFIX.length);
+  const pipe = body.indexOf("|");
+  return { who: pipe >= 0 ? body.slice(0, pipe) : body, at: pipe >= 0 ? body.slice(pipe + 1) : "" };
+}
+function withAudit(notes, whoStr) { return stripAudit(notes) + "\n" + AUDIT_PREFIX + whoStr + "|" + new Date().toISOString(); }
 
 function downloadCsv(rows) {
   const cols = ["Date","SBU","Activity","Category","Goal","Budget (Cr)","KPI / Outcome","Responsible","Status","Progress %","Actual Spend (BDT)","Notes","Created By","Last Edited By","Last Edited At"];
   const esc = (v) => { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
   const lines = [cols.join(",")];
-  rows.forEach((p) => lines.push([
-    p.activity_date, p.sbu, p.activity, p.category, p.goal, p.budget_cr, p.kpi, p.responsible,
-    p.status, p.progress, p.actual_spend, p.notes, p.created_by, p.last_edited_by || p.created_by, p.updated_at,
-  ].map(esc).join(",")));
+  rows.forEach((p) => {
+    const a = parseAudit(p);
+    lines.push([
+      p.activity_date, p.sbu, p.activity, p.category, p.goal, p.budget_cr, p.kpi, p.responsible,
+      p.status, p.progress, p.actual_spend, stripAudit(p.notes),
+      p.created_by, (a && a.who) || p.last_edited_by || p.created_by, (a && a.at) || p.updated_at,
+    ].map(esc).join(","));
+  });
   const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -281,7 +302,7 @@ function toast(msg, err) {
 }
 
 async function api(path, opts) {
-  const r = await fetch(path, opts);
+  const r = await fetch(API_BASE + path, opts);
   const j = await r.json().catch(()=>({}));
   if (!r.ok) throw new Error(j.error || r.statusText);
   return j;
@@ -391,7 +412,9 @@ document.querySelectorAll(".nav-links button").forEach(b => b.addEventListener("
 
 document.getElementById("tbody").addEventListener("change", async e => {
   if (e.target.classList.contains("stsel")) {
-    try { await api("/api/plans?id=" + e.target.dataset.id, { method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify({status:e.target.value, edited_by: who()}) }); toast("Status updated ✓"); loadAll(); }
+    const p = plans.find(x => x.id === e.target.dataset.id);
+    const patch = { status: e.target.value, notes: withAudit(p ? p.notes : "", who()) };
+    try { await api("/api/plans?id=" + e.target.dataset.id, { method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify(patch) }); toast("Status updated ✓"); loadAll(); }
     catch(err){ toast(err.message, true); }
   }
 });
@@ -439,7 +462,7 @@ function openModal(p) {
     ["Responsible", p.responsible || "—"],
     ["Goal", p.goal || "—"],
     ["KPI / Outcome", p.kpi || "—"],
-    ["Notes", p.notes || "—"],
+    ["Notes", stripAudit(p.notes) || "—"],
     ["Created By", p.created_by || "—"],
     ["Last Edited", editedLabel(p)],
   ];
@@ -460,7 +483,9 @@ document.getElementById("modalBackdrop").addEventListener("click", (e) => { if (
 document.getElementById("mSave").addEventListener("click", async () => {
   if (!currentModalId) return;
   const status = document.getElementById("mStatus").value;
-  try { await api("/api/plans?id=" + currentModalId, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status, edited_by: who() }) }); toast("Saved ✓"); loadAll(); closeModal(); }
+  const p = plans.find(x => x.id === currentModalId);
+  const patch = { status, notes: withAudit(p ? p.notes : "", who()) };
+  try { await api("/api/plans?id=" + currentModalId, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(patch) }); toast("Saved ✓"); loadAll(); closeModal(); }
   catch (err) { toast(err.message, true); }
 });
 document.getElementById("mDelete").addEventListener("click", async () => {
