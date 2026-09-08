@@ -1,0 +1,64 @@
+name: Sync Calendar Workbooks
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # hourly
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Python deps
+        run: pip install gspread google-auth requests openpyxl
+
+      - name: Install Node deps
+        working-directory: calendar-portal
+        run: npm install --no-audit --no-fund
+
+      - name: Decode service account
+        run: echo "${{ secrets.SHEETS_SA_JSON }}" | base64 -d > /tmp/sa.json
+
+      - name: Extract workbooks -> plans.json
+        working-directory: calendar-portal
+        env:
+          GOOGLE_SERVICE_ACCOUNT_PATH: /tmp/sa.json
+        run: python sync/extract_workbooks.py --out sync/plans.json
+
+      - name: Push workbook data into Netlify Blobs (merge, keep portal rows)
+        working-directory: calendar-portal
+        env:
+          SITE_ID: 8bb48716-c5c3-497c-8d23-1a0cdc369f98
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+        run: node sync/sync_blobs.mjs push --in sync/plans.json
+
+      - name: Dump Blobs -> blobs.json
+        working-directory: calendar-portal
+        env:
+          SITE_ID: 8bb48716-c5c3-497c-8d23-1a0cdc369f98
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+        run: node sync/sync_blobs.mjs dump --out sync/blobs.json
+
+      - name: Write portal rows back to Google Sheets
+        working-directory: calendar-portal
+        env:
+          GOOGLE_SERVICE_ACCOUNT_PATH: /tmp/sa.json
+        run: python sync/write_back.py --blobs sync/blobs.json --ids sync/synced_ids.json
+
+      - name: Mark synced rows
+        working-directory: calendar-portal
+        env:
+          SITE_ID: 8bb48716-c5c3-497c-8d23-1a0cdc369f98
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+        run: node sync/sync_blobs.mjs mark-synced --ids sync/synced_ids.json

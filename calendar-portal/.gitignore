@@ -6,3 +6,7 @@ out
 *.log
 .DS_Store
 netlify/functions/blobs-config.json
+sync/plans.json
+sync/blobs.json
+sync/synced_ids.json
+sync/__pycache__/
