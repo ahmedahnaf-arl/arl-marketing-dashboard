@@ -85,6 +85,8 @@ def main():
     pending = [p for p in rows if (p.get("created_by") and not p.get("synced_to_sheet"))]
     if not pending:
         print("No pending portal rows to sync.")
+        if not args.dry_run:
+            json.dump([], open(args.ids, "w"))
         return
 
     gc = gspread.service_account(filename=SA_PATH)
