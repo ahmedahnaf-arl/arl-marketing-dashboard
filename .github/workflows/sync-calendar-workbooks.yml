@@ -54,6 +54,7 @@ jobs:
         working-directory: calendar-portal
         env:
           GOOGLE_SERVICE_ACCOUNT_PATH: /tmp/sa.json
+        continue-on-error: true
         run: python sync/consolidated_sheet.py sync --in sync/blobs.json --sheet 15MTBNvO3_7zJHT5YTuqk7HXNkmwhZKJnVSCJkqHMvuo
 
       - name: Write portal rows back to Google Sheets
