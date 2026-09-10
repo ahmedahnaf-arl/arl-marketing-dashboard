@@ -29,14 +29,23 @@ STATUS_LIST = ["Planned", "In Progress", "Completed", "On Hold", "Cancelled"]
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--in", dest="infile", default="sync/plans.json")
+    ap.add_argument("--sheet-id", dest="sheet_id", default=None,
+                    help="populate an existing spreadsheet (instead of creating a new one)")
     args = ap.parse_args()
 
     plans = json.load(open(args.infile, encoding="utf-8"))
     gc = gspread.service_account(filename=SA_PATH)
 
-    sh = gc.create("AKIJ Campaign Repository")
+    if args.sheet_id:
+        sh = gc.open_by_key(args.sheet_id)
+    else:
+        sh = gc.create("AKIJ Campaign Repository")
     ws = sh.sheet1
-    ws.update_title("Campaigns")
+    if ws.title.lower() != "campaigns":
+        try:
+            ws.update_title("Campaigns")
+        except Exception:
+            pass
 
     rows = [HEADERS]
     for p in plans:
