@@ -41,6 +41,13 @@ END_PREFIX = "⟪end⟫"
 
 def end_of(p):
     for line in (p.get("notes") or "").split("\n"):
+        if line.startswith("⟪meta⟫"):
+            try:
+                m = json.loads(line[len("⟪meta⟫"):])
+                if isinstance(m, dict) and m.get("end_date"):
+                    return m["end_date"]
+            except Exception:
+                pass
         if line.startswith(END_PREFIX):
             return line[len(END_PREFIX):]
     return p.get("end_date")

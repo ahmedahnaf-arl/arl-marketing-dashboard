@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AKIJ Growth & Performance Portal</title>
+<title>AKIJ Marketing Activity Calendar &amp; Performance Portal</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.3.2/styles/ag-grid.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@31.3.2/styles/ag-theme-quartz.css">
 <style>
 :root{--bg:#0f1420;--panel:#171d2c;--panel2:#1e2638;--line:#2a3349;--txt:#e8edf7;--muted:#93a0bb;--accent:#2f81f7;--gold:#e8b53a;--green:#2ecc71;--amber:#f5a623;--red:#ff5c5c;}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Roboto,Arial,sans-serif;font-size:14px;line-height:1.5;min-height:100vh}
-.wrap{max-width:1460px;margin:0 auto;padding:0 20px 60px}
+.wrap{max-width:1560px;margin:0 auto;padding:0 20px 60px}
 .topnav{background:linear-gradient(135deg,#0d1a33,#14264d 55%,#1c3a6b);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
-.topnav .inner{max-width:1460px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.topnav .inner{max-width:1560px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:11px}
 .logo{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#e8b53a,#f5d06b);color:#14264d;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px}
 .brand h1{font-size:15px;font-weight:700}
@@ -45,12 +45,6 @@ body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Roboto,Arial,s
 .btn.ghost{background:var(--panel2);border:1px solid var(--line);color:var(--txt)}
 .btn.sm{padding:6px 12px;font-size:12.5px}
 .btn.danger{background:rgba(255,92,92,.14);color:#ff9a9a}
-.cal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
-.month-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
-.month-card h4{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px}
-.month-item{font-size:11.5px;padding:5px 7px;border-radius:6px;margin:4px 0;border-left:3px solid var(--accent);background:var(--panel2)}
-.month-item .sbu{font-weight:700;color:#dce6f8}
-.month-item .c{font-size:10px;color:var(--muted);margin-top:2px}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
 .toolbar select,.toolbar input{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:7px 10px;border-radius:8px;font-size:13px;outline:none}
 .count{color:var(--muted);font-size:12px}
@@ -61,9 +55,6 @@ body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Roboto,Arial,s
 @media(max-width:980px){.two-col{grid-template-columns:1fr}}
 .muted{color:var(--muted)}.small{font-size:12px}
 .tab{display:none}.tab.active{display:block}
-.kv{display:grid;grid-template-columns:150px 1fr;gap:8px 12px;margin-bottom:14px}
-.kv .k{color:var(--muted);font-size:12px;text-align:right;padding-top:2px}
-.kv .v{font-size:13px;word-break:break-word}
 .login-backdrop{position:fixed;inset:0;background:radial-gradient(circle at 50% 20%,#14264d,#0b1120);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
 .login-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px 30px;max-width:420px;width:100%}
 .login-box h2{font-size:19px;margin-bottom:4px}
@@ -74,25 +65,20 @@ body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Roboto,Arial,s
 .field input,.field select,.field textarea{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:9px 11px;border-radius:9px;font-size:13.5px;font-family:inherit;outline:none;width:100%}
 .perf-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px}
 .perf-card h3{font-size:16px;font-weight:700;margin-bottom:4px;color:var(--gold)}
-.perf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:14px 0}
+.perf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;margin:14px 0}
 .perf-metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .perf-metric .v{font-size:20px;font-weight:800;color:var(--accent)}
 .perf-metric .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
 .perf-metric.good .v{color:var(--green)}.perf-metric.bad .v{color:var(--red)}.perf-metric.warn .v{color:var(--amber)}
-.perf-flow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
-@media(max-width:860px){.perf-flow{grid-template-columns:1fr}}
-.flow-step{border-left:3px solid var(--accent);background:var(--panel2);border-radius:8px;padding:12px 14px}
-.flow-step h4{font-size:13px;color:var(--gold);margin-bottom:6px}
-/* AG Grid dark overrides */
-#grid.ag-theme-quartz-dark{--ag-background-color:#171d2c;--ag-header-background-color:#1e2638;--ag-border-color:#2a3349;--ag-foreground-color:#e8edf7;--ag-row-hover-color:#1f2a40;--ag-control-panel-background-color:#1e2638;height:62vh;width:100%}
+#grid.ag-theme-quartz-dark{--ag-background-color:#171d2c;--ag-header-background-color:#1e2638;--ag-border-color:#2a3349;--ag-foreground-color:#e8edf7;--ag-row-hover-color:#1f2a40;height:64vh;width:100%}
 </style>
 </head>
 <body>
 
 <div class="login-backdrop" id="loginBackdrop">
   <div class="login-box">
-    <h2>Growth &amp; Performance Portal</h2>
-    <p>AKIJ Resource — Marketing · BD · Growth (FY 2026-27)</p>
+    <h2>Marketing Activity Calendar &amp; Performance</h2>
+    <p>AKIJ Resource — Plan → Budget → Execution → Performance → ROMI/ROAS → Learning → Next Action</p>
     <div class="field"><label>I am from (SBU access)</label><select id="loginSbu"><option value="">Select your SBU…</option></select></div>
     <button class="btn" id="loginSbuBtn" style="width:100%;justify-content:center">Enter as SBU viewer</button>
     <div class="or">— or —</div>
@@ -104,11 +90,11 @@ body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Roboto,Arial,s
 
 <div class="topnav">
   <div class="inner">
-    <div class="brand"><div class="logo">AK</div><div><h1>Growth &amp; Performance Portal</h1><div class="sub">Marketing · BD · Growth — FY 2026-27</div></div></div>
+    <div class="brand"><div class="logo">AK</div><div><h1>Marketing Activity Calendar</h1><div class="sub">Plan → Budget → Execution → Performance → ROMI/ROAS → Learning → Next Action</div></div></div>
     <nav class="nav-links">
-      <button data-tab="campaigns" class="active">Campaigns</button>
+      <button data-tab="calendar" class="active">Activity Calendar</button>
       <button data-tab="performance">Performance</button>
-      <button data-tab="calendar">Calendar</button>
+      <button data-tab="timeline">Timeline</button>
     </nav>
     <div class="userchip"><span id="chipRole"></span><b id="chipSbu"></b><button id="logoutBtn" title="Sign out">↪</button></div>
   </div>
@@ -116,19 +102,19 @@ body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Roboto,Arial,s
 
 <div class="wrap">
 
-  <section id="tab-campaigns" class="tab active">
-    <div class="pagehead"><h2>Campaigns — Spreadsheet</h2><p id="campSub">Double-click a cell to edit · use dropdowns · Ctrl+C / Ctrl+V to copy &amp; paste · drag the bottom-right handle to fill.</p></div>
+  <section id="tab-calendar" class="tab active">
+    <div class="pagehead"><h2>Marketing Activity Calendar (spreadsheet)</h2><p id="campSub">Double-click to edit · dropdowns · Ctrl+C/V copy &amp; paste · drag the fill handle. Changes save automatically.</p></div>
     <div class="toolbar">
       <select id="fSbu"><option value="">All SBUs</option></select>
-      <select id="fCat"><option value="">All Categories</option></select>
       <select id="fStatus"><option value="">All Status</option></select>
+      <select id="fMonth"><option value="">All Months</option></select>
       <input type="text" id="fQ" placeholder="Search…">
       <span class="count" id="count"></span>
-      <button class="btn" id="addRow">＋ Add Row</button>
+      <button class="btn" id="addRow">＋ Add Activity</button>
       <button class="btn ghost sm" id="exportCsv">⬇ Export CSV</button>
     </div>
     <div id="grid" class="ag-theme-quartz-dark"></div>
-    <div class="note">Spreadsheet is scoped to <b id="scopeNote"></b>. Changes save automatically as you edit. End Date is stored with each row.</div>
+    <div class="note">View is scoped to <b id="scopeNote"></b>. Covering: Activity/Campaign · Objective · Timing · Brand/SKU · Market/Segment · Channel · Responsible · Budget · Incremental · Expected Outcome &amp; ROMI · Actual Spend/Results/ROMI · Learning · Next Action.</div>
   </section>
 
   <section id="tab-performance" class="tab">
@@ -136,10 +122,10 @@ body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Roboto,Arial,s
     <div id="perfList"></div>
   </section>
 
-  <section id="tab-calendar" class="tab">
-    <div class="pagehead"><h2>Monthly Calendar</h2><p>Activities plotted by scheduled month.</p></div>
-    <div class="toolbar"><select id="cSbu"><option value="">All SBUs</option></select><select id="cCat"><option value="">All Categories</option></select><span class="count" id="cCount"></span></div>
-    <div class="cal-grid" id="calGrid"></div>
+  <section id="tab-timeline" class="tab">
+    <div class="pagehead"><h2>Monthly Timeline</h2><p>Activities plotted by scheduled month.</p></div>
+    <div class="toolbar"><select id="cSbu"><option value="">All SBUs</option></select><select id="cCat"><option value="">All Channels</option></select><span class="count" id="cCount"></span></div>
+    <div id="calGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px"></div>
   </section>
 
 </div>
@@ -150,206 +136,223 @@ body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Roboto,Arial,s
 const CATS = ["ATL","BTL","Digital","OOH","Research","Promotional / Gifts","Sales & Operation","Event / Activation","Campaign / Promotion","Other"];
 const SBUS = [["ACCL","Akij Cement Company Ltd."],["AIL","Akij Ispat Ltd."],["AAFL","Akij Agro Feed Ltd."],["AAIL","Akij Automobile Industries Ltd."],["AASL","Akij Air Service Ltd."],["AMPL","Akij Mediplex Ltd."],["AMQL","Akij Mediquip Ltd."],["ARMCL","Akij Ready Mix Concrete Ltd."],["ACEL","Akij Consumer Electronics Ltd. (ORCA)"],["ALCL","Akij LifeCare Ltd. (Pharmacy)"]];
 const SBU_CODES = SBUS.map(s=>s[0]);
-const STATUSES = ["Planned","In Progress","Completed","On Hold","Cancelled"];
+const STATUSES = ["Planned","Locked","In Progress","Completed","On Hold","Cancelled"];
 const CBDO_CODE = "akij-cbdo-2026";
 const API_BASE = "https://akij-growth-calendar.netlify.app";
 const REVENUE_URL = "https://raw.githubusercontent.com/ahmedahnaf-arl/arl-marketing-dashboard/master/calendar-portal/revenue.json";
 const MONTHS = ["Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun"];
-const AUDIT_PREFIX = "⟪edited⟫", END_PREFIX = "⟪end⟫";
+const META_PREFIX = "⟪meta⟫", EDIT_PREFIX = "⟪edited⟫";
 const mLabel = ym => { const [y,m]=ym.split("-").map(Number); return MONTHS[m-1]+"-"+String(y).slice(2); };
 const fmtCr = n => { n=Number(n); return (!n||isNaN(n)) ? "—" : n.toLocaleString("en-US",{maximumFractionDigits:1})+" Cr"; };
 const fmtBdt = n => { n=Number(n); return (!n||isNaN(n)) ? "—" : "BDT "+n.toLocaleString("en-US",{maximumFractionDigits:0}); };
 const fmtTs = iso => { const t = iso?new Date(iso):null; return (t&&!isNaN(t)) ? t.toLocaleDateString("en-GB",{day:"2-digit",month:"short"})+" "+t.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}) : ""; };
 
-// ---- notes metadata helpers (⟪key⟫value markers) ----
-const metaLines = n => (n||"").split("\n").filter(l=>l.startsWith("⟪"));
-const textLines = n => (n||"").split("\n").filter(l=>!l.startsWith("⟪")).filter(l=>l.trim()!=="");
-function getMeta(n, prefix){ const l = metaLines(n).find(x=>x.startsWith(prefix)); return l ? l.slice(prefix.length) : ""; }
-function setMeta(n, prefix, value){ const others = metaLines(n).filter(l=>!l.startsWith(prefix)); const lines = textLines(n).concat(others); if(value) lines.push(prefix+value); return lines.join("\n").trim(); }
-const endOf = p => getMeta(p.notes, END_PREFIX) || p.end_date || "";
-function withAudit(notes, whoStr){ return setMeta(notes, AUDIT_PREFIX, whoStr+"|"+new Date().toISOString()); }
-function editedLabel(p){ const a = getMeta(p.notes, AUDIT_PREFIX); const w = a.split("|")[0] || p.last_edited_by || p.created_by || ""; const t = a.split("|")[1] || p.updated_at; const ts = fmtTs(t); return (w||ts)?(w+(ts?" · ":"")+ts):"—"; }
+// ---- FIELDS: the canonical schema (frozen = direct backend field; meta = in ⟪meta⟫ JSON) ----
+const META_KEYS = ["end_date","brand","market","incremental_budget","expected_revenue_impact","expected_romi_roas","actual_results","actual_revenue_impact","actual_romi_roas","learning","next_action"];
+const FIELDS = [
+  {f:"activity_date", h:"Date", w:105, type:"date", frozen:true},
+  {f:"end_date", h:"End Date", w:105, type:"date", meta:true},
+  {f:"sbu", h:"SBU", w:85, type:"sbu", frozen:true},
+  {f:"activity", h:"Activity / Campaign", minW:210, flex:1.6, frozen:true},
+  {f:"goal", h:"Objective", minW:150, flex:1.2, frozen:true},
+  {f:"brand", h:"Brand / SKU / Product", w:150, meta:true},
+  {f:"market", h:"Market / Segment", w:150, meta:true},
+  {f:"category", h:"Channel / Activity", w:140, type:"cat", frozen:true},
+  {f:"responsible", h:"Responsible / Agency", w:135, frozen:true},
+  {f:"budget_cr", h:"Budget (Cr)", w:95, type:"num", frozen:true},
+  {f:"incremental_budget", h:"Incremental (Cr)", w:110, type:"num", meta:true},
+  {f:"kpi", h:"Expected Outcome / KPI", minW:170, flex:1.3, frozen:true},
+  {f:"expected_revenue_impact", h:"Exp. Sales/Rev Impact", w:140, meta:true},
+  {f:"expected_romi_roas", h:"Exp. ROMI/ROAS", w:110, meta:true},
+  {f:"status", h:"Status", w:115, type:"status", frozen:true},
+  {f:"actual_spend", h:"Actual Spend (BDT)", w:120, type:"num", frozen:true},
+  {f:"actual_results", h:"Actual Results / KPIs", minW:150, flex:1.2, meta:true},
+  {f:"actual_revenue_impact", h:"Actual Sales Impact", w:140, meta:true},
+  {f:"actual_romi_roas", h:"Actual ROMI/ROAS", w:115, meta:true},
+  {f:"learning", h:"Learning / Recommendation", minW:170, flex:1.3, meta:true},
+  {f:"next_action", h:"Next Action", minW:150, flex:1.2, meta:true},
+  {f:"progress", h:"Prog %", w:75, type:"num", frozen:true},
+];
+
+// ---- notes meta helpers ----
+function meta(p){ try{ const l=(p.notes||"").split("\n").find(x=>x.startsWith(META_PREFIX)); if(!l) return {}; const j=JSON.parse(l.slice(META_PREFIX.length)); return (j&&typeof j==="object")?j:{}; }catch(e){ return {}; } }
+function freeText(n){ return (n||"").split("\n").filter(l=>!l.startsWith(META_PREFIX)&&!l.startsWith(EDIT_PREFIX)).join("\n").trim(); }
+function setMetaNotes(p, key, value){
+  const m = meta(p); m[key] = (value===""||value==null)? undefined : value;
+  Object.keys(m).forEach(k=>{ if(m[k]===undefined) delete m[k]; });
+  const lines = [freeText(p.notes)];
+  if(Object.keys(m).length) lines.push(META_PREFIX+JSON.stringify(m));
+  lines.push(EDIT_PREFIX+who()+"|"+new Date().toISOString());
+  return lines.filter(l=>l!=="").join("\n");
+}
+function withAudit(notes, whoStr){ const m=(notes||"").split("\n").filter(l=>!l.startsWith(EDIT_PREFIX)).join("\n").trim(); const x=[m, EDIT_PREFIX+whoStr+"|"+new Date().toISOString()].filter(l=>l!==""); return x.join("\n"); }
+function editedLabel(p){ const l=(p.notes||"").split("\n").find(x=>x.startsWith(EDIT_PREFIX)); const a=(l||"").slice(EDIT_PREFIX.length).split("|"); const w=a[0]||p.last_edited_by||p.created_by||""; const t=fmtTs(a[1]||p.updated_at); return (w||t)?(w+(t?" · ":"")+t):"—"; }
 function who(){ return (localStorage.getItem("akij_user_name")||"").trim() || "Anonymous"; }
 
-let plans = [], revenue = null, auth = null, gridApi = null;
+let plans=[], revenue=null, auth=null, gridApi=null;
 auth = JSON.parse(localStorage.getItem("akij_auth")||"null");
-const visiblePlans = () => (auth && auth.role==="cbdo") ? plans : plans.filter(p=>p.sbu===auth.sbu);
-const sbuName = code => { const s=SBUS.find(x=>x[0]===code); return s?(code+" — "+s[1]):code; };
+const visiblePlans = () => (auth&&auth.role==="cbdo") ? plans : plans.filter(p=>p.sbu===auth.sbu);
+const sbuName = c => { const s=SBUS.find(x=>x[0]===c); return s?(c+" — "+s[1]):c; };
 
-function initLogin(){ document.getElementById("loginSbu").innerHTML = `<option value="">Select your SBU…</option>` + SBUS.map(s=>`<option value="${s[0]}">${s[0]} — ${s[1]}</option>`).join(""); }
+function initLogin(){ document.getElementById("loginSbu").innerHTML=`<option value="">Select your SBU…</option>`+SBUS.map(s=>`<option value="${s[0]}">${s[0]} — ${s[1]}</option>`).join(""); }
 function enterSbu(){ const v=document.getElementById("loginSbu").value; if(!v){ document.getElementById("loginErr").textContent="Select your SBU."; return; } setAuth({role:"sbu",sbu:v}); }
-function enterCbdo(){ const c=document.getElementById("loginCode").value.trim(); if(c!==CBDO_CODE){ document.getElementById("loginErr").textContent="Invalid CBDO code."; return; } setAuth({role:"cbdo",sbu:null}); }
+function enterCbdo(){ if(document.getElementById("loginCode").value.trim()!==CBDO_CODE){ document.getElementById("loginErr").textContent="Invalid CBDO code."; return; } setAuth({role:"cbdo",sbu:null}); }
 function setAuth(a){ auth=a; localStorage.setItem("akij_auth",JSON.stringify(a)); applyAuth(); renderAll(); }
 function logout(){ auth=null; localStorage.removeItem("akij_auth"); location.reload(); }
 function applyAuth(){
-  document.getElementById("loginBackdrop").style.display = auth ? "none" : "flex";
-  document.getElementById("chipRole").textContent = auth && auth.role==="cbdo" ? "CBDO" : "SBU";
-  document.getElementById("chipSbu").textContent = auth ? (auth.role==="cbdo"?"Consolidated":auth.sbu) : "";
-  document.getElementById("campSub").textContent = "Double-click a cell to edit · dropdowns · Ctrl+C/V copy-paste · drag handle to fill.";
-  document.getElementById("scopeNote").textContent = auth && auth.role==="cbdo" ? "all SBUs (CBDO consolidated)" : sbuName(auth.sbu);
-  document.getElementById("perfSub").textContent = auth && auth.role==="cbdo" ? "Consolidated performance across all SBUs" : "Performance for "+sbuName(auth.sbu);
-  const fs = document.getElementById("fSbu");
-  if (auth && auth.role==="sbu"){ fs.value=auth.sbu; fs.disabled=true; } else { fs.disabled=false; }
-  // SBU column editable only for CBDO
-  if (gridApi){ gridApi.getColumn("sbu").setColDef("editable", !!(auth && auth.role==="cbdo")); }
+  document.getElementById("loginBackdrop").style.display = auth ? "none":"flex";
+  document.getElementById("chipRole").textContent = auth&&auth.role==="cbdo"?"CBDO":"SBU";
+  document.getElementById("chipSbu").textContent = auth?(auth.role==="cbdo"?"Consolidated":auth.sbu):"";
+  document.getElementById("scopeNote").textContent = auth&&auth.role==="cbdo"?"all SBUs (CBDO consolidated)":sbuName(auth.sbu);
+  document.getElementById("perfSub").textContent = auth&&auth.role==="cbdo"?"Consolidated performance across all SBUs":"Performance for "+sbuName(auth.sbu);
+  const fs=document.getElementById("fSbu"); if(auth&&auth.role==="sbu"){ fs.value=auth.sbu; fs.disabled=true; } else fs.disabled=false;
+  if(gridApi) gridApi.getColumn("sbu").setColDef("editable", !!(auth&&auth.role==="cbdo"));
 }
 
-async function api(path, opts){ const r=await fetch(API_BASE+path, opts); const j=await r.json().catch(()=>({})); if(!r.ok) throw new Error(j.error||r.statusText); return j; }
-
+async function api(path,opts){ const r=await fetch(API_BASE+path,opts); const j=await r.json().catch(()=>({})); if(!r.ok) throw new Error(j.error||r.statusText); return j; }
 async function loadAll(){
-  try { const p=await api("/api/plans"); plans=p.data; } catch(e){ plans=[]; }
-  try { const r=await fetch(REVENUE_URL,{cache:"no-store"}); if(r.ok) revenue=await r.json(); } catch(e){ revenue=null; }
+  try{ const p=await api("/api/plans"); plans=p.data; }catch(e){ plans=[]; }
+  try{ const r=await fetch(REVENUE_URL,{cache:"no-store"}); if(r.ok) revenue=await r.json(); }catch(e){ revenue=null; }
   renderAll();
 }
 
-// ---- AG Grid ----
-function gridRows(){ return visiblePlans().map(p=>({ ...p, end_date: endOf(p) })); }
-const colDefs = [
-  { field:"activity_date", headerName:"Date", editable:true, width:110, cellEditor:"agTextCellEditor" },
-  { field:"end_date", headerName:"End Date", editable:true, width:110 },
-  { field:"sbu", headerName:"SBU", editable:true, width:85, cellEditor:"agSelectCellEditor", cellEditorParams:{ values:SBU_CODES } },
-  { field:"activity", headerName:"Activity", editable:true, minWidth:220, flex:2 },
-  { field:"category", headerName:"Category", editable:true, width:150, cellEditor:"agSelectCellEditor", cellEditorParams:{ values:CATS } },
-  { field:"goal", headerName:"Goal", editable:true, minWidth:160, flex:1.4 },
-  { field:"kpi", headerName:"KPI / Outcome", editable:true, minWidth:160, flex:1.4 },
-  { field:"responsible", headerName:"Responsible", editable:true, width:130 },
-  { field:"actual_spend", headerName:"Spend (BDT)", editable:true, width:120, type:"numericColumn" },
-  { field:"status", headerName:"Status", editable:true, width:125, cellEditor:"agSelectCellEditor", cellEditorParams:{ values:STATUSES } },
-  { field:"progress", headerName:"Progress %", editable:true, width:105, type:"numericColumn" },
-  { field:"notes", headerName:"Notes", editable:true, minWidth:160, flex:1.5 },
-];
+// ---- grid ----
+function gridRows(){ return visiblePlans().map(p=>({ ...p, ...meta(p), end_date: meta(p).end_date||p.end_date||"" })); }
+function buildCols(){
+  return FIELDS.map(f=>{
+    const base = { field:f.f, headerName:f.h, width:f.w, minWidth:f.minW, flex:f.flex, resizable:true, sortable:true, filter:true, editable:true };
+    if(f.type==="sbu") base.cellEditor="agSelectCellEditor", base.cellEditorParams={values:SBU_CODES};
+    else if(f.type==="cat") base.cellEditor="agSelectCellEditor", base.cellEditorParams={values:CATS};
+    else if(f.type==="status") base.cellEditor="agSelectCellEditor", base.cellEditorParams={values:STATUSES};
+    else if(f.type==="num") base.type="numericColumn";
+    return base;
+  });
+}
 function buildGrid(){
   gridApi = agGrid.createGrid(document.getElementById("grid"), {
-    columnDefs: colDefs,
-    rowData: gridRows(),
-    defaultColDef: { resizable:true, sortable:true, filter:true, editable:false },
-    rowSelection:"multiple",
-    suppressRowClickSelection:true,
-    enableCellTextSelection:true,
-    enableRangeSelection:true,
-    enableFillHandle:true,
-    enableCellChangeFlash:true,
-    singleClickEdit:false,
-    stopEditingWhenCellsLoseFocus:true,
+    columnDefs: buildCols(), rowData: gridRows(),
+    rowSelection:"multiple", suppressRowClickSelection:true,
+    enableCellTextSelection:true, enableRangeSelection:true, enableFillHandle:true, enableCellChangeFlash:true,
+    singleClickEdit:false, stopEditingWhenCellsLoseFocus:true,
     onCellValueChanged: onCellChanged,
   });
 }
 async function onCellChanged(params){
-  const p = params.data; if(!p || !p.id) return;
-  const field = params.colDef.field, val = params.newValue;
-  try {
-    if (field === "end_date") {
-      const notes = setMeta(withAudit(p.notes, who()), END_PREFIX, val||"");
-      await api("/api/plans?id="+p.id, { method:"PATCH", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ notes }) });
-      p.notes = notes;
+  const p=params.data; if(!p||!p.id) return;
+  const f=params.colDef.field, v=params.newValue;
+  try{
+    if(META_KEYS.includes(f)){
+      const notes = setMetaNotes(p, f, v);
+      await api("/api/plans?id="+p.id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({notes})});
+      p.notes=notes;
     } else {
-      const patch = { [field]: (field==="actual_spend"||field==="progress") ? Number(val) : val, notes: withAudit(p.notes, who()) };
-      await api("/api/plans?id="+p.id, { method:"PATCH", headers:{"Content-Type":"application/json"}, body:JSON.stringify(patch) });
-      p[field] = val;
+      const nv = (f==="budget_cr"||f==="actual_spend"||f==="progress") ? Number(v) : v;
+      const patch = { [f]: nv, notes: withAudit(p.notes, who()) };
+      await api("/api/plans?id="+p.id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(patch)});
+      p[f]=nv;
     }
     toast("Saved ✓");
-  } catch(e){ toast(e.message, true); }
+  }catch(e){ toast(e.message,true); }
 }
 async function addRow(){
-  const sbu = auth && auth.sbu ? auth.sbu : SBU_CODES[0];
+  const sbu = auth&&auth.sbu ? auth.sbu : SBU_CODES[0];
   const d = new Date().toISOString().slice(0,10);
-  const body = { activity_date:d, end_date:"", sbu, activity:"New activity — edit me", category:"Other", status:"Planned", progress:0, actual_spend:0, notes:"" };
-  try {
-    const r = await api("/api/plans", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body) });
-    const rec = r.data;
-    rec.end_date = "";
-    plans.unshift(rec);
-    gridApi.applyTransaction({ add:[{...rec, end_date:""}] });
-    renderCounts();
-    toast("Row added — fill it in ✓");
-  } catch(e){ toast(e.message, true); }
+  const body = { activity_date:d, sbu, activity:"New activity — edit me", category:"Other", status:"Planned", progress:0, budget_cr:0, actual_spend:0, notes:"" };
+  try{
+    const r=await api("/api/plans",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    const rec=r.data; plans.unshift(rec);
+    gridApi.applyTransaction({add:[{...rec,...meta(rec)}]});
+    renderCounts(); toast("Activity added — fill it in ✓");
+  }catch(e){ toast(e.message,true); }
 }
-function refreshGrid(){ if(gridApi){ gridApi.setGridOption("rowData", gridRows()); renderCounts(); } }
-
-// filters (client-side re-filter via visiblePlans)
 function filtered(){
-  const fs=document.getElementById("fSbu").value, fc=document.getElementById("fCat").value, fst=document.getElementById("fStatus").value, q=document.getElementById("fQ").value.toLowerCase();
+  const fs=document.getElementById("fSbu").value, fst=document.getElementById("fStatus").value, fm=document.getElementById("fMonth").value, q=document.getElementById("fQ").value.toLowerCase();
   return visiblePlans().filter(p=>{
-    if(fs && p.sbu!==fs) return false; if(fc && p.category!==fc) return false; if(fst && p.status!==fst) return false;
-    if(q){ const h=[p.activity,p.goal,p.kpi,p.responsible,p.sbu].join(" ").toLowerCase(); if(!h.includes(q)) return false; }
+    if(fs&&p.sbu!==fs) return false; if(fst&&p.status!==fst) return false; if(fm&&(p.activity_date||"").slice(0,7)!==fm) return false;
+    if(q){ const h=[p.activity,p.goal,p.kpi,p.responsible,p.sbu,meta(p).brand,meta(p).market].join(" ").toLowerCase(); if(!h.includes(q)) return false; }
     return true;
   });
 }
-function renderCounts(){ document.getElementById("count").textContent = filtered().length + " activities"; }
-function applyFilters(){ if(gridApi){ gridApi.setGridOption("rowData", filtered().map(p=>({...p,end_date:endOf(p)}))); } renderCounts(); }
-["fSbu","fCat","fStatus","fQ"].forEach(id=>document.getElementById(id).addEventListener("input", applyFilters));
+function renderCounts(){ document.getElementById("count").textContent = filtered().length+" activities"; }
+function applyFilters(){ if(gridApi) gridApi.setGridOption("rowData", filtered().map(p=>({...p,...meta(p),end_date:meta(p).end_date||p.end_date||""}))); renderCounts(); }
+["fSbu","fStatus","fMonth","fQ"].forEach(id=>document.getElementById(id).addEventListener("input",applyFilters));
 
 function downloadCsv(rows){
-  const cols=["Date","End Date","SBU","Activity","Category","Goal","Spend (BDT)","KPI","Responsible","Status","Progress","Notes","Created By","Last Edited By"];
+  const cols=FIELDS.map(f=>f.h).concat(["Created By","Last Edited"]);
   const esc=v=>{v=v==null?"":String(v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
   const lines=[cols.join(",")];
-  rows.forEach(p=>{ const a=getMeta(p.notes,AUDIT_PREFIX).split("|"); lines.push([p.activity_date,endOf(p),p.sbu,p.activity,p.category,p.goal,p.actual_spend,p.kpi,p.responsible,p.status,p.progress,textLines(p.notes).join(" "),p.created_by,a[0]||p.last_edited_by||""].map(esc).join(",")); });
-  const blob=new Blob(["\uFEFF"+lines.join("\r\n")],{type:"text/csv;charset=utf-8;"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="akij-campaigns.csv"; document.body.appendChild(a); a.click(); a.remove();
+  rows.forEach(p=>{ const m=meta(p); const vals=FIELDS.map(f=> f.meta? m[f.f] : p[f.f]); lines.push(vals.concat([p.created_by, editedLabel(p)]).map(esc).join(",")); });
+  const blob=new Blob(["\uFEFF"+lines.join("\r\n")],{type:"text/csv;charset=utf-8;"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="akij-marketing-calendar.csv"; document.body.appendChild(a); a.click(); a.remove();
 }
 
 // ---- performance ----
-function sbusForPerf(){ return (auth && auth.role==="cbdo") ? SBU_CODES : [auth.sbu]; }
-function revenueFor(sbu){ return (revenue && revenue.rows) ? revenue.rows.filter(r=>r.sbu===sbu).sort((a,b)=>b.revenue-a.revenue) : []; }
+function sbusForPerf(){ return (auth&&auth.role==="cbdo") ? SBU_CODES : [auth.sbu]; }
+function revenueFor(sbu){ return (revenue&&revenue.rows)? revenue.rows.filter(r=>r.sbu===sbu).sort((a,b)=>b.revenue-a.revenue) : []; }
 function renderPerformance(){
   document.getElementById("perfList").innerHTML = sbusForPerf().map(sbu=>{
-    const chans = revenueFor(sbu);
-    const revTotal = (revenue && revenue.totals && revenue.totals[sbu]!=null) ? revenue.totals[sbu] : chans.reduce((a,c)=>a+c.revenue,0);
-    const list = plans.filter(p=>p.sbu===sbu);
-    const spend = list.reduce((a,p)=>a+(Number(p.actual_spend)||0),0);
-    const romi = spend>0 ? (revTotal-spend)/spend : null;
-    const roas = spend>0 ? revTotal/spend : null;
-    const learning = localStorage.getItem("akij_learning_"+sbu)||"";
-    const nextAction = localStorage.getItem("akij_nextaction_"+sbu)||"";
-    const maxChan = Math.max(1,...chans.map(c=>c.revenue));
-    const chansHtml = chans.length ? chans.slice(0,8).map(c=>`<div class="hbar"><span class="lbl" title="${c.channel}">${c.channel}</span><div class="track"><div class="fill" style="width:${c.revenue/maxChan*100}%;background:#2f81f7"></div></div><span class="val">${fmtCr(c.revenue/1e7)}</span></div>`).join("") : `<div class="muted small">No channel revenue cached for this SBU.</div>`;
-    const romiCls = romi===null?"":(romi>=1?"good":(romi>=0?"warn":"bad"));
+    const chans=revenueFor(sbu);
+    const revTotal=(revenue&&revenue.totals&&revenue.totals[sbu]!=null)?revenue.totals[sbu]:chans.reduce((a,c)=>a+c.revenue,0);
+    const list=plans.filter(p=>p.sbu===sbu);
+    const budget=list.reduce((a,p)=>a+(Number(p.budget_cr)||0),0);
+    const spend=list.reduce((a,p)=>a+(Number(p.actual_spend)||0),0);
+    const inc=list.reduce((a,p)=>a+(Number(meta(p).incremental_budget)||0),0);
+    const romi=spend>0?(revTotal-spend)/spend:null;
+    const roas=spend>0?revTotal/spend:null;
+    const done=list.filter(p=>p.status==="Completed").length;
+    const learnings=list.map(p=>meta(p).learning).filter(Boolean);
+    const actions=list.map(p=>meta(p).next_action).filter(Boolean);
+    const maxChan=Math.max(1,...chans.map(c=>c.revenue));
+    const chansHtml=chans.length?chans.slice(0,8).map(c=>`<div class="hbar"><span class="lbl" title="${c.channel}">${c.channel}</span><div class="track"><div class="fill" style="width:${c.revenue/maxChan*100}%;background:#2f81f7"></div></div><span class="val">${fmtCr(c.revenue/1e7)}</span></div>`).join(""):`<div class="muted small">No channel revenue cached.</div>`;
+    const romiCls=romi===null?"":(romi>=1?"good":(romi>=0?"warn":"bad"));
     return `<div class="perf-card"><h3>${sbuName(sbu)}</h3>
       <div class="perf-grid">
-        <div class="perf-metric"><div class="v">${fmtCr(revTotal/1e7)}</div><div class="k">Revenue</div></div>
-        <div class="perf-metric"><div class="v">${fmtCr(spend/1e7)}</div><div class="k">Marketing Spend</div></div>
+        <div class="perf-metric"><div class="v">${list.length}</div><div class="k">Plan (activities)</div></div>
+        <div class="perf-metric"><div class="v">${fmtCr(budget/1e7)}</div><div class="k">Budget</div></div>
+        <div class="perf-metric"><div class="v">${fmtCr(spend/1e7)}</div><div class="k">Actual Spend</div></div>
+        <div class="perf-metric"><div class="v">${fmtCr(inc/1e7)}</div><div class="k">Incremental</div></div>
+        <div class="perf-metric"><div class="v">${done}</div><div class="k">Execution (done)</div></div>
+        <div class="perf-metric blue"><div class="v">${fmtCr(revTotal/1e7)}</div><div class="k">Revenue</div></div>
         <div class="perf-metric ${roas===null?"":(roas>=2?"good":(roas>=1?"warn":"bad"))}"><div class="v">${roas===null?"—":roas.toFixed(2)+"x"}</div><div class="k">ROAS</div></div>
         <div class="perf-metric ${romiCls}"><div class="v">${romi===null?"—":(romi*100).toFixed(0)+"%"}</div><div class="k">ROMI</div></div>
-        <div class="perf-metric"><div class="v">${list.length}</div><div class="k">Activities</div></div>
       </div>
       <div class="section-title" style="margin:8px 0">Revenue by Channel</div>${chansHtml}
-      <div class="perf-flow">
-        <div class="flow-step"><h4>📘 Learning</h4><textarea id="learn_${sbu}" placeholder="What did we learn?">${learning}</textarea><button class="btn sm ghost" style="margin-top:6px" data-learn="${sbu}">Save</button></div>
-        <div class="flow-step"><h4>🎯 Next Action</h4><textarea id="next_${sbu}" placeholder="What is the next action?">${nextAction}</textarea><button class="btn sm ghost" style="margin-top:6px" data-next="${sbu}">Save</button></div>
-      </div></div>`;
+      ${learnings.length?`<div class="section-title" style="margin:12px 0 6px">📘 Learning</div><ul style="margin-left:18px">${learnings.map(l=>`<li class="small">${l}</li>`).join("")}</ul>`:""}
+      ${actions.length?`<div class="section-title" style="margin:12px 0 6px">🎯 Next Actions</div><ul style="margin-left:18px">${actions.map(a=>`<li class="small">${a}</li>`).join("")}</ul>`:""}
+    </div>`;
   }).join("");
 }
 
-// ---- calendar ----
-function renderCalendar(){
+// ---- timeline ----
+function renderTimeline(){
   const sbu=document.getElementById("cSbu").value, cat=document.getElementById("cCat").value;
   const list=visiblePlans().filter(p=>(!sbu||p.sbu===sbu)&&(!cat||p.category===cat));
   document.getElementById("cCount").textContent=list.length+" activities";
-  const groups={}; list.forEach(p=>{(groups[p.activity_date.slice(0,7)]||=[]).push(p);});
-  document.getElementById("calGrid").innerHTML = Object.keys(groups).sort().map(ym=>`<div class="month-card"><h4>${mLabel(ym)} <span class="muted small">(${groups[ym].length})</span></h4>${groups[ym].map(p=>`<div class="month-item"><div class="sbu">${p.sbu}</div><div>${p.activity}</div><div class="c">${p.category} · ${p.status}</div></div>`).join("")}</div>`).join("") || `<div class="card muted" style="grid-column:1/-1">No activities.</div>`;
+  const g={}; list.forEach(p=>{(g[(p.activity_date||"").slice(0,7)]||=[]).push(p);});
+  document.getElementById("calGrid").innerHTML = Object.keys(g).sort().map(ym=>`<div class="card" style="border-radius:12px;padding:12px 14px"><h4 style="color:var(--gold);font-size:13px;margin-bottom:8px">${mLabel(ym)} <span class="muted small">(${g[ym].length})</span></h4>${g[ym].map(p=>`<div style="font-size:11.5px;padding:5px 7px;border-radius:6px;margin:4px 0;border-left:3px solid var(--accent);background:var(--panel2)"><div style="font-weight:700;color:#dce6f8">${p.sbu}</div><div>${p.activity}</div><div class="muted" style="font-size:10px">${p.category} · ${p.status}</div></div>`).join("")}</div>`).join("") || `<div class="card muted">No activities.</div>`;
 }
 
-function renderAll(){ refreshGrid(); renderPerformance(); renderCalendar(); }
-
+function renderAll(){ if(gridApi){ gridApi.setGridOption("rowData", gridRows()); renderCounts(); } renderPerformance(); renderTimeline(); }
 function toast(msg,err){ const t=document.getElementById("toast"); t.textContent=msg; t.className="toast"+(err?" err":""); t.style.display="block"; setTimeout(()=>t.style.display="none",3000); }
 
 // events
-document.querySelectorAll(".nav-links button").forEach(b=>b.addEventListener("click",()=>{ document.querySelectorAll(".nav-links button").forEach(x=>x.classList.remove("active")); b.classList.add("active"); document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); document.getElementById("tab-"+b.dataset.tab).classList.add("active"); if(b.dataset.tab==="calendar") renderCalendar(); }));
+document.querySelectorAll(".nav-links button").forEach(b=>b.addEventListener("click",()=>{ document.querySelectorAll(".nav-links button").forEach(x=>x.classList.remove("active")); b.classList.add("active"); document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); document.getElementById("tab-"+b.dataset.tab).classList.add("active"); }));
 document.getElementById("addRow").addEventListener("click",addRow);
 document.getElementById("exportCsv").addEventListener("click",()=>{ downloadCsv(filtered()); toast("CSV exported ✓"); });
 document.getElementById("loginSbuBtn").addEventListener("click",enterSbu);
 document.getElementById("loginCbdoBtn").addEventListener("click",enterCbdo);
 document.getElementById("loginCode").addEventListener("keydown",e=>{ if(e.key==="Enter") enterCbdo(); });
 document.getElementById("logoutBtn").addEventListener("click",logout);
-document.getElementById("perfList").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; if(b.dataset.learn){ localStorage.setItem("akij_learning_"+b.dataset.learn, document.getElementById("learn_"+b.dataset.learn).value); toast("Learning saved ✓"); } if(b.dataset.next){ localStorage.setItem("akij_nextaction_"+b.dataset.next, document.getElementById("next_"+b.dataset.next).value); toast("Next action saved ✓"); } });
-["cSbu","cCat"].forEach(id=>document.getElementById(id).addEventListener("change",renderCalendar));
+["cSbu","cCat"].forEach(id=>document.getElementById(id).addEventListener("change",renderTimeline));
 
-// init
 function initSelects(){
   const fs=document.getElementById("fSbu"); fs.innerHTML=`<option value="">All SBUs</option>`+SBUS.map(s=>`<option>${s[0]}</option>`).join("");
   document.getElementById("cSbu").innerHTML=fs.innerHTML;
-  document.getElementById("fCat").innerHTML=`<option value="">All Categories</option>`+CATS.map(c=>`<option>${c}</option>`).join("");
-  document.getElementById("cCat").innerHTML=document.getElementById("fCat").innerHTML;
   document.getElementById("fStatus").innerHTML=`<option value="">All Status</option>`+STATUSES.map(s=>`<option>${s}</option>`).join("");
+  document.getElementById("cCat").innerHTML=`<option value="">All Channels</option>`+CATS.map(c=>`<option>${c}</option>`).join("");
+  // months (Oct-Dec 2026 + Sep 2026 as per governance window, plus existing months)
+  const mset=new Set(plans.map(p=>(p.activity_date||"").slice(0,7)).filter(Boolean));
+  ["2026-09","2026-10","2026-11","2026-12"].forEach(m=>mset.add(m));
+  document.getElementById("fMonth").innerHTML=`<option value="">All Months</option>`+[...mset].sort().map(m=>`<option value="${m}">${mLabel(m)}</option>`).join("");
 }
 initSelects();
 initLogin();

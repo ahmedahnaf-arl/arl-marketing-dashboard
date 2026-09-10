@@ -170,7 +170,7 @@ def row_to_plan(row, col, default_sbu_code):
     status = STATUS_MAP.get(status_raw, "Planned")
     progress = 100 if status == "Completed" else (50 if status == "In Progress" else 0)
 
-    # stash approval status + end date into notes for fidelity
+    # stash approval status + structured meta (end_date) into notes
     approval = (get("Approval Status") or "").strip()
     remarks = (get("Remarks") or "").strip()
     notes_lines = []
@@ -178,8 +178,11 @@ def row_to_plan(row, col, default_sbu_code):
         notes_lines.append(f"[Approval: {approval}]")
     if remarks:
         notes_lines.append(remarks)
+    meta = {}
     if end_date:
-        notes_lines.append(f"⟪end⟫{end_date}")
+        meta["end_date"] = end_date
+    if meta:
+        notes_lines.append("⟪meta⟫" + json.dumps(meta, ensure_ascii=False))
     notes = "\n".join(notes_lines) or None
 
     return {
