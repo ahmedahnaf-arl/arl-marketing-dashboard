@@ -181,6 +181,7 @@ def row_to_plan(row, col, default_sbu_code):
 
     return {
         "activity_date": start_date,
+        "end_date": parse_date(get("Activity End Date")),
         "sbu": sbu_code(raw_sbu, default_sbu_code),
         "activity": activity,
         "category": normalize_category(get("Category")),

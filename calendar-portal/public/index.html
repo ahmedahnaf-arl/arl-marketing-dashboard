@@ -101,6 +101,16 @@ table.tbl tr:hover td{background:rgba(47,129,247,.05)}
 @media(max-width:860px){.perf-flow{grid-template-columns:1fr}}
 .flow-step{border-left:3px solid var(--accent);background:var(--panel2);border-radius:8px;padding:12px 14px}
 .flow-step h4{font-size:13px;color:var(--gold);margin-bottom:6px}
+/* grid */
+table.grid th{position:sticky;top:0}
+table.grid td{padding:2px}
+table.grid input,table.grid select{background:transparent;border:1px solid transparent;color:var(--txt);padding:6px 7px;border-radius:6px;font-size:12.5px;width:100%;font-family:inherit}
+table.grid input:hover,table.grid select:hover{border-color:var(--line)}
+table.grid input:focus,table.grid select:focus{border-color:var(--accent);background:var(--panel2);outline:none}
+table.grid .newrow input,table.grid .newrow select{border:1px dashed var(--line);background:rgba(47,129,247,.05)}
+table.grid select{min-width:90px}
+table.grid td.del{width:28px;text-align:center}
+.grid-msg{color:var(--green)}
 </style>
 </head>
 <body>
@@ -177,25 +187,17 @@ table.tbl tr:hover td{background:rgba(47,129,247,.05)}
     <div id="perfList"></div>
   </section>
 
-  <!-- ADD -->
+  <!-- ADD / GRID -->
   <section id="tab-add" class="tab">
-    <div class="pagehead"><h2>Add / Update an Activity</h2><p>Fields marked * required. Duplicate (date+SBU+activity) updates the existing row.</p></div>
-    <div class="card">
-      <form id="entryForm" class="form-grid">
-        <div class="field"><label class="required">Date</label><input type="date" name="activity_date" required></div>
-        <div class="field"><label class="required">SBU</label><select name="sbu" required><option value="">Select…</option></select></div>
-        <div class="field full"><label class="required">Activity</label><input name="activity" required></div>
-        <div class="field"><label class="required">Category</label><select name="category" required><option value="">Select…</option></select></div>
-        <div class="field"><label>Status</label><select name="status"></select></div>
-        <div class="field full"><label>Business / Marketing Goal</label><textarea name="goal"></textarea></div>
-        <div class="field"><label>Budget (Cr)</label><input type="number" step="0.1" min="0" name="budget_cr"></div>
-        <div class="field"><label>Actual Spend (BDT)</label><input type="number" step="1" min="0" name="actual_spend"></div>
-        <div class="field"><label>Progress %</label><input type="number" min="0" max="100" name="progress" value="0"></div>
-        <div class="field"><label>Responsible</label><input name="responsible"></div>
-        <div class="field full"><label>Expected Outcome / KPI</label><textarea name="kpi"></textarea></div>
-        <div class="field full"><label>Notes</label><textarea name="notes"></textarea></div>
-        <div class="full" style="display:flex;gap:10px;align-items:center"><button class="btn" type="submit">Save</button><button class="btn ghost" type="reset">Reset</button><span class="err" id="formErr"></span></div>
-      </form>
+    <div class="pagehead"><h2>Campaign Grid</h2><p id="gridSub">Spreadsheet-style editing — click a cell to edit, <b>Tab/Enter</b> to move, <b>double-click</b> a cell to fill from the row above, dropdowns for SBU/Category/Status. <b>Add Row</b> to create a new activity.</p></div>
+    <div class="filters">
+      <button class="btn" id="gridAddRow">+ Add Row</button>
+      <button class="btn ghost sm" id="gridRefresh">↻ Refresh</button>
+      <span class="count" id="gridCount"></span>
+      <span class="muted small" id="gridMsg"></span>
+    </div>
+    <div class="tbl-scroll" style="max-height:72vh;overflow:auto" id="gridWrap">
+      <table class="tbl" id="gridTable"></table>
     </div>
   </section>
 
@@ -230,6 +232,10 @@ const fmtTs = iso => { const t = iso?new Date(iso):null; return (t&&!isNaN(t)) ?
 const stripAudit = n => (n||"").split("\n").filter(l=>!l.startsWith(AUDIT_PREFIX)).join("\n").trim();
 function parseAudit(p){ const lines=(p.notes||"").split("\n").filter(l=>l.startsWith(AUDIT_PREFIX)); if(!lines.length) return null; const b=lines[lines.length-1].slice(AUDIT_PREFIX.length); const i=b.indexOf("|"); return {who:i>=0?b.slice(0,i):b, at:i>=0?b.slice(i+1):""}; }
 const withAudit = (n,w)=> stripAudit(n)+"\n"+AUDIT_PREFIX+w+"|"+new Date().toISOString();
+const END_PREFIX = "⟪end⟫";
+function parseEnd(p){ if(p && p.end_date) return p.end_date; const m=(p.notes||"").split("\n").find(l=>l.startsWith(END_PREFIX)); return m?m.slice(END_PREFIX.length):""; }
+function setEnd(notes, d){ const w=(notes||"").split("\n").filter(l=>!l.startsWith(END_PREFIX)).join("\n").trim(); return d? w+"\n"+END_PREFIX+d : w; }
+function cleanNotes(n){ return (n||"").split("\n").filter(l=>!l.startsWith(AUDIT_PREFIX)&&!l.startsWith(END_PREFIX)).join("\n").trim(); }
 function editedLabel(p){ const a=parseAudit(p); const w=(a&&a.who)||p.last_edited_by||p.created_by||""; const t=fmtTs((a&&a.at)||p.updated_at); return (w||t)? (w+(t?" · ":"")+t) : "—"; }
 function who(){ return (localStorage.getItem("akij_user_name")||"").trim() || "Anonymous"; }
 
@@ -273,7 +279,6 @@ async function loadAll(){
   try { const r=await fetch(REVENUE_URL,{cache:"no-store"}); if(r.ok) revenue=await r.json(); } catch(e){ revenue=null; }
   renderAll();
 }
-function renderAll(){ renderDashboard(); renderPerformance(); }
 
 function scopeStats(list){
   const totals={total:list.length,planned:0,in_progress:0,completed:0,on_hold:0,cancelled:0,avg_progress:0};
@@ -380,10 +385,10 @@ document.querySelectorAll(".nav-links button").forEach(b=>b.addEventListener("cl
 ["fSbu","fCat","fStatus","fQ"].forEach(id=>document.getElementById(id).addEventListener("input",renderTable));
 document.getElementById("exportCsv").addEventListener("click",()=>{ downloadCsv(filtered()); toast("CSV exported ✓"); });
 function downloadCsv(rows){
-  const cols=["Date","SBU","Activity","Category","Goal","Spend (BDT)","KPI","Responsible","Status","Progress","Notes","Created By","Last Edited By","Last Edited At"];
+  const cols=["Date","End Date","SBU","Activity","Category","Goal","Spend (BDT)","KPI","Responsible","Status","Progress","Notes","Created By","Last Edited By","Last Edited At"];
   const esc=v=>{v=v==null?"":String(v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
   const lines=[cols.join(",")];
-  rows.forEach(p=>{const a=parseAudit(p); lines.push([p.activity_date,p.sbu,p.activity,p.category,p.goal,p.actual_spend,p.kpi,p.responsible,p.status,p.progress,stripAudit(p.notes),p.created_by,(a&&a.who)||p.last_edited_by||p.created_by,(a&&a.at)||p.updated_at].map(esc).join(","));});
+  rows.forEach(p=>{const a=parseAudit(p); lines.push([p.activity_date,parseEnd(p),p.sbu,p.activity,p.category,p.goal,p.actual_spend,p.kpi,p.responsible,p.status,p.progress,cleanNotes(p.notes),p.created_by,(a&&a.who)||p.last_edited_by||p.created_by,(a&&a.at)||p.updated_at].map(esc).join(","));});
   const blob=new Blob(["\uFEFF"+lines.join("\r\n")],{type:"text/csv;charset=utf-8;"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="akij-activities.csv"; document.body.appendChild(a); a.click(); a.remove();
 }
 
@@ -397,12 +402,107 @@ document.getElementById("tbody").addEventListener("change",async e=>{
 document.getElementById("tbody").addEventListener("click",async e=>{
   if(e.target.dataset.del){ if(!confirm("Delete this activity?")) return; try{ await api("/api/plans?id="+e.target.dataset.del,{method:"DELETE"}); toast("Deleted ✓"); loadAll(); }catch(err){ toast(err.message,true); } }
 });
-document.getElementById("entryForm").addEventListener("submit",async e=>{
-  e.preventDefault(); const fd=new FormData(e.target); const body={}; fd.forEach((v,k)=>body[k]=v);
-  document.getElementById("formErr").textContent="";
-  try{ await api("/api/plans",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}); toast("Saved ✓"); e.target.reset(); document.querySelector('[name="progress"]').value=0; loadAll(); }
-  catch(err){ document.getElementById("formErr").textContent=err.message; }
+// ---- grid editor ----
+const GRID_COLS = [
+  {key:"activity_date", label:"Date", type:"date"},
+  {key:"end_date", label:"End Date", type:"date"},
+  {key:"sbu", label:"SBU", type:"select", opts:()=>SBUS.map(s=>s[0])},
+  {key:"activity", label:"Activity", type:"text"},
+  {key:"category", label:"Category", type:"select", opts:()=>CATS},
+  {key:"goal", label:"Goal", type:"text"},
+  {key:"actual_spend", label:"Spend (BDT)", type:"num"},
+  {key:"kpi", label:"KPI / Outcome", type:"text"},
+  {key:"responsible", label:"Responsible", type:"text"},
+  {key:"status", label:"Status", type:"select", opts:()=>STATUSES},
+  {key:"progress", label:"Prog %", type:"num"},
+  {key:"notes", label:"Notes", type:"text"},
+];
+function cellVal(p, key){
+  if(key==="end_date") return parseEnd(p);
+  if(key==="notes") return cleanNotes(p);
+  const v = p[key];
+  return (v==null||v==="") ? "" : String(v);
+}
+function gridRows(){ return visiblePlans().slice().sort((a,b)=>(a.activity_date||"").localeCompare(b.activity_date||"")); }
+function cellHtml(p, col){
+  const val = cellVal(p, col.key);
+  const id = p.id;
+  const esc = (s)=>String(s).replace(/"/g,"&quot;");
+  if(col.type==="select"){
+    return `<select data-col="${col.key}" data-id="${id}">${col.opts().map(o=>`<option ${o===val?"selected":""}>${o}</option>`).join("")}</select>`;
+  }
+  if(col.type==="date"){
+    return `<input type="date" data-col="${col.key}" data-id="${id}" value="${esc(val)}">`;
+  }
+  return `<input type="${col.type==='num'?'number':'text'}" data-col="${col.key}" data-id="${id}" value="${esc(val)}">`;
+}
+function renderGrid(){
+  const rows = gridRows();
+  document.getElementById("gridCount").textContent = rows.length+" activities";
+  document.getElementById("gridSub").textContent = (auth&&auth.role==="cbdo") ? "Consolidated grid — all SBUs. Click a cell to edit, Tab/Enter to move, double-click to fill from above." : "Grid scoped to "+sbuName(auth.sbu)+". Click a cell to edit, Tab/Enter to move, double-click to fill from above.";
+  const head = `<thead><tr>${GRID_COLS.map(c=>`<th>${c.label}</th>`).join("")}<th></th></tr></thead>`;
+  const body = rows.map(p=>`<tr>${GRID_COLS.map(c=>`<td>${cellHtml(p,c)}</td>`).join("")}<td class="del"><button class="btn sm danger" data-delrow="${p.id}">✕</button></td></tr>`).join("");
+  document.getElementById("gridTable").innerHTML = head + `<tbody>${body}</tbody>`;
+}
+async function saveCell(id, col, value){
+  const p = plans.find(x=>x.id===id); if(!p) return;
+  let patch = {};
+  if(col==="end_date"){ patch.notes = setEnd(p.notes, value); }
+  else if(col==="notes"){ patch.notes = String(value==null?"":value) + (parseEnd(p)?"\n"+END_PREFIX+parseEnd(p):""); }
+  else if(col==="status"){ patch.status = value; patch.notes = withAudit(p.notes, who()); }
+  else { patch[col] = value; }
+  try{
+    await api("/api/plans?id="+id, {method:"PATCH", headers:{"Content-Type":"application/json"}, body:JSON.stringify(patch)});
+    const m=document.getElementById("gridMsg"); m.textContent="Saved ✓"; m.style.color="var(--green)"; setTimeout(()=>m.textContent="",1500);
+    const idx=plans.findIndex(x=>x.id===id);
+    if(idx>=0){ if(col==="end_date") plans[idx].notes = patch.notes; else if(col==="notes") plans[idx].notes = patch.notes; else if(col==="status"){ plans[idx].status=value; plans[idx].notes=patch.notes; } else plans[idx][col]=value; }
+    renderDashboard();
+  }catch(err){ const m=document.getElementById("gridMsg"); m.textContent="⚠ "+err.message; m.style.color="var(--red)"; }
+}
+async function addRow(){
+  const body = { activity_date: new Date().toISOString().slice(0,10), sbu: (auth&&auth.sbu)||"ACCL", activity:"(new activity)", category:"Other", status:"Planned", progress:0, notes: setEnd("", "") };
+  try{ await api("/api/plans",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}); toast("Row added — edit it in the grid ✓"); loadAll(); }
+  catch(err){ toast(err.message,true); }
+}
+document.getElementById("gridAddRow").addEventListener("click", addRow);
+document.getElementById("gridRefresh").addEventListener("click", loadAll);
+document.getElementById("gridTable").addEventListener("change", e=>{
+  const t = e.target; if(!t.dataset.col || !t.dataset.id) return;
+  saveCell(t.dataset.id, t.dataset.col, t.value);
 });
+document.getElementById("gridTable").addEventListener("click", async e=>{
+  const b = e.target.closest("[data-delrow]"); if(!b) return;
+  if(!confirm("Delete this activity?")) return;
+  try{ await api("/api/plans?id="+b.dataset.delrow,{method:"DELETE"}); toast("Deleted ✓"); loadAll(); }catch(err){ toast(err.message,true); }
+});
+document.getElementById("gridTable").addEventListener("dblclick", e=>{
+  const inp = e.target.closest("input"); if(!inp) return;
+  const tr = inp.closest("tr"); const prev = tr && tr.previousElementSibling; if(!prev) return;
+  const above = prev.querySelector(`[data-col="${inp.dataset.col}"]`);
+  if(above){ inp.value = above.value; inp.dispatchEvent(new Event("change")); }
+});
+document.getElementById("gridTable").addEventListener("paste", e=>{
+  const target = e.target.closest("input"); if(!target) return;
+  const text = (e.clipboardData||window.clipboardData).getData("text");
+  if(text.indexOf("\t")<0 && text.indexOf("\n")<0) return; // single value: native
+  e.preventDefault();
+  const lines = text.split(/\r?\n/).filter(l=>l.trim()!=="");
+  let row = target.closest("tr");
+  let startIdx = [...row.children].indexOf(target.closest("td"));
+  const rows = [...document.querySelectorAll("#gridTable tbody tr")];
+  const rowStart = rows.indexOf(row);
+  lines.forEach((line, li)=>{
+    const cells = line.split("\t");
+    const tr = rows[rowStart+li]; if(!tr) return;
+    const tds = [...tr.children];
+    cells.forEach((val, ci)=>{
+      const td = tds[startIdx+ci]; if(!td) return;
+      const inp = td.querySelector("input,select"); if(!inp) return;
+      inp.value = val; inp.dispatchEvent(new Event("change"));
+    });
+  });
+});
+function renderAll(){ renderDashboard(); renderPerformance(); renderGrid(); }
 document.getElementById("perfList").addEventListener("click",e=>{
   const b=e.target.closest("button");
   if(!b) return;
@@ -415,7 +515,7 @@ document.getElementById("loginCode").addEventListener("keydown",e=>{ if(e.key===
 document.getElementById("logoutBtn").addEventListener("click",logout);
 
 // modal
-function openModal(p){ currentModalId=p.id; document.getElementById("mTitle").textContent=p.activity; document.getElementById("mStatus").innerHTML=STATUSES.map(s=>`<option ${s===p.status?"selected":""}>${s}</option>`).join(""); const rows=[["SBU",sbuName(p.sbu)],["Date",p.activity_date],["Category",p.category],["Status",p.status],["Spend",fmtBdt(p.actual_spend)],["Progress",(p.progress||0)+"%"],["Responsible",p.responsible||"—"],["Goal",p.goal||"—"],["KPI / Outcome",p.kpi||"—"],["Notes",stripAudit(p.notes)||"—"],["Last Edited",editedLabel(p)]]; document.getElementById("mBody").innerHTML=`<div class="kv">${rows.map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join("")}</div>`; document.getElementById("modalBackdrop").style.display="flex"; }
+function openModal(p){ currentModalId=p.id; document.getElementById("mTitle").textContent=p.activity; document.getElementById("mStatus").innerHTML=STATUSES.map(s=>`<option ${s===p.status?"selected":""}>${s}</option>`).join(""); const rows=[["SBU",sbuName(p.sbu)],["Date",p.activity_date],["End Date",parseEnd(p)||"—"],["Category",p.category],["Status",p.status],["Spend",fmtBdt(p.actual_spend)],["Progress",(p.progress||0)+"%"],["Responsible",p.responsible||"—"],["Goal",p.goal||"—"],["KPI / Outcome",p.kpi||"—"],["Notes",cleanNotes(p.notes)||"—"],["Last Edited",editedLabel(p)]]; document.getElementById("mBody").innerHTML=`<div class="kv">${rows.map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join("")}</div>`; document.getElementById("modalBackdrop").style.display="flex"; }
 function closeModal(){ document.getElementById("modalBackdrop").style.display="none"; currentModalId=null; }
 document.getElementById("mClose").addEventListener("click",closeModal);
 document.getElementById("modalBackdrop").addEventListener("click",e=>{ if(e.target.id==="modalBackdrop") closeModal(); });
@@ -425,9 +525,6 @@ document.getElementById("mDelete").addEventListener("click",async()=>{ if(!curre
 function toast(msg,err){ const t=document.getElementById("toast"); t.textContent=msg; t.className="toast"+(err?" err":""); t.style.display="block"; setTimeout(()=>t.style.display="none",3200); }
 
 function initSelects(){
-  document.querySelector('[name="sbu"]').innerHTML=`<option value="">Select…</option>`+SBUS.map(s=>`<option value="${s[0]}">${s[0]} — ${s[1]}</option>`).join("");
-  document.querySelector('[name="category"]').innerHTML=`<option value="">Select…</option>`+CATS.map(c=>`<option>${c}</option>`).join("");
-  document.querySelector('[name="status"]').innerHTML=STATUSES.map(s=>`<option>${s}</option>`).join("");
   const fs=document.getElementById("fSbu"); fs.innerHTML=`<option value="">All SBUs</option>`+SBUS.map(s=>`<option>${s[0]}</option>`).join("");
   document.getElementById("fCat").innerHTML=`<option value="">All Categories</option>`+CATS.map(c=>`<option>${c}</option>`).join("");
   document.getElementById("fStatus").innerHTML=`<option value="">All Status</option>`+STATUSES.map(s=>`<option>${s}</option>`).join("");
