@@ -341,7 +341,7 @@ function renderPerformance(){
   const sbus = sbusForPerf();
   document.getElementById("perfList").innerHTML = sbus.map(sbu=>{
     const chans = revenueFor(sbu);
-    const revTotal = chans.reduce((a,c)=>a+c.revenue,0);
+    const revTotal = (revenue && revenue.totals && revenue.totals[sbu] != null) ? revenue.totals[sbu] : chans.reduce((a,c)=>a+c.revenue,0);
     const list = plans.filter(p=>p.sbu===sbu);
     const spend = list.reduce((a,p)=>a+(Number(p.actual_spend)||0),0);
     const romi = spend>0 ? (revTotal - spend)/spend : null;

@@ -21,7 +21,7 @@ jobs:
           node-version: 20
 
       - name: Install Python deps
-        run: pip install gspread google-auth requests openpyxl pymssql
+        run: pip install gspread google-auth requests openpyxl
 
       - name: Install Node deps
         working-directory: calendar-portal
@@ -29,14 +29,6 @@ jobs:
 
       - name: Decode service account
         run: echo "${{ secrets.SHEETS_SA_JSON }}" | base64 -d > /tmp/sa.json
-
-      - name: Fetch channel-wise revenue from DWH
-        working-directory: calendar-portal
-        env:
-          DWH_SERVER: ${{ secrets.DWH_SERVER }}
-          DWH_USER: ${{ secrets.DWH_USER }}
-          DWH_PASSWORD: ${{ secrets.DWH_PASSWORD }}
-        run: python sync/revenue_sync.py --out revenue.json
 
       - name: Extract workbooks -> plans.json
         working-directory: calendar-portal
@@ -70,10 +62,3 @@ jobs:
           SITE_ID: 8bb48716-c5c3-497c-8d23-1a0cdc369f98
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
         run: node sync/sync_blobs.mjs mark-synced --ids sync/synced_ids.json
-
-      - name: Publish revenue.json to repo (for portal fetch)
-        run: |
-          git config user.name "Calendar Sync Bot"
-          git config user.email "bot@akijresource.com"
-          git add calendar-portal/revenue.json
-          if git diff --cached --quiet; then echo "revenue unchanged"; else git commit -m "Refresh channel-wise revenue cache"; git push origin master; fi

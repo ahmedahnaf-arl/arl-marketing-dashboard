@@ -1,0 +1,28 @@
+{
+  "as_of_days": 90,
+  "source": "DWH: fin GL (3010001/2/5/6) for per-SBU totals; oms sales orders for channel breakdown",
+  "totals": {
+    "ACCL": 4513575539.75,
+    "AIL": 2908685346.17,
+    "AAFL": 2854358870.75,
+    "ARMCL": 963373863.0,
+    "ALCL": 190755741.06,
+    "AAIL": 133473599.0,
+    "AASL": 24250744.18,
+    "ACEL": 21764590.0,
+    "AMPL": 3206998.0,
+    "AMQL": 0
+  },
+  "rows": [
+    {"sbu": "ACCL", "channel": "Enterprise", "revenue": 4512728249.8, "orders": 38883},
+    {"sbu": "ACCL", "channel": "Bulk", "revenue": 475971125.0, "orders": 78},
+    {"sbu": "ACCL", "channel": "Corporate Sales", "revenue": 254175885.0, "orders": 443},
+    {"sbu": "ACCL", "channel": "Sister Concern", "revenue": 5739700.0, "orders": 20},
+    {"sbu": "ACCL", "channel": "Wastage", "revenue": 3621345.0, "orders": 3},
+    {"sbu": "AAFL", "channel": "Distributor", "revenue": 2621284338.505, "orders": 14050},
+    {"sbu": "AAFL", "channel": "Corporate", "revenue": 82191348.1, "orders": 111},
+    {"sbu": "AAIL", "channel": "B2C Tyre", "revenue": 114667800.0, "orders": 299},
+    {"sbu": "AAIL", "channel": "B2B Tyre", "revenue": 29424299.0, "orders": 54},
+    {"sbu": "ARMCL", "channel": "Corporate Sales", "revenue": 1586128919.78, "orders": 1256}
+  ]
+}
