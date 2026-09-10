@@ -3,42 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AKIJ Growth Calendar — Marketing, BD & Growth Portal</title>
+<title>AKIJ Growth & Performance Portal</title>
 <style>
-:root{
-  --bg:#0f1420;--panel:#171d2c;--panel2:#1e2638;--line:#2a3349;--txt:#e8edf7;--muted:#93a0bb;
-  --accent:#2f81f7;--gold:#e8b53a;--green:#2ecc71;--amber:#f5a623;--red:#ff5c5c;
-}
+:root{--bg:#0f1420;--panel:#171d2c;--panel2:#1e2638;--line:#2a3349;--txt:#e8edf7;--muted:#93a0bb;--accent:#2f81f7;--gold:#e8b53a;--green:#2ecc71;--amber:#f5a623;--red:#ff5c5c;}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Roboto,Arial,sans-serif;font-size:14px;line-height:1.5;min-height:100vh}
 a{color:var(--accent);text-decoration:none}
-.wrap{max-width:1320px;margin:0 auto;padding:0 20px 60px}
+.wrap{max-width:1360px;margin:0 auto;padding:0 20px 60px}
 .topnav{background:linear-gradient(135deg,#0d1a33,#14264d 55%,#1c3a6b);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
-.topnav .inner{max-width:1320px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.topnav .inner{max-width:1360px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:11px}
 .logo{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#e8b53a,#f5d06b);color:#14264d;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px}
-.brand h1{font-size:15px;font-weight:700;letter-spacing:.2px}
+.brand h1{font-size:15px;font-weight:700}
 .brand .sub{font-size:11px;color:var(--muted)}
 .nav-links{display:flex;gap:6px;margin-left:auto}
-.nav-links button{padding:8px 14px;border-radius:9px;font-size:13px;font-weight:600;color:#cdd8ee;background:none;border:none;cursor:pointer;font-family:inherit}
+.nav-links button{padding:8px 13px;border-radius:9px;font-size:13px;font-weight:600;color:#cdd8ee;background:none;border:none;cursor:pointer;font-family:inherit}
 .nav-links button:hover{background:rgba(255,255,255,.08)}
 .nav-links button.active{background:var(--accent);color:#fff}
+.userchip{display:flex;align-items:center;gap:8px;font-size:12px;color:#cdd8ee;background:rgba(255,255,255,.06);border:1px solid var(--line);padding:5px 11px;border-radius:20px}
+.userchip b{color:var(--gold)}
+.userchip button{background:none;border:none;color:#ff9a9a;cursor:pointer;font-size:12px}
 .pagehead{margin:26px 0 20px}
 .pagehead h2{font-size:20px;font-weight:700}
 .pagehead p{color:var(--muted);font-size:13px;margin-top:3px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
-.stat .v{font-size:26px;font-weight:800;color:var(--gold)}
-.stat .k{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
-.stat.blue .v{color:var(--accent)}.stat.green .v{color:var(--green)}.stat.amber .v{color:var(--amber)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 17px}
+.stat .v{font-size:24px;font-weight:800;color:var(--gold)}
+.stat .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.stat.blue .v{color:var(--accent)}.stat.green .v{color:var(--green)}.stat.amber .v{color:var(--amber)}.stat.red .v{color:var(--red)}
 .section-title{font-size:15px;font-weight:700;margin:26px 0 12px;display:flex;align-items:center;gap:8px}
 .section-title .bar{width:4px;height:16px;background:var(--gold);border-radius:2px;display:inline-block}
 .hbar{display:flex;align-items:center;gap:10px;margin:7px 0}
-.hbar .lbl{width:215px;font-size:12.5px;color:#c6d0e4;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.hbar .lbl{width:200px;font-size:12.5px;color:#c6d0e4;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
 .hbar .track{flex:1;background:var(--panel2);border-radius:6px;height:18px;overflow:hidden}
 .hbar .fill{height:100%;border-radius:6px;min-width:2px}
-.hbar .val{width:95px;font-size:12px;color:var(--muted);flex-shrink:0}
+.hbar .val{width:110px;font-size:12px;color:var(--muted);flex-shrink:0}
 .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
 .legend span{display:flex;align-items:center;gap:6px;font-size:12px;color:#c6d0e4}
 .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
@@ -55,7 +55,7 @@ table.tbl tr:hover td{background:rgba(47,129,247,.05)}
 .field label{font-size:12px;font-weight:600;color:#c6d0e4}
 .field input,.field select,.field textarea{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:9px 11px;border-radius:9px;font-size:13.5px;font-family:inherit;outline:none;width:100%}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
-.field textarea{min-height:74px;resize:vertical}
+.field textarea{min-height:70px;resize:vertical}
 .required::after{content:" *";color:var(--red)}
 .btn{display:inline-flex;align-items:center;gap:7px;cursor:pointer;background:var(--accent);color:#fff;border:none;border-radius:9px;padding:10px 18px;font-size:14px;font-weight:600;font-family:inherit}
 .btn:hover{filter:brightness(1.08)}
@@ -65,58 +65,85 @@ table.tbl tr:hover td{background:rgba(47,129,247,.05)}
 .cal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
 .month-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .month-card h4{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px}
-.month-item{font-size:11.5px;padding:5px 7px;border-radius:6px;margin:4px 0;border-left:3px solid var(--accent);background:var(--panel2)}
+.month-item{font-size:11.5px;padding:5px 7px;border-radius:6px;margin:4px 0;border-left:3px solid var(--accent);background:var(--panel2);cursor:pointer}
+.month-item:hover{background:#24314b}
 .month-item .sbu{font-weight:700;color:#dce6f8}
 .month-item .c{font-size:10px;color:var(--muted);margin-top:2px}
 .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
 .filters select,.filters input{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:8px 10px;border-radius:8px;font-size:13px;outline:none}
-.filters input[type=text]{min-width:220px}
+.filters input[type=text]{min-width:200px}
 .count{color:var(--muted);font-size:12px}
 .note{background:rgba(232,181,58,.08);border:1px solid rgba(232,181,58,.3);border-radius:10px;padding:11px 14px;font-size:12.5px;color:#f0d48a;margin-top:12px}
 .toast{position:fixed;bottom:22px;right:22px;z-index:100;background:#152338;border:1px solid var(--green);color:#7fe0a6;padding:11px 16px;border-radius:10px;font-size:13px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
 .toast.err{border-color:var(--red);color:#ff9a9a}
-.err{color:var(--red);font-size:12.5px}
 .two-col{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}
 @media(max-width:980px){.two-col{grid-template-columns:1fr}}
 .muted{color:var(--muted)}.small{font-size:12px}
 .tab{display:none}.tab.active{display:block}
-.whoami{display:flex;align-items:center;gap:6px}
-.whoami label{font-size:11px;color:var(--muted)}
-.whoami input{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:6px 9px;border-radius:8px;font-size:12px;width:130px;outline:none}
-.month-item{cursor:pointer;transition:background .12s}
-.month-item:hover{background:#24314b}
-.modal-backdrop{position:fixed;inset:0;background:rgba(5,8,15,.72);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:640px;width:100%;max-height:88vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}
-.modal-head h3{font-size:16px;font-weight:700;margin:0}
-.modal-body{padding:16px 18px}
-.modal-foot{display:flex;gap:10px;align-items:center;padding:12px 18px;border-top:1px solid var(--line);flex-wrap:wrap}
-.modal-foot select{background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:7px 10px;border-radius:8px;font-size:13px}
 .kv{display:grid;grid-template-columns:150px 1fr;gap:8px 12px;margin-bottom:14px}
 .kv .k{color:var(--muted);font-size:12px;text-align:right;padding-top:2px}
-.kv .v{font-size:13px;color:var(--txt);word-break:break-word}
-.badge2{display:inline-block;padding:2px 9px;border-radius:6px;font-size:12px;font-weight:600}
+.kv .v{font-size:13px;word-break:break-word}
+.badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;white-space:nowrap}
+/* login */
+.login-backdrop{position:fixed;inset:0;background:radial-gradient(circle at 50% 20%,#14264d,#0b1120);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px 30px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.login-box h2{font-size:19px;margin-bottom:4px}
+.login-box p{color:var(--muted);font-size:12.5px;margin-bottom:20px}
+.login-box .or{text-align:center;color:var(--muted);font-size:12px;margin:14px 0}
+.perf-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px}
+.perf-card h3{font-size:16px;font-weight:700;margin-bottom:4px;color:var(--gold)}
+.perf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:14px 0}
+.perf-metric{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.perf-metric .v{font-size:20px;font-weight:800;color:var(--accent)}
+.perf-metric .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.perf-metric.good .v{color:var(--green)}.perf-metric.bad .v{color:var(--red)}.perf-metric.warn .v{color:var(--amber)}
+.perf-flow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+@media(max-width:860px){.perf-flow{grid-template-columns:1fr}}
+.flow-step{border-left:3px solid var(--accent);background:var(--panel2);border-radius:8px;padding:12px 14px}
+.flow-step h4{font-size:13px;color:var(--gold);margin-bottom:6px}
 </style>
 </head>
 <body>
+
+<!-- LOGIN -->
+<div class="login-backdrop" id="loginBackdrop">
+  <div class="login-box">
+    <h2>Growth &amp; Performance Portal</h2>
+    <p>AKIJ Resource — Marketing · Business Development · Growth (FY 2026-27)</p>
+    <div class="field">
+      <label>I am from (SBU access)</label>
+      <select id="loginSbu"><option value="">Select your SBU…</option></select>
+    </div>
+    <button class="btn" id="loginSbuBtn" style="width:100%;justify-content:center">Enter as SBU viewer</button>
+    <div class="or">— or —</div>
+    <div class="field">
+      <label>CBDO access code</label>
+      <input type="password" id="loginCode" placeholder="CBDO passcode">
+    </div>
+    <button class="btn ghost" id="loginCbdoBtn" style="width:100%;justify-content:center">Enter as CBDO</button>
+    <div class="err" id="loginErr" style="margin-top:10px"></div>
+  </div>
+</div>
+
 <div class="topnav">
   <div class="inner">
     <div class="brand">
       <div class="logo">AK</div>
       <div>
-        <h1>Growth Activity Calendar</h1>
-        <div class="sub">Marketing · Business Development · Growth — FY 2026-27</div>
+        <h1>Growth &amp; Performance Portal</h1>
+        <div class="sub">Marketing · BD · Growth — FY 2026-27</div>
       </div>
     </div>
-    <div class="whoami">
-      <label>You:</label>
-      <input id="userName" type="text" placeholder="Your name" title="Your name — recorded as the editor of any changes you make">
-    </div>
     <nav class="nav-links">
-      <button data-tab="dashboard" class="active">Dashboard</button>
+      <button data-tab="dashboard" class="active">Calendar</button>
+      <button data-tab="performance">Performance</button>
       <button data-tab="add">+ Add Activity</button>
-      <button data-tab="calendar">Calendar</button>
     </nav>
+    <div class="userchip">
+      <span id="chipRole"></span>
+      <b id="chipSbu"></b>
+      <button id="logoutBtn" title="Sign out">↪</button>
+    </div>
   </div>
 </div>
 
@@ -124,94 +151,64 @@ table.tbl tr:hover td{background:rgba(47,129,247,.05)}
 
   <!-- DASHBOARD -->
   <section id="tab-dashboard" class="tab active">
-    <div class="pagehead">
-      <h2>Growth Analytics Dashboard</h2>
-      <p>Consolidated Marketing, Business Development &amp; Growth activity calendar — FY 2026-27 (live).</p>
-    </div>
+    <div class="pagehead"><h2>Activity Calendar</h2><p id="dashSub"></p></div>
     <div class="stats" id="statCards"></div>
     <div class="two-col" style="margin-top:18px">
       <div class="card"><div class="section-title" style="margin-top:0">Activities by Category</div><div id="chartByCat"></div></div>
-      <div class="card"><div class="section-title" style="margin-top:0">Budget by Category (Cr)</div><div id="chartBudgetCat"></div></div>
-    </div>
-    <div class="two-col" style="margin-top:14px">
-      <div class="card"><div class="section-title" style="margin-top:0">Activities by SBU</div><div id="chartBySbu"></div></div>
-      <div class="card">
-        <div class="section-title" style="margin-top:0">Status Distribution</div><div class="legend" id="legendStatus"></div>
-        <div class="section-title">Monthly Pipeline</div><div id="chartByMonth" style="display:flex;align-items:flex-end;gap:6px;height:110px;margin-top:8px"></div>
-      </div>
+      <div class="card"><div class="section-title" style="margin-top:0">Status Distribution</div><div class="legend" id="legendStatus"></div><div class="section-title">Monthly Pipeline</div><div id="chartByMonth" style="display:flex;align-items:flex-end;gap:6px;height:110px;margin-top:8px"></div></div>
     </div>
     <div class="section-title"><span class="bar"></span>Activity Tracker</div>
     <div class="filters">
       <select id="fSbu"><option value="">All SBUs</option></select>
       <select id="fCat"><option value="">All Categories</option></select>
       <select id="fStatus"><option value="">All Status</option></select>
-      <input type="text" id="fQ" placeholder="Search activity / goal / KPI / owner…">
+      <input type="text" id="fQ" placeholder="Search…">
       <span class="count" id="count"></span>
-      <button class="btn ghost sm" id="exportCsv" title="Download the current view as CSV">⬇ Export CSV</button>
+      <button class="btn ghost sm" id="exportCsv">⬇ Export CSV</button>
     </div>
     <div class="tbl-scroll" style="max-height:70vh;overflow-y:auto">
-      <table class="tbl"><thead><tr>
-        <th>Date</th><th>SBU</th><th>Activity</th><th>Category</th><th>Goal</th><th>Budget</th><th>KPI / Outcome</th><th>Owner</th><th>Status</th><th>Last Edited</th><th></th>
-      </tr></thead><tbody id="tbody"></tbody></table>
+      <table class="tbl"><thead><tr><th>Date</th><th>SBU</th><th>Activity</th><th>Category</th><th>Goal</th><th>Spend</th><th>KPI</th><th>Owner</th><th>Status</th><th>Last Edited</th><th></th></tr></thead><tbody id="tbody"></tbody></table>
     </div>
+  </section>
+
+  <!-- PERFORMANCE -->
+  <section id="tab-performance" class="tab">
+    <div class="pagehead"><h2>Performance · ROMI/ROAS · Learning · Next Action</h2><p id="perfSub"></p></div>
+    <div id="perfList"></div>
   </section>
 
   <!-- ADD -->
   <section id="tab-add" class="tab">
-    <div class="pagehead">
-      <h2>Add / Update a Campaign or Activity Plan</h2>
-      <p>Anyone with the link can submit. Fields marked * are required. A duplicate (date + SBU + activity) updates the existing row.</p>
-    </div>
+    <div class="pagehead"><h2>Add / Update an Activity</h2><p>Fields marked * required. Duplicate (date+SBU+activity) updates the existing row.</p></div>
     <div class="card">
       <form id="entryForm" class="form-grid">
         <div class="field"><label class="required">Date</label><input type="date" name="activity_date" required></div>
-        <div class="field"><label class="required">SBU / Business</label><select name="sbu" required><option value="">Select SBU…</option></select></div>
-        <div class="field full"><label class="required">Activity</label><input name="activity" required placeholder="e.g. Winter peak-season TVC + outdoor flight"></div>
-        <div class="field"><label class="required">Category</label><select name="category" required><option value="">Select category…</option></select></div>
+        <div class="field"><label class="required">SBU</label><select name="sbu" required><option value="">Select…</option></select></div>
+        <div class="field full"><label class="required">Activity</label><input name="activity" required></div>
+        <div class="field"><label class="required">Category</label><select name="category" required><option value="">Select…</option></select></div>
         <div class="field"><label>Status</label><select name="status"></select></div>
-        <div class="field full"><label>Business / Marketing Goal</label><textarea name="goal" placeholder="What is this activity meant to achieve?"></textarea></div>
-        <div class="field"><label>Budget (Cr)</label><input type="number" step="0.1" min="0" name="budget_cr" placeholder="e.g. 3.5"></div>
-        <div class="field"><label>Actual Spend (BDT)</label><input type="number" step="1" min="0" name="actual_spend" placeholder="Optional"></div>
+        <div class="field full"><label>Business / Marketing Goal</label><textarea name="goal"></textarea></div>
+        <div class="field"><label>Budget (Cr)</label><input type="number" step="0.1" min="0" name="budget_cr"></div>
+        <div class="field"><label>Actual Spend (BDT)</label><input type="number" step="1" min="0" name="actual_spend"></div>
         <div class="field"><label>Progress %</label><input type="number" min="0" max="100" name="progress" value="0"></div>
-        <div class="field"><label>Responsible Person</label><input name="responsible" placeholder="e.g. Subrata Kumar Singha"></div>
-        <div class="field full"><label>Expected Outcome / KPI</label><textarea name="kpi" placeholder="Measurable result, e.g. GRP >= 2,200; aided recall >=60%"></textarea></div>
-        <div class="field full"><label>Notes / Next Action</label><textarea name="notes" placeholder="Optional tracker notes"></textarea></div>
-        <div class="field full"><label>Your Name (optional)</label><input name="created_by" placeholder="Recorded as submitter"></div>
-        <div class="full" style="display:flex;gap:10px;align-items:center"><button class="btn" type="submit">Save Activity</button><button class="btn ghost" type="reset">Reset</button><span class="err" id="formErr"></span></div>
+        <div class="field"><label>Responsible</label><input name="responsible"></div>
+        <div class="field full"><label>Expected Outcome / KPI</label><textarea name="kpi"></textarea></div>
+        <div class="field full"><label>Notes</label><textarea name="notes"></textarea></div>
+        <div class="full" style="display:flex;gap:10px;align-items:center"><button class="btn" type="submit">Save</button><button class="btn ghost" type="reset">Reset</button><span class="err" id="formErr"></span></div>
       </form>
     </div>
   </section>
 
-  <!-- CALENDAR -->
-  <section id="tab-calendar" class="tab">
-    <div class="pagehead"><h2>Monthly Calendar</h2><p>Activities plotted by scheduled month (FY 2026-27).</p></div>
-    <div class="filters">
-      <select id="cSbu"><option value="">All SBUs</option></select>
-      <select id="cCat"><option value="">All Categories</option></select>
-      <span class="count" id="cCount"></span>
-    </div>
-    <div class="cal-grid" id="calGrid"></div>
-  </section>
-
 </div>
 
-<!-- campaign detail modal -->
-<div class="modal-backdrop" id="modalBackdrop" style="display:none">
-  <div class="modal">
-    <div class="modal-head">
-      <h3 id="mTitle">Campaign detail</h3>
-      <button class="btn ghost sm" id="mClose">✕</button>
-    </div>
-    <div class="modal-body" id="mBody"></div>
-    <div class="modal-foot">
-      <span class="muted small">Status:</span>
-      <select id="mStatus"></select>
-      <button class="btn sm" id="mSave">Save</button>
-      <button class="btn sm danger" id="mDelete">Delete</button>
-    </div>
+<!-- detail modal -->
+<div class="modal-backdrop" id="modalBackdrop" style="display:none;position:fixed;inset:0;background:rgba(5,8,15,.72);z-index:200;display:none;align-items:center;justify-content:center;padding:20px">
+  <div class="modal" style="background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:640px;width:100%;max-height:88vh;overflow:auto">
+    <div class="modal-head" style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)"><h3 id="mTitle" style="font-size:16px;font-weight:700;margin:0">Detail</h3><button class="btn ghost sm" id="mClose">✕</button></div>
+    <div class="modal-body" style="padding:16px 18px" id="mBody"></div>
+    <div class="modal-foot" style="display:flex;gap:10px;align-items:center;padding:12px 18px;border-top:1px solid var(--line);flex-wrap:wrap"><span class="muted small">Status:</span><select id="mStatus" style="background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:7px 10px;border-radius:8px"></select><button class="btn sm" id="mSave">Save</button><button class="btn sm danger" id="mDelete">Delete</button></div>
   </div>
 </div>
-
 <div class="toast" id="toast" style="display:none"></div>
 
 <script>
@@ -221,284 +218,224 @@ const STATUSES = ["Planned","In Progress","Completed","On Hold","Cancelled"];
 const SCOLOR = {"Planned":"#2f81f7","In Progress":"#f5a623","Completed":"#2ecc71","On Hold":"#ff5c5c","Cancelled":"#8a93a8"};
 const CC = ["#2f81f7","#7a5cff","#ff5ca8","#2ecc71","#f5a623","#ff7a3d","#2fd5e8","#e8b53a","#7ad24a","#ff5c5c"];
 const MONTHS = ["Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun"];
+const CBDO_CODE = "akij-cbdo-2026";
+const API_BASE = "https://akij-growth-calendar.netlify.app";
+const REVENUE_URL = "https://raw.githubusercontent.com/ahmedahnaf-arl/arl-marketing-dashboard/master/calendar-portal/revenue.json";
+const AUDIT_PREFIX = "⟪edited⟫";
+
 const mLabel = ym => { const [y,m]=ym.split("-").map(Number); return MONTHS[m-1]+"-"+String(y).slice(2); };
 const fmtCr = n => { n=Number(n); return (!n||isNaN(n)) ? "—" : n.toLocaleString("en-US",{maximumFractionDigits:1})+" Cr"; };
+const fmtBdt = n => { n=Number(n); return (!n||isNaN(n)) ? "—" : "BDT "+n.toLocaleString("en-US",{maximumFractionDigits:0}); };
+const fmtTs = iso => { const t = iso?new Date(iso):null; return (t&&!isNaN(t)) ? t.toLocaleDateString("en-GB",{day:"2-digit",month:"short"})+" "+t.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}) : ""; };
+const stripAudit = n => (n||"").split("\n").filter(l=>!l.startsWith(AUDIT_PREFIX)).join("\n").trim();
+function parseAudit(p){ const lines=(p.notes||"").split("\n").filter(l=>l.startsWith(AUDIT_PREFIX)); if(!lines.length) return null; const b=lines[lines.length-1].slice(AUDIT_PREFIX.length); const i=b.indexOf("|"); return {who:i>=0?b.slice(0,i):b, at:i>=0?b.slice(i+1):""}; }
+const withAudit = (n,w)=> stripAudit(n)+"\n"+AUDIT_PREFIX+w+"|"+new Date().toISOString();
+function editedLabel(p){ const a=parseAudit(p); const w=(a&&a.who)||p.last_edited_by||p.created_by||""; const t=fmtTs((a&&a.at)||p.updated_at); return (w||t)? (w+(t?" · ":"")+t) : "—"; }
+function who(){ return (localStorage.getItem("akij_user_name")||"").trim() || "Anonymous"; }
 
-let plans = [], analytics = null;
-
+let plans = [], revenue = null;
+let auth = null;
 let currentModalId = null;
-const userNameEl = document.getElementById("userName");
-userNameEl.value = localStorage.getItem("akij_user_name") || "";
-userNameEl.addEventListener("change", () => localStorage.setItem("akij_user_name", userNameEl.value.trim()));
-function who() { return userNameEl.value.trim() || "Anonymous"; }
 
-function editedLabel(p) {
-  const a = parseAudit(p);
-  const whoStr = (a && a.who) || p.last_edited_by || p.created_by || "";
-  const ts = fmtTs((a && a.at) || p.updated_at);
-  if (!whoStr && !ts) return "—";
-  return (whoStr ? whoStr + (ts ? " · " : "") : "") + ts;
+// ---- auth ----
+auth = JSON.parse(localStorage.getItem("akij_auth")||"null");
+function visiblePlans(){ return (auth && auth.role==="cbdo") ? plans : plans.filter(p=>p.sbu===auth.sbu); }
+function sbuName(code){ const s=SBUS.find(x=>x[0]===code); return s? (code+" — "+s[1]) : code; }
+
+function initLogin(){
+  const sel = document.getElementById("loginSbu");
+  sel.innerHTML = `<option value="">Select your SBU…</option>` + SBUS.map(s=>`<option value="${s[0]}">${s[0]} — ${s[1]}</option>`).join("");
+}
+function enterSbu(){ const v=document.getElementById("loginSbu").value; if(!v){ document.getElementById("loginErr").textContent="Select your SBU."; return; } setAuth({role:"sbu",sbu:v}); }
+function enterCbdo(){ const c=document.getElementById("loginCode").value.trim(); if(c!==CBDO_CODE){ document.getElementById("loginErr").textContent="Invalid CBDO code."; return; } setAuth({role:"cbdo",sbu:null}); }
+function setAuth(a){ auth=a; localStorage.setItem("akij_auth", JSON.stringify(a)); document.getElementById("loginBackdrop").style.display="none"; applyAuth(); renderAll(); }
+function logout(){ auth=null; localStorage.removeItem("akij_auth"); document.getElementById("loginBackdrop").style.display="flex"; }
+function applyAuth(){
+  document.getElementById("loginBackdrop").style.display = auth ? "none" : "flex";
+  const role = auth && auth.role==="cbdo" ? "CBDO" : "SBU";
+  document.getElementById("chipRole").textContent = role;
+  document.getElementById("chipSbu").textContent = auth && auth.sbu ? auth.sbu : (auth&&auth.role==="cbdo"?"Consolidated":"");
+  document.getElementById("dashSub").textContent = auth&&auth.role==="cbdo" ? "Consolidated view — all SBUs" : "Scoped to "+sbuName(auth.sbu);
+  document.getElementById("perfSub").textContent = auth&&auth.role==="cbdo" ? "Consolidated performance across all SBUs" : "Performance for "+sbuName(auth.sbu);
+  // SBU filter: lock to own SBU for level-1
+  const fs = document.getElementById("fSbu");
+  if (auth && auth.role==="sbu") { fs.value = auth.sbu; fs.disabled = true; }
+  else { fs.disabled = false; }
 }
 
-const API_BASE = "https://akij-growth-calendar.netlify.app";
-const AUDIT_PREFIX = "⟪edited⟫";
-function fmtTs(iso) {
-  const t = iso ? new Date(iso) : null;
-  if (!t || isNaN(t)) return "";
-  return t.toLocaleDateString("en-GB", { day: "2-digit", month: "short" }) + " " + t.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-}
-function stripAudit(notes) { return (notes || "").split("\n").filter((l) => !l.startsWith(AUDIT_PREFIX)).join("\n").trim(); }
-function parseAudit(p) {
-  const lines = (p.notes || "").split("\n").filter((l) => l.startsWith(AUDIT_PREFIX));
-  if (!lines.length) return null;
-  const body = lines[lines.length - 1].slice(AUDIT_PREFIX.length);
-  const pipe = body.indexOf("|");
-  return { who: pipe >= 0 ? body.slice(0, pipe) : body, at: pipe >= 0 ? body.slice(pipe + 1) : "" };
-}
-function withAudit(notes, whoStr) { return stripAudit(notes) + "\n" + AUDIT_PREFIX + whoStr + "|" + new Date().toISOString(); }
-
-function downloadCsv(rows) {
-  const cols = ["Date","SBU","Activity","Category","Goal","Budget (Cr)","KPI / Outcome","Responsible","Status","Progress %","Actual Spend (BDT)","Notes","Created By","Last Edited By","Last Edited At"];
-  const esc = (v) => { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
-  const lines = [cols.join(",")];
-  rows.forEach((p) => {
-    const a = parseAudit(p);
-    lines.push([
-      p.activity_date, p.sbu, p.activity, p.category, p.goal, p.budget_cr, p.kpi, p.responsible,
-      p.status, p.progress, p.actual_spend, stripAudit(p.notes),
-      p.created_by, (a && a.who) || p.last_edited_by || p.created_by, (a && a.at) || p.updated_at,
-    ].map(esc).join(","));
-  });
-  const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "akij-growth-calendar.csv";
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 500);
-}
-
-function fillSelect(el, items, val) {
-  el.innerHTML = items.map(x => `<option value="${x[0]}">${x[0]} — ${x[1]}</option>`).join("");
-  if (val) el.insertAdjacentHTML("afterbegin", `<option value="">${val}</option>`);
-}
-
-function initSelects() {
-  fillSelect(document.querySelector('[name="sbu"]'), SBUS, "");
-  fillSelect(document.querySelector('[name="category"]'), CATS.map(c=>[c,c]), "");
-  document.querySelector('[name="status"]').innerHTML = STATUSES.map(s=>`<option>${s}</option>`).join("");
-  const fs = document.getElementById("fSbu"), cs = document.getElementById("cSbu");
-  fs.innerHTML = `<option value="">All SBUs</option>` + SBUS.map(s=>`<option>${s[0]}</option>`).join("");
-  cs.innerHTML = fs.innerHTML;
-  document.getElementById("fCat").innerHTML = `<option value="">All Categories</option>` + CATS.map(c=>`<option>${c}</option>`).join("");
-  document.getElementById("cCat").innerHTML = document.getElementById("fCat").innerHTML;
-  document.getElementById("fStatus").innerHTML = `<option value="">All Status</option>` + STATUSES.map(s=>`<option>${s}</option>`).join("");
-}
-
-function toast(msg, err) {
-  const t = document.getElementById("toast");
-  t.textContent = msg; t.className = "toast" + (err ? " err" : "");
-  t.style.display = "block";
-  setTimeout(()=>t.style.display="none", 3200);
-}
-
-async function api(path, opts) {
-  const r = await fetch(API_BASE + path, opts);
-  const j = await r.json().catch(()=>({}));
-  if (!r.ok) throw new Error(j.error || r.statusText);
-  return j;
-}
-
-async function loadAll() {
+// ---- data ----
+async function api(path, opts){ const r=await fetch(API_BASE+path, opts); const j=await r.json().catch(()=>({})); if(!r.ok) throw new Error(j.error||r.statusText); return j; }
+async function loadAll(){
   try {
-    const [a, p] = await Promise.all([api("/api/analytics"), api("/api/plans")]);
-    analytics = a; plans = p.data;
-    renderDashboard(); renderTable(); renderCalendar();
-  } catch (e) {
-    document.getElementById("statCards").innerHTML = `<div class="note" style="grid-column:1/-1">Could not load data: ${e.message}</div>`;
+    const p = await api("/api/plans");
+    plans = p.data;
+  } catch(e){ plans=[]; }
+  try { const r=await fetch(REVENUE_URL,{cache:"no-store"}); if(r.ok) revenue=await r.json(); } catch(e){ revenue=null; }
+  renderAll();
+}
+function renderAll(){ renderDashboard(); renderPerformance(); }
+
+function scopeStats(list){
+  const totals={total:list.length,planned:0,in_progress:0,completed:0,on_hold:0,cancelled:0,avg_progress:0};
+  let psum=0; const byCat={}, bySbu={}, byMonth={}, byStatus={}; let budget=0, spend=0;
+  for(const p of list){
+    if(p.status==="Planned")totals.planned++; else if(p.status==="In Progress")totals.in_progress++; else if(p.status==="Completed")totals.completed++; else if(p.status==="On Hold")totals.on_hold++; else if(p.status==="Cancelled")totals.cancelled++;
+    psum += Number(p.progress)||0; budget += Number(p.budget_cr)||0; spend += Number(p.actual_spend)||0;
+    const c=p.category||"Other"; byCat[c]=byCat[c]||{c,count:0,budget:0}; byCat[c].count++; byCat[c].budget+=Number(p.budget_cr)||0;
+    bySbu[p.sbu]=bySbu[p.sbu]||{c:p.sbu,count:0}; bySbu[p.sbu].count++;
+    byStatus[p.status]=(byStatus[p.status]||0)+1;
+    const m=(p.activity_date||"").slice(0,7); if(m) byMonth[m]=(byMonth[m]||0)+1;
   }
+  totals.avg_progress = list.length? Math.round(psum/list.length) : 0;
+  return {totals, byCat:Object.values(byCat).sort((a,b)=>b.count-a.count), bySbu:Object.values(bySbu).sort((a,b)=>b.count-a.count), byStatus:Object.entries(byStatus).map(([status,count])=>({status,count})).sort((a,b)=>b.count-a.count), byMonth:Object.entries(byMonth).map(([month,count])=>({month,count})).sort((a,b)=>a.month.localeCompare(b.month)), budget, spend};
 }
 
-function hbar(el, rows, max, budget) {
-  el.innerHTML = rows.map((r,i)=>`
-    <div class="hbar">
-      <span class="lbl" title="${r.label}">${r.label}</span>
-      <div class="track"><div class="fill" style="width:${(r.v/max*100)}%;background:${r.color||CC[i%CC.length]}"></div></div>
-      <span class="val">${budget ? fmtCr(r.budget)+" · "+r.v : r.v}</span>
-    </div>`).join("");
-}
-
-function renderDashboard() {
-  const t = analytics.totals;
+function renderDashboard(){
+  const list = visiblePlans();
+  const s = scopeStats(list);
   document.getElementById("statCards").innerHTML = `
-    <div class="stat blue"><div class="v">${t.total}</div><div class="k">Total Activities</div></div>
-    <div class="stat"><div class="v">${fmtCr(analytics.budget.budget)}</div><div class="k">Planned Budget</div></div>
-    <div class="stat amber"><div class="v">${t.in_progress}</div><div class="k">In Progress</div></div>
-    <div class="stat green"><div class="v">${t.completed}</div><div class="k">Completed</div></div>
-    <div class="stat"><div class="v">${Math.round(t.avg_progress||0)}%</div><div class="k">Avg Progress</div></div>
-    <div class="stat green"><div class="v">${fmtCr(analytics.budget.spend)}</div><div class="k">Actual Spend</div></div>`;
-  const maxCat = Math.max(1,...analytics.byCategory.map(c=>c.count));
-  const maxBud = Math.max(1,...analytics.byCategory.map(c=>c.budget));
-  const maxSbu = Math.max(1,...analytics.bySbu.map(c=>c.count));
-  const maxMon = Math.max(1,...analytics.byMonth.map(c=>c.count));
-  hbar(document.getElementById("chartByCat"), analytics.byCategory.map(c=>({label:c.category,v:c.count,budget:c.budget})), maxCat, false);
-  hbar(document.getElementById("chartBudgetCat"), analytics.byCategory.filter(c=>c.budget>0).map(c=>({label:c.category,v:c.budget,budget:c.budget})), maxBud, true);
-  hbar(document.getElementById("chartBySbu"), analytics.bySbu.map(c=>({label:c.sbu,v:c.count,budget:c.budget})), maxSbu, false);
-  document.getElementById("legendStatus").innerHTML = analytics.status.map(s=>`<span><span class="dot" style="background:${SCOLOR[s.status]}"></span>${s.status}: ${s.count}</span>`).join("");
-  document.getElementById("chartByMonth").innerHTML = analytics.byMonth.map(m=>`
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
-      <div style="width:100%;max-width:34px;background:#2f81f7;border-radius:4px 4px 0 0;height:${(m.count/maxMon*90)}px;min-height:${m.count?4:1}px" title="${mLabel(m.month)}: ${m.count}"></div>
-      <span class="small muted" style="font-size:9px">${mLabel(m.month)}</span>
-    </div>`).join("");
+    <div class="stat blue"><div class="v">${s.totals.total}</div><div class="k">Activities</div></div>
+    <div class="stat"><div class="v">${fmtCr(s.spend/1e7)}</div><div class="k">Actual Spend</div></div>
+    <div class="stat amber"><div class="v">${s.totals.in_progress}</div><div class="k">In Progress</div></div>
+    <div class="stat green"><div class="v">${s.totals.completed}</div><div class="k">Completed</div></div>
+    <div class="stat"><div class="v">${s.totals.avg_progress}%</div><div class="k">Avg Progress</div></div>`;
+  const maxCat=Math.max(1,...s.byCat.map(c=>c.count));
+  document.getElementById("chartByCat").innerHTML = s.byCat.map((c,i)=>`<div class="hbar"><span class="lbl" title="${c.c}">${c.c}</span><div class="track"><div class="fill" style="width:${c.count/maxCat*100}%;background:${CC[i%CC.length]}"></div></div><span class="val">${c.count}</span></div>`).join("");
+  document.getElementById("legendStatus").innerHTML = s.byStatus.map(x=>`<span><span class="dot" style="background:${SCOLOR[x.status]}"></span>${x.status}: ${x.count}</span>`).join("");
+  const maxMon=Math.max(1,...s.byMonth.map(c=>c.count));
+  document.getElementById("chartByMonth").innerHTML = s.byMonth.map(m=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;max-width:34px;background:#2f81f7;border-radius:4px 4px 0 0;height:${m.count/maxMon*90}px;min-height:${m.count?4:1}px" title="${mLabel(m.month)}: ${m.count}"></div><span class="small muted" style="font-size:9px">${mLabel(m.month)}</span></div>`).join("");
+  renderTable();
 }
 
-function filtered() {
-  const sbu = document.getElementById("fSbu").value, cat = document.getElementById("fCat").value,
-        st = document.getElementById("fStatus").value, q = document.getElementById("fQ").value.toLowerCase();
-  return plans.filter(p => {
-    if (sbu && p.sbu !== sbu) return false;
-    if (cat && p.category !== cat) return false;
-    if (st && p.status !== st) return false;
-    if (q) { const h = [p.activity,p.goal,p.kpi,p.responsible,p.sbu].join(" ").toLowerCase(); if (!h.includes(q)) return false; }
+function filtered(){
+  const fs=document.getElementById("fSbu").value, fc=document.getElementById("fCat").value, fst=document.getElementById("fStatus").value, q=document.getElementById("fQ").value.toLowerCase();
+  return visiblePlans().filter(p=>{
+    if(fs && p.sbu!==fs) return false;
+    if(fc && p.category!==fc) return false;
+    if(fst && p.status!==fst) return false;
+    if(q){ const h=[p.activity,p.goal,p.kpi,p.responsible,p.sbu].join(" ").toLowerCase(); if(!h.includes(q)) return false; }
     return true;
   });
 }
-
-function renderTable() {
-  const rows = filtered();
-  document.getElementById("count").textContent = rows.length + " activities";
-  document.getElementById("tbody").innerHTML = rows.map(p => `
-    <tr>
-      <td style="white-space:nowrap">${p.activity_date}</td>
-      <td style="white-space:nowrap;font-weight:600">${p.sbu}</td>
-      <td>${p.activity}</td>
-      <td><span class="cat">${p.category}</span></td>
-      <td>${p.goal||""}</td>
-      <td style="white-space:nowrap">${fmtCr(p.budget_cr)}</td>
-      <td>${p.kpi||""}</td>
-      <td style="white-space:nowrap">${p.responsible||""}</td>
-      <td style="white-space:nowrap">
-        <select data-id="${p.id}" class="stsel" style="background:${SCOLOR[p.status]}22;color:${SCOLOR[p.status]};border:1px solid ${SCOLOR[p.status]};border-radius:7px;padding:3px 6px;font-size:12px;font-weight:600;outline:none">
-          ${STATUSES.map(s=>`<option ${s===p.status?"selected":""}>${s}</option>`).join("")}
-        </select>
-      </td>
-      <td class="small" style="white-space:nowrap">${editedLabel(p)}</td>
-      <td><button class="btn sm danger" data-del="${p.id}">✕</button></td>
-    </tr>`).join("") || `<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:24px">No activities match the filters.</td></tr>`;
+function renderTable(){
+  const rows=filtered();
+  document.getElementById("count").textContent=rows.length+" activities";
+  document.getElementById("tbody").innerHTML = rows.map(p=>`<tr>
+    <td style="white-space:nowrap">${p.activity_date}</td>
+    <td style="white-space:nowrap;font-weight:600">${p.sbu}</td>
+    <td>${p.activity}</td><td><span class="cat">${p.category}</span></td><td>${p.goal||""}</td>
+    <td style="white-space:nowrap">${p.actual_spend?fmtBdt(p.actual_spend):"—"}</td><td>${p.kpi||""}</td><td style="white-space:nowrap">${p.responsible||""}</td>
+    <td style="white-space:nowrap"><select data-id="${p.id}" class="stsel" style="background:${SCOLOR[p.status]}22;color:${SCOLOR[p.status]};border:1px solid ${SCOLOR[p.status]};border-radius:7px;padding:3px 6px;font-size:12px;font-weight:600;outline:none">${STATUSES.map(s=>`<option ${s===p.status?"selected":""}>${s}</option>`).join("")}</select></td>
+    <td class="small" style="white-space:nowrap">${editedLabel(p)}</td>
+    <td><button class="btn sm danger" data-del="${p.id}">✕</button></td>
+  </tr>`).join("") || `<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:24px">No activities.</td></tr>`;
 }
 
-function renderCalendar() {
-  const sbu = document.getElementById("cSbu").value, cat = document.getElementById("cCat").value;
-  const list = plans.filter(p => (!sbu||p.sbu===sbu) && (!cat||p.category===cat));
-  document.getElementById("cCount").textContent = list.length + " activities";
-  const groups = {};
-  list.forEach(p => { (groups[p.activity_date.slice(0,7)] ||= []).push(p); });
-  const keys = Object.keys(groups).sort();
-  document.getElementById("calGrid").innerHTML = keys.map(ym => `
-    <div class="month-card"><h4>${mLabel(ym)} <span class="muted small">(${groups[ym].length})</span></h4>
-      ${groups[ym].map(p=>`<div class="month-item" data-id="${p.id}" style="border-left-color:${SCOLOR[p.status]||"#2f81f7"}"><div class="sbu">${p.sbu}</div><div>${p.activity}</div><div class="c">${p.category} · ${p.status}</div></div>`).join("")}
-    </div>`).join("") || `<div class="card muted" style="grid-column:1/-1">No activities match the filter.</div>`;
+// ---- performance ----
+function sbusForPerf(){ return (auth && auth.role==="cbdo") ? SBUS.map(s=>s[0]) : [auth.sbu]; }
+function revenueFor(sbu){
+  if(!revenue || !revenue.rows) return [];
+  return revenue.rows.filter(r=>r.sbu===sbu).sort((a,b)=>b.revenue-a.revenue);
+}
+function renderPerformance(){
+  const sbus = sbusForPerf();
+  document.getElementById("perfList").innerHTML = sbus.map(sbu=>{
+    const chans = revenueFor(sbu);
+    const revTotal = chans.reduce((a,c)=>a+c.revenue,0);
+    const list = plans.filter(p=>p.sbu===sbu);
+    const spend = list.reduce((a,p)=>a+(Number(p.actual_spend)||0),0);
+    const romi = spend>0 ? (revTotal - spend)/spend : null;
+    const roas = spend>0 ? revTotal/spend : null;
+    const learning = localStorage.getItem("akij_learning_"+sbu)||"";
+    const nextAction = localStorage.getItem("akij_nextaction_"+sbu)||"";
+    const maxChan = Math.max(1,...chans.map(c=>c.revenue));
+    const chansHtml = chans.length ? chans.slice(0,8).map(c=>`<div class="hbar"><span class="lbl" title="${c.channel}">${c.channel}</span><div class="track"><div class="fill" style="width:${c.revenue/maxChan*100}%;background:#2f81f7"></div></div><span class="val">${fmtCr(c.revenue/1e7)}</span></div>`).join("") : `<div class="muted small">No channel revenue cached (DWH sync pending).</div>`;
+    const romiCls = romi===null?"":(romi>=1?"good":(romi>=0?"warn":"bad"));
+    return `<div class="perf-card">
+      <h3>${sbuName(sbu)}</h3>
+      <div class="perf-grid">
+        <div class="perf-metric"><div class="v">${fmtCr(revTotal/1e7)}</div><div class="k">Revenue (${revenue?revenue.as_of_days+"d":"—"})</div></div>
+        <div class="perf-metric"><div class="v">${fmtCr(spend/1e7)}</div><div class="k">Marketing Spend</div></div>
+        <div class="perf-metric ${roas===null?"":(roas>=2?"good":(roas>=1?"warn":"bad"))}"><div class="v">${roas===null?"—":roas.toFixed(2)+"x"}</div><div class="k">ROAS</div></div>
+        <div class="perf-metric ${romiCls}"><div class="v">${romi===null?"—":(romi*100).toFixed(0)+"%"}</div><div class="k">ROMI</div></div>
+        <div class="perf-metric"><div class="v">${list.length}</div><div class="k">Activities</div></div>
+      </div>
+      <div class="section-title" style="margin:8px 0">Revenue by Channel</div>
+      ${chansHtml}
+      <div class="perf-flow">
+        <div class="flow-step"><h4>📘 Learning</h4><textarea id="learn_${sbu}" placeholder="What did we learn?">${learning}</textarea><button class="btn sm ghost" style="margin-top:6px" data-learn="${sbu}">Save Learning</button></div>
+        <div class="flow-step"><h4>🎯 Next Action</h4><textarea id="next_${sbu}" placeholder="What is the next action?">${nextAction}</textarea><button class="btn sm ghost" style="margin-top:6px" data-next="${sbu}">Save Action</button></div>
+      </div>
+    </div>`;
+  }).join("");
 }
 
-// events
-document.querySelectorAll(".nav-links button").forEach(b => b.addEventListener("click", () => {
+// ---- events ----
+document.querySelectorAll(".nav-links button").forEach(b=>b.addEventListener("click",()=>{
   document.querySelectorAll(".nav-links button").forEach(x=>x.classList.remove("active"));
   b.classList.add("active");
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  document.getElementById("tab-" + b.dataset.tab).classList.add("active");
+  document.getElementById("tab-"+b.dataset.tab).classList.add("active");
 }));
-
-["fSbu","fCat","fStatus","fQ"].forEach(id => document.getElementById(id).addEventListener("input", renderTable));
-["cSbu","cCat"].forEach(id => document.getElementById(id).addEventListener("change", renderCalendar));
-
-document.getElementById("tbody").addEventListener("change", async e => {
-  if (e.target.classList.contains("stsel")) {
-    const p = plans.find(x => x.id === e.target.dataset.id);
-    const patch = { status: e.target.value, notes: withAudit(p ? p.notes : "", who()) };
-    try { await api("/api/plans?id=" + e.target.dataset.id, { method:"PATCH", headers:{"Content-Type":"application/json"}, body: JSON.stringify(patch) }); toast("Status updated ✓"); loadAll(); }
-    catch(err){ toast(err.message, true); }
-  }
-});
-document.getElementById("tbody").addEventListener("click", async e => {
-  if (e.target.dataset.del) {
-    if (!confirm("Delete this activity?")) return;
-    try { await api("/api/plans?id=" + e.target.dataset.del, { method:"DELETE" }); toast("Deleted ✓"); loadAll(); }
-    catch(err){ toast(err.message, true); }
-  }
-});
-
-document.getElementById("entryForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  const fd = new FormData(e.target); const body = {};
-  fd.forEach((v,k) => body[k] = v);
-  document.getElementById("formErr").textContent = "";
-  try {
-    if (body.created_by) { localStorage.setItem("akij_user_name", body.created_by.trim()); userNameEl.value = body.created_by.trim(); }
-    await api("/api/plans", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body) });
-    toast("Activity saved ✓"); e.target.reset(); document.querySelector('[name="progress"]').value = 0;
-    document.querySelector('[name="created_by"]').value = who();
-    loadAll();
-  } catch (err) { document.getElementById("formErr").textContent = err.message; }
-});
-
-// CSV export
-document.getElementById("exportCsv").addEventListener("click", () => {
-  downloadCsv(filtered());
-  toast("CSV exported ✓");
-});
-
-// Calendar card -> detail modal
-function openModal(p) {
-  currentModalId = p.id;
-  document.getElementById("mTitle").textContent = p.activity;
-  document.getElementById("mStatus").innerHTML = STATUSES.map(s => `<option ${s === p.status ? "selected" : ""}>${s}</option>`).join("");
-  const rows = [
-    ["SBU", p.sbu],
-    ["Date", p.activity_date],
-    ["Category", p.category],
-    ["Status", p.status],
-    ["Budget", fmtCr(p.budget_cr)],
-    ["Actual Spend", p.actual_spend ? "BDT " + Number(p.actual_spend).toLocaleString() : "—"],
-    ["Progress", (p.progress || 0) + "%"],
-    ["Responsible", p.responsible || "—"],
-    ["Goal", p.goal || "—"],
-    ["KPI / Outcome", p.kpi || "—"],
-    ["Notes", stripAudit(p.notes) || "—"],
-    ["Created By", p.created_by || "—"],
-    ["Last Edited", editedLabel(p)],
-  ];
-  document.getElementById("mBody").innerHTML = `<div class="kv">${rows.map(([k, v]) => `<div class="k">${k}</div><div class="v">${v}</div>`).join("")}</div>`;
-  document.getElementById("modalBackdrop").style.display = "flex";
+["fSbu","fCat","fStatus","fQ"].forEach(id=>document.getElementById(id).addEventListener("input",renderTable));
+document.getElementById("exportCsv").addEventListener("click",()=>{ downloadCsv(filtered()); toast("CSV exported ✓"); });
+function downloadCsv(rows){
+  const cols=["Date","SBU","Activity","Category","Goal","Spend (BDT)","KPI","Responsible","Status","Progress","Notes","Created By","Last Edited By","Last Edited At"];
+  const esc=v=>{v=v==null?"":String(v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  const lines=[cols.join(",")];
+  rows.forEach(p=>{const a=parseAudit(p); lines.push([p.activity_date,p.sbu,p.activity,p.category,p.goal,p.actual_spend,p.kpi,p.responsible,p.status,p.progress,stripAudit(p.notes),p.created_by,(a&&a.who)||p.last_edited_by||p.created_by,(a&&a.at)||p.updated_at].map(esc).join(","));});
+  const blob=new Blob(["\uFEFF"+lines.join("\r\n")],{type:"text/csv;charset=utf-8;"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="akij-activities.csv"; document.body.appendChild(a); a.click(); a.remove();
 }
-function closeModal() { document.getElementById("modalBackdrop").style.display = "none"; currentModalId = null; }
 
-document.getElementById("calGrid").addEventListener("click", (e) => {
-  const item = e.target.closest(".month-item");
-  if (item && item.dataset.id) {
-    const p = plans.find((x) => x.id === item.dataset.id);
-    if (p) openModal(p);
+document.getElementById("tbody").addEventListener("change",async e=>{
+  if(e.target.classList.contains("stsel")){
+    const p=plans.find(x=>x.id===e.target.dataset.id);
+    const patch={status:e.target.value, notes:withAudit(p?p.notes:"",who())};
+    try{ await api("/api/plans?id="+e.target.dataset.id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(patch)}); toast("Status updated ✓"); loadAll(); }catch(err){ toast(err.message,true); }
   }
 });
-document.getElementById("mClose").addEventListener("click", closeModal);
-document.getElementById("modalBackdrop").addEventListener("click", (e) => { if (e.target.id === "modalBackdrop") closeModal(); });
-document.getElementById("mSave").addEventListener("click", async () => {
-  if (!currentModalId) return;
-  const status = document.getElementById("mStatus").value;
-  const p = plans.find(x => x.id === currentModalId);
-  const patch = { status, notes: withAudit(p ? p.notes : "", who()) };
-  try { await api("/api/plans?id=" + currentModalId, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(patch) }); toast("Saved ✓"); loadAll(); closeModal(); }
-  catch (err) { toast(err.message, true); }
+document.getElementById("tbody").addEventListener("click",async e=>{
+  if(e.target.dataset.del){ if(!confirm("Delete this activity?")) return; try{ await api("/api/plans?id="+e.target.dataset.del,{method:"DELETE"}); toast("Deleted ✓"); loadAll(); }catch(err){ toast(err.message,true); } }
 });
-document.getElementById("mDelete").addEventListener("click", async () => {
-  if (!currentModalId) return;
-  if (!confirm("Delete this activity?")) return;
-  try { await api("/api/plans?id=" + currentModalId, { method: "DELETE" }); toast("Deleted ✓"); loadAll(); closeModal(); }
-  catch (err) { toast(err.message, true); }
+document.getElementById("entryForm").addEventListener("submit",async e=>{
+  e.preventDefault(); const fd=new FormData(e.target); const body={}; fd.forEach((v,k)=>body[k]=v);
+  document.getElementById("formErr").textContent="";
+  try{ await api("/api/plans",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}); toast("Saved ✓"); e.target.reset(); document.querySelector('[name="progress"]').value=0; loadAll(); }
+  catch(err){ document.getElementById("formErr").textContent=err.message; }
 });
+document.getElementById("perfList").addEventListener("click",e=>{
+  const b=e.target.closest("button");
+  if(!b) return;
+  if(b.dataset.learn){ localStorage.setItem("akij_learning_"+b.dataset.learn, document.getElementById("learn_"+b.dataset.learn).value); toast("Learning saved ✓"); }
+  if(b.dataset.next){ localStorage.setItem("akij_nextaction_"+b.dataset.next, document.getElementById("next_"+b.dataset.next).value); toast("Next action saved ✓"); }
+});
+document.getElementById("loginSbuBtn").addEventListener("click",enterSbu);
+document.getElementById("loginCbdoBtn").addEventListener("click",enterCbdo);
+document.getElementById("loginCode").addEventListener("keydown",e=>{ if(e.key==="Enter") enterCbdo(); });
+document.getElementById("logoutBtn").addEventListener("click",logout);
 
-// pre-fill name in entry form
-document.querySelector('[name="created_by"]').value = localStorage.getItem("akij_user_name") || "";
+// modal
+function openModal(p){ currentModalId=p.id; document.getElementById("mTitle").textContent=p.activity; document.getElementById("mStatus").innerHTML=STATUSES.map(s=>`<option ${s===p.status?"selected":""}>${s}</option>`).join(""); const rows=[["SBU",sbuName(p.sbu)],["Date",p.activity_date],["Category",p.category],["Status",p.status],["Spend",fmtBdt(p.actual_spend)],["Progress",(p.progress||0)+"%"],["Responsible",p.responsible||"—"],["Goal",p.goal||"—"],["KPI / Outcome",p.kpi||"—"],["Notes",stripAudit(p.notes)||"—"],["Last Edited",editedLabel(p)]]; document.getElementById("mBody").innerHTML=`<div class="kv">${rows.map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join("")}</div>`; document.getElementById("modalBackdrop").style.display="flex"; }
+function closeModal(){ document.getElementById("modalBackdrop").style.display="none"; currentModalId=null; }
+document.getElementById("mClose").addEventListener("click",closeModal);
+document.getElementById("modalBackdrop").addEventListener("click",e=>{ if(e.target.id==="modalBackdrop") closeModal(); });
+document.getElementById("mSave").addEventListener("click",async()=>{ if(!currentModalId) return; const st=document.getElementById("mStatus").value; const p=plans.find(x=>x.id===currentModalId); try{ await api("/api/plans?id="+currentModalId,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({status:st,notes:withAudit(p?p.notes:"",who())})}); toast("Saved ✓"); loadAll(); closeModal(); }catch(err){ toast(err.message,true);} });
+document.getElementById("mDelete").addEventListener("click",async()=>{ if(!currentModalId) return; if(!confirm("Delete this activity?")) return; try{ await api("/api/plans?id="+currentModalId,{method:"DELETE"}); toast("Deleted ✓"); loadAll(); closeModal(); }catch(err){ toast(err.message,true);} });
+
+function toast(msg,err){ const t=document.getElementById("toast"); t.textContent=msg; t.className="toast"+(err?" err":""); t.style.display="block"; setTimeout(()=>t.style.display="none",3200); }
+
+function initSelects(){
+  document.querySelector('[name="sbu"]').innerHTML=`<option value="">Select…</option>`+SBUS.map(s=>`<option value="${s[0]}">${s[0]} — ${s[1]}</option>`).join("");
+  document.querySelector('[name="category"]').innerHTML=`<option value="">Select…</option>`+CATS.map(c=>`<option>${c}</option>`).join("");
+  document.querySelector('[name="status"]').innerHTML=STATUSES.map(s=>`<option>${s}</option>`).join("");
+  const fs=document.getElementById("fSbu"); fs.innerHTML=`<option value="">All SBUs</option>`+SBUS.map(s=>`<option>${s[0]}</option>`).join("");
+  document.getElementById("fCat").innerHTML=`<option value="">All Categories</option>`+CATS.map(c=>`<option>${c}</option>`).join("");
+  document.getElementById("fStatus").innerHTML=`<option value="">All Status</option>`+STATUSES.map(s=>`<option>${s}</option>`).join("");
+}
 
 initSelects();
+initLogin();
+applyAuth();
 loadAll();
 </script>
 </body>
