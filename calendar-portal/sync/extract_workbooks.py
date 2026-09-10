@@ -165,23 +165,26 @@ def row_to_plan(row, col, default_sbu_code):
 
     raw_sbu = get("SBU/Business") or ""
     start_date = parse_date(get("Activity Start Date"), get("Month"))
+    end_date = parse_date(get("Activity End Date"), get("Month"))
     status_raw = (get("Execution Status") or "").strip().lower()
     status = STATUS_MAP.get(status_raw, "Planned")
     progress = 100 if status == "Completed" else (50 if status == "In Progress" else 0)
 
-    # stash approval status into notes for fidelity
+    # stash approval status + end date into notes for fidelity
     approval = (get("Approval Status") or "").strip()
     remarks = (get("Remarks") or "").strip()
-    notes_parts = []
+    notes_lines = []
     if approval:
-        notes_parts.append(f"[Approval: {approval}]")
+        notes_lines.append(f"[Approval: {approval}]")
     if remarks:
-        notes_parts.append(remarks)
-    notes = " | ".join(notes_parts) or None
+        notes_lines.append(remarks)
+    if end_date:
+        notes_lines.append(f"⟪end⟫{end_date}")
+    notes = "\n".join(notes_lines) or None
 
     return {
         "activity_date": start_date,
-        "end_date": parse_date(get("Activity End Date")),
+        "end_date": end_date,
         "sbu": sbu_code(raw_sbu, default_sbu_code),
         "activity": activity,
         "category": normalize_category(get("Category")),

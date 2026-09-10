@@ -36,8 +36,19 @@ STATUS_BACK = {
 }
 
 # portal field -> (sheet header name, value transform)
+END_PREFIX = "⟪end⟫"
+
+
+def end_of(p):
+    for line in (p.get("notes") or "").split("\n"):
+        if line.startswith(END_PREFIX):
+            return line[len(END_PREFIX):]
+    return p.get("end_date")
+
+
 FIELD_MAP = [
     ("Activity Start Date", lambda p: p.get("activity_date")),
+    ("Activity End Date", lambda p: end_of(p)),
     ("SBU/Business", lambda p: p.get("sbu")),
     ("Activity Type", lambda p: p.get("activity")),
     ("Category", lambda p: p.get("category")),

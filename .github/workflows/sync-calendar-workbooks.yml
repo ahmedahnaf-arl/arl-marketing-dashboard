@@ -50,6 +50,12 @@ jobs:
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
         run: node sync/sync_blobs.mjs dump --out sync/blobs.json
 
+      - name: Sync consolidated Google Sheet
+        working-directory: calendar-portal
+        env:
+          GOOGLE_SERVICE_ACCOUNT_PATH: /tmp/sa.json
+        run: python sync/consolidated_sheet.py sync --in sync/blobs.json --sheet 15MTBNvO3_7zJHT5YTuqk7HXNkmwhZKJnVSCJkqHMvuo
+
       - name: Write portal rows back to Google Sheets
         working-directory: calendar-portal
         env:
