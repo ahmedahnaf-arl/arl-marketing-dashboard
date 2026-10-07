@@ -22,12 +22,8 @@ jobs:
 
       - name: Build report (T-1)
         working-directory: flash-src
-        env:
-          DWH_SERVER: ${{ secrets.DWH_SERVER }}
-          DWH_USER: ${{ secrets.DWH_USER }}
-          DWH_PASSWORD: ${{ secrets.DWH_PASSWORD }}
         run: |
-          pip install pymssql
+          pip install requests
           python deploy_cloud.py ../flash-live/index.html
 
       - name: Push refresh
