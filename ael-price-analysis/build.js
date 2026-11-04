@@ -50,6 +50,7 @@ const COMPM = readJson(path.join(ROOT,"data","competitor_market.json"), {rows:[]
 const COMPB = readJson(path.join(ROOT,"data","competitor_bench.json"), {rows:[]}).rows;
 const DELFY = readJson(path.join(ROOT,"data","delivery_fy.json"), {rows:[]}).rows;
 const ZONES = readJson(path.join(ROOT,"data","zones.json"), {rows:[]}).rows;
+const PLM = readJson(path.join(ROOT,"data","pl_monthly.json"), {rows:[]}).rows;
 const CHNAMES = {71:"Distributor",70:"Dealer",67:"Bulk",146:"Bulk Flour & Dal",145:"Rice Bulk",72:"Chain Store",68:"Corporate",96:"Export",93:"Government",185:"Tender",69:"Sister Concern",92:"Employee",73:"E-Commerce",183:"HORECA",74:"Trading",0:"Other"};
 
 /* code -> [[channel, qty, value]] over the channel window */
@@ -364,6 +365,7 @@ const PAY = {
   compBench: COMPB,
   delFy: DELFY,
   zones: ZONES,
+  plMonthly: PLM,
   compMonths: [...new Set(COMPM.map(r=>r.ym))].sort(),
   booked: BOOK,
   snapshotSold: DECL.length
@@ -641,7 +643,7 @@ footer{padding:14px 26px;border-top:1px solid var(--line);color:var(--muted);fon
   <div class="guide">
     <div><div class="gl">What this answers</div><p>Where the business is heading, what has to be decided, what to do now, which SKUs are at risk, and how to recover the revenue gap — in that order.</p></div>
     <div><div class="gl">How to read it</div><p>Five blocks, each pairing a plain-language summary with a proof table and a chart. Fiscal years are <b>July–June</b>; FY27 is the year that started July 2026. Every block is recomputed from the period / channel / category filters at the top.</p></div>
-    <div><div class="gl">Source &amp; a caveat</div><p>Orders (net revenue), deliveries and zones from the ERP; declared DP/TP/MRP from the price grid; elasticity from monthly price–volume. <b>COGS is not posted for AEL</b> (0 of 234,781 delivery lines carry a cost), so margin-based “loss-making” screening is replaced by price-realisation risk — stated where it applies.</p></div>
+    <div><div class="gl">Source &amp; a caveat</div><p>Orders and deliveries from the ERP; declared DP/TP/MRP from the price grid; elasticity from monthly price–volume. <b>Gross margin and net profit come from the GL</b> (account 4810001 cost of goods sold, plus selling, logistics, marketing, admin and financing lines) — but only at business-unit level, because no SKU-level cost is posted. SKU screening is therefore price realisation, not SKU P&amp;L.</p></div>
   </div>
   <div class="note-box" id="ddaHead" style="margin-bottom:12px"></div>
 
@@ -650,7 +652,7 @@ footer{padding:14px 26px;border-top:1px solid var(--line);color:var(--muted);fon
     <div class="hint">Monthly net revenue with fiscal-year boundaries. The table proves the trajectory; the SMART box states what it means.</div>
     <div id="cDir"></div>
     <div class="grid g2" style="margin-top:12px">
-      <div><table id="tFy"><thead><tr><th>Fiscal year</th><th>Revenue</th><th>YoY</th><th>Deliveries</th><th>Active SKUs</th></tr></thead><tbody></tbody></table></div>
+      <div><table id="tFy"><thead><tr><th>Fiscal year</th><th>Revenue</th><th>YoY</th><th>GP %</th><th>NP %</th><th>Deliveries</th><th>Partners</th><th>SKUs</th></tr></thead><tbody></tbody></table></div>
       <div id="smartDir"></div>
     </div>
   </div>
@@ -659,6 +661,7 @@ footer{padding:14px 26px;border-top:1px solid var(--line);color:var(--muted);fon
     <h3>02 · Decision — what has to be decided</h3>
     <div class="hint">Three decisions the data supports. Each card carries the number behind it.</div>
     <div class="grid g3" id="decCards"></div>
+    <div class="grid g2" style="margin-top:12px"><div><h3 style="font-size:12.5px;margin:0 0 6px">Margin vs financing cost, by fiscal year</h3><div id="cFin"></div></div><div id="decFinNote"></div></div>
     <div id="cDec" style="margin-top:14px"></div>
     <div class="scroll" style="margin-top:12px"><table id="tDec"><thead><tr>
       <th>SKU</th><th>Category</th><th>Revenue</th><th>Revenue FY27 vs FY26</th><th>Realized vs TP</th><th>β</th><th>Read</th>
@@ -688,6 +691,11 @@ footer{padding:14px 26px;border-top:1px solid var(--line);color:var(--muted);fon
     <div class="grid g2" style="margin-top:12px">
       <div><h3 style="font-size:12.5px;margin:0 0 6px">Where the gap came from</h3><div id="recDrivers"></div></div>
       <div><h3 style="font-size:12.5px;margin:0 0 6px">Recovery plan — SMART</h3><div id="recPlan"></div></div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>06 · 7P marketing mix — each lever with its measured evidence</h3>
+      <div class="hint">Product, Price, Place, Promotion, People, Process, Physical evidence — every line carries the number behind it from the current view.</div>
+      <div class="grid g2" id="p7"></div>
     </div>
     <div class="scroll" style="margin-top:12px"><table id="tRec"><thead><tr><th>Month</th><th>This FY</th><th>Last FY</th><th>Gap</th><th>Gap %</th></tr></thead><tbody></tbody></table></div>
   </div>

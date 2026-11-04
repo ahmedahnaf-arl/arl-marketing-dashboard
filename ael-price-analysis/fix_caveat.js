@@ -1,0 +1,5 @@
+﻿const fs=require('fs');let b=fs.readFileSync('build.js','utf8');
+b=b.replace('<div><div class="gl">Source &amp; a caveat</div><p>Orders (net revenue), deliveries and zones from the ERP; declared DP/TP/MRP from the price grid; elasticity from monthly price–volume. <b>COGS is not posted for AEL</b> (0 of 234,781 delivery lines carry a cost), so margin-based “loss-making” screening is replaced by price-realisation risk — stated where it applies.</p></div>',
+'<div><div class="gl">Source &amp; a caveat</div><p>Orders and deliveries from the ERP; declared DP/TP/MRP from the price grid; elasticity from monthly price–volume. <b>Gross margin and net profit come from the GL</b> (account 4810001 cost of goods sold, plus selling, logistics, marketing, admin and financing lines) — but only at business-unit level, because no SKU-level cost is posted. SKU screening is therefore price realisation, not SKU P&amp;L.</p></div>');
+b=b.replace('<div class="note-box warn" id="riskNote" style="margin-top:12px"></div>','<div class="note-box warn" id="riskNote" style="margin-top:12px"></div>');
+fs.writeFileSync('build.js',b);console.log('guide fixed:', b.includes('account 4810001'));
