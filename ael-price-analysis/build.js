@@ -48,6 +48,8 @@ const BOOK = readJson(path.join(ROOT,"data","discount_booked.json"), []);
 const CAT = readJson(path.join(ROOT,"data","categories.json"), {map:{},method:{}});
 const COMPM = readJson(path.join(ROOT,"data","competitor_market.json"), {rows:[]}).rows;
 const COMPB = readJson(path.join(ROOT,"data","competitor_bench.json"), {rows:[]}).rows;
+const DELFY = readJson(path.join(ROOT,"data","delivery_fy.json"), {rows:[]}).rows;
+const ZONES = readJson(path.join(ROOT,"data","zones.json"), {rows:[]}).rows;
 const CHNAMES = {71:"Distributor",70:"Dealer",67:"Bulk",146:"Bulk Flour & Dal",145:"Rice Bulk",72:"Chain Store",68:"Corporate",96:"Export",93:"Government",185:"Tender",69:"Sister Concern",92:"Employee",73:"E-Commerce",183:"HORECA",74:"Trading",0:"Other"};
 
 /* code -> [[channel, qty, value]] over the channel window */
@@ -360,6 +362,8 @@ const PAY = {
   catCounts: (()=>{const c={}; for(const r of ROWS){const v=r.cat||"Unmapped"; c[v]=(c[v]||0)+1;} return c;})(),
   compMarket: COMPM,
   compBench: COMPB,
+  delFy: DELFY,
+  zones: ZONES,
   compMonths: [...new Set(COMPM.map(r=>r.ym))].sort(),
   booked: BOOK,
   snapshotSold: DECL.length
@@ -404,6 +408,10 @@ input[type=search],select{background:var(--panel2);border:1px solid var(--line);
 @media(max-width:1000px){.guide{grid-template-columns:1fr}}
 .guide .gl{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--amber);margin-bottom:4px;font-weight:600}
 .guide p{margin:0;font-size:11.8px;color:#c3d1e2;line-height:1.55}
+.smart{display:flex;flex-direction:column;gap:7px}
+.smart>div{display:grid;grid-template-columns:22px 1fr;gap:9px;align-items:start}
+.sk{width:20px;height:20px;border-radius:6px;background:rgba(245,165,36,.15);border:1px solid rgba(245,165,36,.45);color:var(--amber);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.smart p{margin:0;font-size:12px;color:#c3d1e2;line-height:1.5}
 .tip{position:fixed;pointer-events:none;background:#0d1622;border:1px solid #33465c;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#e6edf5;box-shadow:0 8px 24px rgba(0,0,0,.5);z-index:99;opacity:0;transition:opacity .12s;max-width:280px}
 .tip b{color:#f5a524}
 .chipbar{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
@@ -631,31 +639,58 @@ footer{padding:14px 26px;border-top:1px solid var(--line);color:var(--muted);fon
 
 <section id="dec">
   <div class="guide">
-    <div><div class="gl">What this answers</div><p>For each material SKU and category: what does the evidence say we should do about price — hold it, restore it, cut it, or stop using price as the lever?</p></div>
-    <div><div class="gl">How to read it</div><p>Every row shows the evidence that produced the call: revenue in view, price change, volume change, elasticity and the gap to declared TP. <b>Decision</b> is the finding, <b>Direction</b> is the pricing stance, <b>Action</b> is the next concrete step. Rows follow the current date / channel / category filters.</p></div>
-    <div><div class="gl">Source</div><p>All from the same order rows and declared price grid as the other tabs. Thresholds are stated in the Decision column (|β| &gt; 1, ±2% price move, 5% gap to TP) so the rule can be audited.</p></div>
+    <div><div class="gl">What this answers</div><p>Where the business is heading, what has to be decided, what to do now, which SKUs are at risk, and how to recover the revenue gap — in that order.</p></div>
+    <div><div class="gl">How to read it</div><p>Five blocks, each pairing a plain-language summary with a proof table and a chart. Fiscal years are <b>July–June</b>; FY27 is the year that started July 2026. Every block is recomputed from the period / channel / category filters at the top.</p></div>
+    <div><div class="gl">Source &amp; a caveat</div><p>Orders (net revenue), deliveries and zones from the ERP; declared DP/TP/MRP from the price grid; elasticity from monthly price–volume. <b>COGS is not posted for AEL</b> (0 of 234,781 delivery lines carry a cost), so margin-based “loss-making” screening is replaced by price-realisation risk — stated where it applies.</p></div>
   </div>
-  <div class="grid g4">
-    <div class="card kpi"><div class="lab">Calls generated</div><div class="val" id="x1"></div><div class="note">SKUs and categories in view</div></div>
-    <div class="card kpi"><div class="lab">Hold / restore price</div><div class="val" id="x2"></div><div class="note">price is not the lever, or the cut failed</div></div>
-    <div class="card kpi"><div class="lab">Price-led growth</div><div class="val" id="x3"></div><div class="note">elastic demand where a move pays</div></div>
-    <div class="card kpi"><div class="lab">Re-declare needed</div><div class="val" id="x4"></div><div class="note">realized &gt; 5% below declared TP</div></div>
-  </div>
+  <div class="note-box" id="ddaHead" style="margin-bottom:12px"></div>
+
   <div class="card" style="margin-top:12px">
-    <h3>Category decisions</h3>
-    <div class="hint" id="catDecNote">Roll-up at category level. Revenue change compares the last 3 months with the prior 3 months in view; price change is the median across the category’s SKUs.</div>
-    <div class="scroll" style="max-height:360px"><table id="tCatDec"><thead><tr>
-      <th>Category</th><th>Revenue</th><th>Rev Δ</th><th>Median price Δ</th><th>% SKUs cutting</th><th>Median β</th><th>Decision</th><th>Direction</th><th>Action</th>
+    <h3>01 · Direction — where the business is heading</h3>
+    <div class="hint">Monthly net revenue with fiscal-year boundaries. The table proves the trajectory; the SMART box states what it means.</div>
+    <div id="cDir"></div>
+    <div class="grid g2" style="margin-top:12px">
+      <div><table id="tFy"><thead><tr><th>Fiscal year</th><th>Revenue</th><th>YoY</th><th>Deliveries</th><th>Active SKUs</th></tr></thead><tbody></tbody></table></div>
+      <div id="smartDir"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h3>02 · Decision — what has to be decided</h3>
+    <div class="hint">Three decisions the data supports. Each card carries the number behind it.</div>
+    <div class="grid g3" id="decCards"></div>
+    <div id="cDec" style="margin-top:14px"></div>
+    <div class="scroll" style="margin-top:12px"><table id="tDec"><thead><tr>
+      <th>SKU</th><th>Category</th><th>Revenue</th><th>Revenue FY27 vs FY26</th><th>Realized vs TP</th><th>β</th><th>Read</th>
     </tr></thead><tbody></tbody></table></div>
   </div>
+
   <div class="card" style="margin-top:12px">
-    <h3>SKU decisions</h3>
-    <div class="hint">Top SKUs by revenue in the current view. Price and volume change compare the last 3 months with the prior 3 months. Click a row for its month-on-month history.</div>
-    <div class="scroll" style="max-height:520px"><table id="tDec"><thead><tr>
-      <th>SKU</th><th>Category</th><th>Revenue</th><th>Price Δ</th><th>Volume Δ</th><th>β</th><th>R²</th><th>vs TP</th><th>Decision</th><th>Direction</th><th>Action</th>
-    </tr></thead><tbody></tbody></table></div>
+    <h3>03 · Action — what to do now</h3>
+    <div class="hint">Prioritised moves, each with the evidence that justifies it.</div>
+    <div class="scroll"><table id="tAct"><thead><tr><th>#</th><th>Priority</th><th>Action</th><th>Evidence</th><th>Owner</th></tr></thead><tbody></tbody></table></div>
   </div>
-  <div class="card" style="margin-top:12px"><div class="note-box warn"><b>Scope of the call.</b> These are pricing decisions, not commercial judgement: the rules only look at realized price, volume, elasticity and the declared grid. They do not know about COGS (not in this extract), stock cover, or competitor stock — so a “price-led growth” call must be checked against margin before it is executed.</div></div>
+
+  <div class="card" style="margin-top:12px">
+    <h3>04 · At-risk SKUs — price realisation</h3>
+    <div class="hint">SKUs trading materially below their declared trade price, and SKUs losing both price and volume. This is a realisation-risk screen, not a P&amp;L loss screen.</div>
+    <div id="cRisk"></div>
+    <div class="scroll" style="margin-top:12px"><table id="tRisk"><thead><tr>
+      <th>SKU</th><th>Category</th><th>Revenue</th><th>Realized</th><th>Declared TP</th><th>Gap</th><th>Price Δ</th><th>Volume Δ</th><th>Direction</th><th>Action</th>
+    </tr></thead><tbody></tbody></table></div>
+    <div class="note-box warn" id="riskNote" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h3>05 · Loss recovery plan</h3>
+    <div class="hint">Same months, year on year, with the gap split by category and a SMART recovery plan.</div>
+    <div id="cRec"></div>
+    <div class="grid g2" style="margin-top:12px">
+      <div><h3 style="font-size:12.5px;margin:0 0 6px">Where the gap came from</h3><div id="recDrivers"></div></div>
+      <div><h3 style="font-size:12.5px;margin:0 0 6px">Recovery plan — SMART</h3><div id="recPlan"></div></div>
+    </div>
+    <div class="scroll" style="margin-top:12px"><table id="tRec"><thead><tr><th>Month</th><th>This FY</th><th>Last FY</th><th>Gap</th><th>Gap %</th></tr></thead><tbody></tbody></table></div>
+  </div>
 </section>
 
 <section id="mt">
