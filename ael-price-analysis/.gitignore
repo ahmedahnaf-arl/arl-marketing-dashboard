@@ -4,3 +4,9 @@ AEL_Price_Elasticity_Cockpit.html
 node_modules/
 __pycache__/
 server.js
+chk_*.js
+patch_*.js
+fix_*.js
+v7.js
+verify_*.js
+top30.js
