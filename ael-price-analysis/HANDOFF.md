@@ -66,6 +66,9 @@ Two ways it runs:
 | `build.js` | Server-side build: reads `data/*.json`, computes per-SKU stats, emits the HTML (markup lives here). |
 | `client.frag.html` | The browser layer: the `frame` filter model, all rendering, charts, tooltips, DDA/7P logic. Loaded by `build.js`. |
 | `config.json` | `{ "buCode": 144, "buName": "Akij Essential", "buShort": "AEL" }` — change this to repoint at another SBU. |
+| `import_external.py` | Parses the price & trade-offer workbook into `external/price_master.json` (committed) and `data/external_price_master.json`. Run whenever the workbook changes. |
+| `external/price_master.json` | **Committed** parsed workbook — the build reads this, so CI works without the spreadsheet. |
+| `external/*.xlsx` | Raw workbook (gitignored, not published). Drop the latest file here to refresh. |
 | `verify.js` | Headless render check (jsdom). Must report `errors: []` and non-zero rows in every table. |
 | `collect*.js` | Legacy helpers used while the data was scraped interactively through MCP tool output. **Not used by `refresh.py` or CI** — safe to ignore or delete. |
 | `.gitignore` | Excludes `data/`, `*.csv`, the built HTML and scratch scripts. |
@@ -104,6 +107,28 @@ node verify.js                # must show errors: [] and populated tables
 Preview: `node server.js` is **not** committed; any static server works, e.g.
 `npx http-server -p 8123` then open `http://127.0.0.1:8123/AEL_Price_Elasticity_Cockpit.html`.
 
+## 4b. External workbook (manual input, not from ERP)
+
+The file `Copy of Competitor's Comparison - Price & Trade Offer.xlsx` supplies what the ERP does not:
+
+- **AEL current vs proposed** DP / TP / MRP / trade offer per SKU (49 consumer SKUs).
+- **13 competitor brands** × DP / TP / MRP / EDP / ETP / trade offer, per SKU.
+- **Sep'26 vs Oct'26 movement**: primary sales, secondary sales and billed outlets per SKU.
+
+To refresh it:
+
+```powershell
+python import_external.py --file "C:\path\to\Copy of Competitor's Comparison - Price & Trade Offer.xlsx"
+node build.js
+git add external/price_master.json ael-price-cockpit/index.html
+git commit -m "Refresh price & trade-offer workbook"; git push
+```
+
+Notes:
+- `external/price_master.json` is committed and read in preference to `data/`; the raw `.xlsx` is gitignored, so a fresh clone rebuilds without the spreadsheet.
+- The daily CI job does **not** refresh this file — it is a human-maintained input. Check the `imported` date before trusting the workbook cards.
+- The sheet is parsed by fixed column positions (`COL` and `COMP_FIRST` in `import_external.py`). If the sheet is restructured, update those constants — never let columns shift silently.
+
 ## 5. Publish
 
 ```powershell
@@ -133,7 +158,8 @@ GitHub Pages rebuilds in ~30-60 s. Or trigger the workflow: **Actions → “Ref
 | Trade schemes | `rtm.tblRTMTradeOfferSetupHeader` + `…Row` |
 | Booked discounts | `oms.tblSalesOrderRowDiscount` (from 10-Oct-2026 only) |
 | Free goods | `oms.tblSalesOrderRow.isFreeItem` (full history) |
-| Competitor prices | `oms.tblCompetitorPriceHeader` + `…Row` + `…Product` (May–Dec 2024 only) |
+| Competitor prices (ERP) | `oms.tblCompetitorPriceHeader` + `…Row` + `…Product` (May–Dec 2024 only) |
+| Competitor prices, proposed grid, trade offers, Sep/Oct volumes | **external workbook** → `external/price_master.json` (see §4b) |
 | Deliveries / zones / partners | `sms.tblDeliveryHeader` |
 | P&L (revenue, COGS, opex, financing) | `fin.tblAccountingJournal` — see GL map below |
 | Categories | Google Sheet `1mXoEEQB6_tJfS485mQPA_lHJKG79M9yYMc_f6_7AryQ` (link-shared CSV) |
@@ -188,6 +214,8 @@ These were learned the hard way. Breaking them silently corrupts the report.
 | Break-even gross margin | ≈13.5% of revenue |
 | Declared prices | 85 SKUs (84 DP · 81 TP · 64 MRP); 10 trade >5% below TP |
 | Elasticity | ~40 usable SKUs of 1,001; median β ≈ −1.5 |
+| Workbook | 49 SKUs · 39 with competitor prices · 13 brands · 12 SKUs with a written trade offer · MRP for 46 |
+| Workbook Sep→Oct | secondary 3,518 → 2,612 (−25.8%) · primary 3,606 → 2,557 (−29.1%) — independently corroborates the dip |
 
 ---
 
@@ -197,6 +225,7 @@ These were learned the hard way. Breaking them silently corrupts the report.
 - **Competitor prices are May–Dec 2024 only** and bulk 50 KG packs carry no MRP/DP — consumer packs only are comparable.
 - **Channel data covers 24 months**, so channel filtering outside that window is all-channel by design (the UI says so).
 - **Item-level trade discounts** begin 10-Oct-2026; before that only free goods are visible.
+- **The price workbook is manual and narrow** — 49 consumer SKUs only, and it does not update itself; treat it as commercial intent, not audited fact.
 - **Market share is not in the ERP** — the only external share data lives in a marketing sheet, not wired in.
 - **`oms.tblSalesOrderRowDiscount.intItemId` is 0**, so booked discounts cannot be attributed to a SKU.
 - **Public repo** — see the warning at the top.
