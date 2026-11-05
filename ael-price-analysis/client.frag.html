@@ -338,7 +338,7 @@ function renderMom(){
     s2+='<circle cx="'+x+'" cy="'+yq+'" r="5" fill="transparent" data-tip="'+esc(tip)+'"/>';
     s2+='<circle cx="'+x+'" cy="'+yp+'" r="5" fill="transparent" data-tip="'+esc(tip)+'"/>';
     s2+='<circle cx="'+x+'" cy="'+yq+'" r="1.8" fill="#60a5fa"/><circle cx="'+x+'" cy="'+yp+'" r="1.8" fill="#f5a524"/>';
-    if(k%6===0)s2+='<text x="'+x+'" y="'+(H-10)+'" fill="#8b9bb0" font-size="7.5" text-anchor="middle">'+o.m.slice(2)+'</text>';});
+    var mstep=Math.max(1,Math.ceil(pts.length/10));if(k%mstep===0)s2+='<text x="'+x+'" y="'+(H-10)+'" fill="#8b9bb0" font-size="7.5" text-anchor="middle">'+o.m.slice(2)+'</text>';});
   s2+='</svg><div class="legend"><span><i style="background:#60a5fa"></i>Volume (left)</span><span><i style="background:#f5a524"></i>Realized price (right)</span></div>';
   document.getElementById('momChart').innerHTML=s2; bindAll(document.getElementById('momChart'));
 }
@@ -661,7 +661,7 @@ function renderExtras(){
         var yy=pad.t+(H-pad.t-pad.b)*(1-(v/base*100-mn)/((mx-mn)||1));d+=(st?'L':'M')+(pad.l+i*step)+','+yy;st=true;});return d;}
       s2+='<path d="'+path('mk',k0)+'" fill="none" stroke="#f5a524" stroke-width="2"/>';
       s2+='<path d="'+path('us',u0)+'" fill="none" stroke="#60a5fa" stroke-width="2"/>';
-      pts.forEach(function(p,i){if(i%1===0)s2+='<text x="'+(pad.l+i*step)+'" y="'+(H-10)+'" fill="#8b9bb0" font-size="8" text-anchor="middle">'+p.m.slice(2)+'</text>';});
+      var lstep=Math.max(1,Math.ceil(pts.length/8));pts.forEach(function(p,i){if(i%lstep===0)s2+='<text x="'+(pad.l+i*step)+'" y="'+(H-10)+'" fill="#8b9bb0" font-size="8" text-anchor="middle">'+p.m.slice(2)+'</text>';});
       s2+='</svg><div class="legend"><span><i style="background:#f5a524"></i>Market MRP</span><span><i style="background:#60a5fa"></i>Our realized price</span></div>';
       document.getElementById('cCmp').innerHTML=s2;
     }
@@ -729,6 +729,56 @@ function fyPL(){
   });
   return out;
 }
+function extRows(){ return (D.ext&&D.ext.rows)||[]; }
+function renderExtComp(){
+  var rows=extRows().filter(function(r){return r.comp&&r.comp.length;});
+  if(!rows.length) return;
+  var pick=document.getElementById('extPick'); if(!pick) return;
+  if(!pick.options.length){
+    rows.forEach(function(r){var o=document.createElement('option');o.value=r.c;o.textContent=(r.n||r.c)+' ('+r.c+')';pick.appendChild(o);});
+    var best=rows.slice().sort(function(a,b){
+      var va=META[a.c]?rowStats(a.c).totV:0, vb=META[b.c]?rowStats(b.c).totV:0; return vb-va;})[0];
+    if(best) pick.value=best.c;
+  }
+  function draw(){
+    var r=rows.filter(function(x){return x.c===pick.value;})[0]||rows[0];
+    var curDp=r.cur&&r.cur.dp, propDp=r.prop&&r.prop.dp;
+    var out='';
+    var mk=function(label,dp,tp,mrp,edp,etp,offer,cls){
+      return '<tr class="'+cls+'"><td><b>'+label+'</b></td><td>'+nf(dp,2)+'</td><td>'+nf(tp,2)+'</td><td>'+nf(mrp,2)+'</td>'+
+        '<td>'+nf(edp,2)+'</td><td>'+nf(etp,2)+'</td><td class="small">'+(offer||'—')+'</td><td>—</td></tr>';};
+    out+=mk('Akij Essential — current', r.cur&&r.cur.dp, r.cur&&r.cur.tp, r.prop&&r.prop.mrp, r.cur&&r.cur.edp, r.cur&&r.cur.etp, r.cur&&r.cur.offer,'');
+    out+=mk('Akij Essential — proposed', propDp, r.prop&&r.prop.tp, r.prop&&r.prop.mrp, r.prop&&r.prop.edp, r.prop&&r.prop.etp, r.prop&&r.prop.offer,'');
+    r.comp.forEach(function(b){
+      var gap=(b.dp!=null&&curDp)?b.dp/curDp-1:null;
+      out+='<tr><td>'+b.b+'</td><td>'+nf(b.dp,2)+'</td><td>'+nf(b.tp,2)+'</td><td>'+nf(b.mrp,2)+'</td>'+
+        '<td>'+nf(b.edp,2)+'</td><td>'+nf(b.etp,2)+'</td><td class="small">'+(b.o||'—')+'</td>'+
+        '<td class="'+cls(gap)+'">'+(gap!=null?pf(gap):'—')+'</td></tr>';
+    });
+    document.querySelector('#tExtComp tbody').innerHTML=out;
+    var priced=r.comp.filter(function(b){return b.dp!=null;});
+    var med=priced.map(function(b){return b.dp;}).sort(function(a,b){return a-b;});
+    var medDp=med.length?med[Math.floor(med.length/2)]:null;
+    document.getElementById('extNote').textContent=priced.length+' of '+D.ext.brands.length+' brands priced'+
+      (medDp!=null&&curDp?(' · median competitor DP '+nf(medDp,2)+' vs our '+nf(curDp,2)+' ('+pf(curDp/medDp-1)+')'):'');
+  }
+  pick.onchange=draw; draw();
+}
+
+function renderExtPrice(){
+  var rows=extRows(); if(!rows.length) return;
+  var tb=document.querySelector('#tExtPrice tbody'); if(!tb) return;
+  rows.sort(function(a,b){return (a.cat||'').localeCompare(b.cat||'')||(a.n||'').localeCompare(b.n||'');});
+  tb.innerHTML=rows.map(function(r){
+    var cD=r.cur&&r.cur.dp, pD=r.prop&&r.prop.dp, cT=r.cur&&r.cur.tp, pT=r.prop&&r.prop.tp;
+    var dD=(cD!=null&&pD!=null)?pD/cD-1:null, dT=(cT!=null&&pT!=null)?pT/cT-1:null;
+    return '<tr><td><b>'+r.n+'</b><div class="small">'+r.c+'</div></td><td>'+r.cat+'</td><td>'+(r.bag!=null?nf(r.bag,0):'—')+'</td>'+
+      '<td>'+nf(cD,2)+'</td><td>'+nf(pD,2)+'</td><td class="'+cls(dD)+'">'+pf(dD)+'</td>'+
+      '<td>'+nf(cT,2)+'</td><td>'+nf(pT,2)+'</td><td class="'+cls(dT)+'">'+pf(dT)+'</td>'+
+      '<td>'+nf(r.prop&&r.prop.mrp,0)+'</td><td class="small">'+((r.prop&&r.prop.offer)||(r.cur&&r.cur.offer)||'—')+'</td></tr>';
+  }).join('');
+}
+
 function renderDDA(){
   if(!document.getElementById('tFy')) return;
   var fy=fyRollup(), pl=fyPL(), fys=Object.keys(fy).map(Number).sort(function(a,b){return a-b;});
@@ -854,6 +904,20 @@ function renderDDA(){
         ' That is the bar any price decision has to clear.</div>';
     }
 
+    /* workbook: trade offers + MRP coverage */
+    var ex=extRows();
+    if(ex.length){
+      var withOffer=ex.filter(function(r){return (r.prop&&r.prop.offer)||(r.cur&&r.cur.offer);});
+      var withMrp=ex.filter(function(r){return r.prop&&r.prop.mrp!=null;});
+      var erpScheme={}; (D.schemes||[]).forEach(function(s){ if(s.code) erpScheme[String(s.code).replace(/\D/g,'')]=1; });
+      var orphan=withOffer.filter(function(r){return !erpScheme[r.c];});
+      document.getElementById('decCards').innerHTML +=
+        '<div class="card" style="background:var(--panel2)"><div class="gl" style="color:var(--amber);font-size:10px;letter-spacing:.8px">DECISION 5 · TRADE OFFERS &amp; MRP</div>'+
+        '<p style="font-size:12.4px;margin:6px 0 0"><b>'+withOffer.length+'</b> SKUs carry a written slab/free offer in the price workbook, but only <b>'+(withOffer.length-orphan.length)+
+        '</b> of them exist as a scheme in the ERP — <b>'+orphan.length+' offers live only in a spreadsheet</b>. MRP is now on file for <b>'+withMrp.length+'</b> SKUs. '+
+        'Book the offers in the ERP or drop them; an un-booked offer cannot be governed, audited or measured.</p></div>';
+    }
+
     var top=dec.slice(0,15);
     var W=980,rowH=22,H=top.length*rowH+40,x0=300,wd=520;
     var maxR=Math.max.apply(null,top.map(function(x){return x.rev;}).concat([1]));
@@ -971,7 +1035,8 @@ function renderDDA(){
       card('PLACE', chs||'—',
         'Channel concentration is extreme: three channels carry most of the revenue. Top delivery zones: '+(zones||'—')+'.')+
       card('PROMOTION', schemes+' schemes · ৳'+bcr(booked)+' Cr booked',
-        active+' schemes active, all on the Distributor channel. Free goods issued in view: '+nf(free)+' units. Discount booking only started Oct-2026, so history is thin.')+
+        active+' schemes active in the ERP, all on the Distributor channel; '+((D.ext&&D.ext.rows)?(D.ext.rows.filter(function(r){return (r.prop&&r.prop.offer)||(r.cur&&r.cur.offer);}).length):0)+
+        ' SKUs carry a written trade offer in the price workbook. Free goods issued in view: '+nf(free)+' units.')+
       card('PEOPLE', partners!=null?nf(partners)+' buying partners':'partners not available',
         'Deliveries per partner and coverage drive volume more than price in bulk. The sales book is wide; realisation discipline is not.')+
       card('PROCESS', decl.length+' of '+FR.codes.length+' SKUs priced ('+pf(FR.codes.length?decl.length/FR.codes.length:null,0)+')',
@@ -1031,6 +1096,17 @@ function renderDDA(){
     drv+='</div>';
     document.getElementById('recDrivers').innerHTML=drv;
 
+    var exr=extRows();
+    if(exr.length){
+      var sS=0,sO=0,pS=0,pO=0,n=0;
+      exr.forEach(function(r){var v=r.vol||{}; if(v.secSep!=null&&v.secOct!=null){sS+=v.secSep;sO+=v.secOct;n++;}
+        if(v.primSep!=null&&v.primOct!=null){pS+=v.primSep;pO+=v.primOct;}});
+      var secTxt = n? ('Secondary sales across the '+n+' workbook SKUs moved from '+nf(sS,0)+' to '+nf(sO,0)+' ('+pf(sS?sO/sS-1:null)+') between Sep and Oct. '):' ';
+      var primTxt = (pS&&pO)? ('Primary moved '+nf(pS,0)+' → '+nf(pO,0)+' ('+pf(pO/pS-1)+'). '):' ';
+      document.getElementById('recDrivers').innerHTML += '<div class="note-box" style="margin-top:10px"><b>Independent check (price workbook).</b> '+secTxt+primTxt+
+        'That is a second, differently-sourced confirmation of the direction of the dip.</div>';
+    }
+
     var worst=cats.slice(0,3).map(function(x){return x.k;}).join(', ');
     var gapCr=totalC-totalP;
     document.getElementById('recPlan').innerHTML=
@@ -1061,7 +1137,7 @@ function renderAll(){
     if(def && (!pick.value || !FR.series[pick.value])) pick.value=def;
   }
   renderSku(); renderMom(); renderDecl(document.getElementById('chq').value||'');
-  renderJumps(); renderPg(); renderEl(); renderDDA(); renderChips(); renderRange(); renderExtras();
+  renderJumps(); renderPg(); renderEl(); renderExtComp(); renderExtPrice(); renderDDA(); renderChips(); renderRange(); renderExtras();
   if(ELDETAIL) showElDetail(ELDETAIL);
 }
 

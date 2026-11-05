@@ -51,6 +51,7 @@ const COMPB = readJson(path.join(ROOT,"data","competitor_bench.json"), {rows:[]}
 const DELFY = readJson(path.join(ROOT,"data","delivery_fy.json"), {rows:[]}).rows;
 const ZONES = readJson(path.join(ROOT,"data","zones.json"), {rows:[]}).rows;
 const PLM = readJson(path.join(ROOT,"data","pl_monthly.json"), {rows:[]}).rows;
+const EXT = readJson(path.join(ROOT,"external","price_master.json"), readJson(path.join(ROOT,"data","external_price_master.json"), {rows:[],brands:[]}));
 const CHNAMES = {71:"Distributor",70:"Dealer",67:"Bulk",146:"Bulk Flour & Dal",145:"Rice Bulk",72:"Chain Store",68:"Corporate",96:"Export",93:"Government",185:"Tender",69:"Sister Concern",92:"Employee",73:"E-Commerce",183:"HORECA",74:"Trading",0:"Other"};
 
 /* code -> [[channel, qty, value]] over the channel window */
@@ -366,6 +367,7 @@ const PAY = {
   delFy: DELFY,
   zones: ZONES,
   plMonthly: PLM,
+  ext: EXT,
   compMonths: [...new Set(COMPM.map(r=>r.ym))].sort(),
   booked: BOOK,
   snapshotSold: DECL.length
@@ -579,13 +581,21 @@ footer{padding:14px 26px;border-top:1px solid var(--line);color:var(--muted);fon
   <div class="guide">
     <div><div class="gl">What this answers</div><p>When our price moved, did volume follow because of us — or because the whole market moved? This compares our realized price with the same pack sold by competitor brands.</p></div>
     <div><div class="gl">How to read it</div><p>Comparison is like-for-like: same product form and same pack size (e.g. Chinigura 1kg vs Chinigura 1kg), not a category average. “Premium vs MRP/DP” is our realized price against the market average. The verdict says whether we led the market, followed it, or moved against it.</p></div>
-    <div><div class="gl">Source</div><p>oms.tblCompetitorPriceHeader / Row / Product — market price surveys by brand and pack. Coverage is limited: <b>May–Dec 2024 only</b>, and bulk 50 KG rows carry no MRP in the ERP.</p></div>
+    <div><div class="gl">Source</div><p>Two: the <b>price &amp; trade-offer workbook</b> (AEL current vs proposed, 13 competitor brands, Oct-2026) and the ERP survey <b>oms.tblCompetitorPriceHeader / Row / Product</b>, which covers <b>May–Dec 2024 only</b> and has no MRP on bulk 50 KG rows.</p></div>
   </div>
   <div class="grid g4">
     <div class="card kpi"><div class="lab">Competitor brands tracked</div><div class="val" id="m1"></div><div class="note">across rice, flour, oil, salt, sugar</div></div>
     <div class="card kpi"><div class="lab">Benchmark packs</div><div class="val" id="m2"></div><div class="note">form + pack size with market prices</div></div>
     <div class="card kpi"><div class="lab">Survey window</div><div class="val" id="m3"></div><div class="note">competitor price data</div></div>
     <div class="card kpi"><div class="lab">Our SKUs matched</div><div class="val" id="m4"></div><div class="note">comparable to a market pack</div></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Competitor matrix — price master workbook (13 brands)</h3>
+    <div class="hint">Same SKU, every brand surveyed in the price &amp; trade-offer workbook. Our current and proposed rows are highlighted. DP / TP / MRP per master bag as recorded in the sheet.</div>
+    <div class="toolbar"><select id="extPick" style="min-width:340px"></select><span class="small" id="extNote"></span></div>
+    <div class="scroll" style="max-height:380px"><table id="tExtComp"><thead><tr>
+      <th>Brand</th><th>DP</th><th>TP</th><th>MRP</th><th>EDP</th><th>ETP</th><th>Trade offer</th><th>DP vs us</th>
+    </tr></thead><tbody></tbody></table></div>
   </div>
   <div class="card" style="margin-top:12px">
     <h3>Our price vs market — same pack</h3>
@@ -620,6 +630,13 @@ footer{padding:14px 26px;border-top:1px solid var(--line);color:var(--muted);fon
     <div class="card kpi"><div class="lab">With a declared TP</div><div class="val" id="p2"></div><div class="note">dealer channel price</div></div>
     <div class="card kpi"><div class="lab">With MRP</div><div class="val" id="p3"></div><div class="note">retail price table</div></div>
     <div class="card kpi"><div class="lab">Trading below declared TP</div><div class="val" id="p4"></div><div class="note">realized net price vs TP</div></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Proposed price architecture &amp; trade offers — workbook</h3>
+    <div class="hint">Current vs proposed DP / TP / MRP for the consumer range, with the trade offer written against each SKU. This is the commercial intent; the ERP grid above is what the system currently holds.</div>
+    <div class="scroll" style="max-height:420px"><table id="tExtPrice"><thead><tr>
+      <th>SKU</th><th>Cat</th><th>Bag</th><th>DP now</th><th>DP prop</th><th>Δ</th><th>TP now</th><th>TP prop</th><th>Δ</th><th>MRP</th><th>Trade offer</th>
+    </tr></thead><tbody></tbody></table></div>
   </div>
   <div class="grid g2" style="margin-top:12px">
     <div class="card"><h3>Realized price vs declared TP</h3><div class="hint">Each SKU plotted by how far its latest realized price sits above (red) or below (teal) its declared trade price.</div><div id="cGap"></div></div>

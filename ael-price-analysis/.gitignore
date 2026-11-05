@@ -10,3 +10,4 @@ fix_*.js
 v7.js
 verify_*.js
 top30.js
+external/*.xlsx
