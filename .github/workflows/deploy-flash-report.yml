@@ -34,5 +34,5 @@ jobs:
         run: |
           git config user.name "Flash Report Bot"
           git config user.email "bot@akijresource.com"
-          git add index.html
+          git add index.html october-tracker.html
           if git diff --cached --quiet; then echo "No change"; else git commit -m "Auto-refresh T-1 data"; git push origin main; fi
