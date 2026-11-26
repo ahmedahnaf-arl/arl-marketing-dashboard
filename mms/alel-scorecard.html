@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKIJ MMS — ENOVAR (ALEL) KPI Scorecard &amp; Indices</title>
+<style>
+:root{--navy:#0B1B33;--navy2:#0F2A47;--blue:#1F4E79;--gold:#C9A227;--bg:#F4F6FA;--card:#fff;--ink:#15202B;--mut:#5A6B7C;--line:#E6EBF2;--green:#1E6B3C;--amber:#C87E1A;--red:#A61C1C;--teal:#2E7D6B}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+.topbar{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,var(--navy),var(--navy2));color:#fff;padding:12px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.topbar .brand{font-weight:800;font-size:15px}.topbar .brand b{color:var(--gold)}
+.topbar .pill{font-size:10px;font-weight:800;background:var(--gold);color:var(--navy);padding:3px 9px;border-radius:20px;letter-spacing:.4px}
+.topbar .spacer{flex:1}.btn{background:#fff;border:1px solid var(--line);color:var(--navy);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}
+.wrap{max-width:1400px;margin:0 auto;padding:20px 24px 80px}
+.banner{background:linear-gradient(120deg,var(--navy),var(--blue));border-radius:14px;color:#fff;padding:18px 22px;margin-bottom:14px}
+.banner h1{font-size:19px;font-weight:800}.banner .sub{font-size:12px;color:#C7D6E8;margin-top:5px;line-height:1.55}
+.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px;box-shadow:0 1px 3px rgba(16,42,67,.08),0 8px 24px rgba(16,42,67,.06);margin-bottom:14px}
+.card h2{font-size:14px;font-weight:800;color:var(--navy);margin-bottom:8px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}@media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:12px 14px}.kpi .k{font-size:10px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.4px}.kpi .v{font-size:22px;font-weight:800;margin-top:4px}.kpi .s{font-size:10.5px;color:var(--mut)}
+.snap{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px}@media(max-width:1000px){.snap{grid-template-columns:repeat(3,1fr)}}
+.tbl{width:100%;border-collapse:collapse;font-size:11.5px}.tbl th,.tbl td{padding:6px 7px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.tbl th{background:var(--navy);color:#fff;font-size:9.5px;text-transform:uppercase;letter-spacing:.3px}.tbl td.num,.tbl th.num{text-align:right}
+.badge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;white-space:nowrap}.b-green{background:#E4F2EA;color:var(--green)}.b-amber{background:#FCF3E2;color:var(--amber)}.b-red{background:#FCEBEB;color:var(--red)}.b-blue{background:#E6F0FA;color:var(--blue)}.b-gray{background:#EEF1F6;color:#5A6B7C}
+.note{font-size:11px;color:var(--mut);line-height:1.5}
+footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top:1px solid var(--line);margin-top:24px}
+</style>
+</head>
+<body>
+<div class="topbar"><span class="brand">AKIJ <b>Resource</b> · MMS</span><span class="pill">ENOVAR (ALEL) · KPI SCORECARD</span><span class="spacer"></span><button class="btn" onclick="window.print()">Print / PDF</button></div>
+<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./strategy-analytics.html">Strategy &amp; Analytics</a><a href="./enovar-icp.html">ENOVAR ICP</a><a href="./enovar-differentiation.html">ICP Differentiation</a><a href="./positioning-4p.html">4P Positioning</a><a href="./4p-evolution.html">4P Evolution</a><a href="./gap-mitigation.html">Gap Mitigation</a><a href="./alel-scorecard.html">ALEL Scorecard</a><a href="./spec.md">Spec</a></div>
+<div class="wrap">
+  <div class="banner"><h1>ENOVAR (ALEL) — KPI Scorecard &amp; Indices</h1><div class="sub">21 active KPIs against ALEL targets; BEI / BHI / BPI / composite. Revenue/marketing from ERP (BU 237); perception KPIs are baseline estimates pending research (Law of Large Numbers applied).</div></div>
+
+  <div class="snap">
+    <div class="kpi"><div class="k">FY25-26 revenue (ERP)</div><div class="v">136.39 Cr</div><div class="s">ICP basis 137.80</div></div>
+    <div class="kpi"><div class="k">FY26-27 target</div><div class="v">402.14 Cr</div><div class="s">+192% YoY</div></div>
+    <div class="kpi"><div class="k">YTD revenue (ERP)</div><div class="v">108.73 Cr</div><div class="s">Jul–Nov</div></div>
+    <div class="kpi"><div class="k">Marketing YTD (ERP)</div><div class="v">6.81 Cr</div><div class="s">GL 4210001</div></div>
+    <div class="kpi"><div class="k">Gross margin</div><div class="v">38.9%</div><div class="s">EAT 2.5%</div></div>
+    <div class="kpi"><div class="k">Share</div><div class="v">3.9% → 8.7%</div><div class="s">rank #6 → top</div></div>
+  </div>
+
+  <div class="card"><h2>Indices (0–5, and /100)</h2><div class="kpis" id="idx"></div>
+    <p class="note">Index mapping: BEI = D1 · BHI = D2+D3+D6 · BPI = D4+D5+D7 · Composite = all 7 (weights 28/13/9/20/15/4/11). Scores are baseline attainment vs FY26-27 target until the tracker measures current values.</p>
+  </div>
+
+  <div class="card"><h2>KPI Scorecard — 21 KPIs</h2>
+    <table class="tbl" id="ktab"></table>
+    <p class="note">Score 0–5 vs FY26-27 target: ≥110%=5 · ≥100%=4 · ≥90%=3 · ≥80%=2 · &lt;80%=1. Current = baseline (unmeasured) for perception KPIs; revenue/marketing are ERP actuals.</p>
+  </div>
+
+  <div class="card"><h2>Data Gaps &amp; Law of Large Numbers (extrapolation)</h2>
+    <p>The perception KPIs have no measured baseline yet. We treat them as <b>estimates</b> and apply the Law of Large Numbers for the future tracker: with a sample of <b>n = 400</b> and p = 0.5 (max variance), the <b>margin of error is ±4.9% at 95% confidence</b>. Any score built on n &lt; 400 is marked "insufficient data" (not official).</p>
+    <table class="tbl"><tr><th>Data</th><th>Status</th><th>Source</th><th>Extrapolation / confidence</th></tr>
+      <tr><td>Revenue (FY25-26, YTD)</td><td><span class="badge b-green">Actual</span></td><td>ERP GL 3010001+ (BU 237)</td><td>—</td></tr>
+      <tr><td>Marketing spend YTD</td><td><span class="badge b-green">Actual</span></td><td>ERP GL 4210001</td><td>—</td></tr>
+      <tr><td>Awareness, TOMA, Perceived quality, Preference, Loyalty, Trust</td><td><span class="badge b-amber">Estimate</span></td><td>Category benchmark (ALEL #6 challenger)</td><td>Tracker n=400 → MoE ±4.9%; replace via D-03 research</td></tr>
+      <tr><td>Consideration, NPS, CSAT, Advocacy</td><td><span class="badge b-amber">Estimate</span></td><td>Benchmark</td><td>CRM/service data gap; monthly once live</td></tr>
+      <tr><td>SOV, Share of search, Relative PQ</td><td><span class="badge b-amber">Estimate</span></td><td>Media/search + tracker</td><td>Calibrate with media data (n/a for survey)</td></tr>
+      <tr><td>Market share, Volume, Distribution, Repeat</td><td><span class="badge b-blue">Partial</span></td><td>Market file + ERP</td><td>Share 3.9% (Sep–Oct'26); distribution ~3.5% coverage</td></tr>
+      <tr><td>Net margin, ROMI, CAC, Digital, Compliance</td><td><span class="badge b-amber">Estimate</span></td><td>Finance / digital / audit</td><td>ERP for margin; others pending systems</td></tr>
+    </table>
+    <p class="note">Rule: estimates are excluded from "official" scores until measured/approved; they still count in coverage so an estimate-heavy SBU shows low coverage — which is honest.</p>
+  </div>
+</div>
+<footer>ENOVAR (ALEL) · KPI Scorecard &amp; Indices · ERP BU 237 · ICP v1.1 · LLN n=400 ±4.9% (95%).</footer>
+<script>
+var DIMS={D1:['Brand Equity',28],D2:['Brand Health',13],D3:['Positioning',9],D4:['Market',20],D5:['Financial',15],D6:['Digital',4],D7:['Execution',11]};
+var KPI=[
+ ['aided','D1','Aided awareness','%',5,30,35],['toma','D1','TOMA','%',4,8,12],['pq','D1','Perceived quality','/100',5,55,60],['pref','D1','Brand preference','%',5,30,35],['dloy','D1','Dealer loyalty','/100',4,52,58],['cont','D1','Contractor recommendation','%',3,40,46],['trust','D1','Brand trust','%',2,60,65],
+ ['cons','D2','Consideration','%',7,32,38],['nps','D2','NPS','pts',6,20,26],
+ ['sov','D3','SOV','%',9,4,5],['sos','D3','Share of search','%',2,5,6],
+ ['msh','D4','Market share','%',9,3.9,4.5],['vol','D4','Volume growth','%',6,30,40],['dist','D4','Distribution reach','%',5,12,15],
+ ['rev','D5','Revenue','Cr',7,136.39,402.14],['npm','D5','Net profit margin','%',4,2.5,3.5],['romi','D5','ROMI','x',4,1.5,2.0],
+ ['eng','D6','Digital presence','/5',2,1.5,2.0],
+ ['guide','D7','Guideline compliance','%',4,70,80],['camp','D7','Campaign effectiveness','%',4,62,68],['budg','D7','Budget efficiency','%',3,80,85]
+];
+function score(att){return att>=1.1?5:att>=1?4:att>=0.9?3:att>=0.8?2:1;}
+function rag(att){return att>=1?'b-green':att>=0.9?'b-amber':'b-red';}
+var dimScore={}, rows='';
+KPI.forEach(function(r){var id=r[0],d=r[1],n=r[2],u=r[3],w=r[4],b=r[5],t=r[6];var att=b/t;var s=score(att);dimScore[d]=dimScore[d]||{sum:0,wt:0};dimScore[d].sum+=s*w;dimScore[d].wt+=w;
+ rows+='<tr><td><b>'+n+'</b></td><td>'+d+'</td><td class="num">'+w+'</td><td class="num">'+b+u+'</td><td class="num">'+t+u+'</td><td class="num">'+b+u+'</td><td class="num"><b>'+s+'</b></td><td class="num">'+(att*100).toFixed(0)+'%</td><td><span class="badge '+rag(att)+'">'+(att>=1?'On':att>=0.9?'Near':'Below')+'</span></td></tr>';});
+document.getElementById('ktab').innerHTML='<tr><th>KPI</th><th>Dim</th><th class="num">Wt</th><th class="num">Baseline</th><th class="num">FY27 target</th><th class="num">Current (est)</th><th class="num">Score</th><th class="num">Attain</th><th>Status</th></tr>'+rows;
+function ds(d){var x=dimScore[d];return x&&x.wt?x.sum/x.wt:0;}
+var BEI=ds('D1'); var BHI=(ds('D2')*13+ds('D3')*9+ds('D6')*4)/26; var BPI=(ds('D4')*20+ds('D5')*15+ds('D7')*11)/46;
+var num=0,den=0;Object.keys(DIMS).forEach(function(d){num+=ds(d)*DIMS[d][1];den+=DIMS[d][1];});var COMP=num/den;
+function c(v,l){var col=v>=4?'var(--green)':v>=3?'var(--amber)':'var(--red)';return '<div class="kpi"><div class="k">'+l+'</div><div class="v" style="color:'+col+'">'+v.toFixed(2)+'<span style="font-size:12px;color:var(--mut)">/5 · '+Math.round(v*20)+'/100</span></div></div>';}
+document.getElementById('idx').innerHTML=c(BEI,'BEI · Brand Equity')+c(BHI,'BHI · Brand Health')+c(BPI,'BPI · Brand Performance')+c(COMP,'Composite');
+</script>
+</body>
+</html>
