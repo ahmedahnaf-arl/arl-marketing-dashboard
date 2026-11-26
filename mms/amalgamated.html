@@ -659,8 +659,61 @@ function emphasis(b){
   '<div class="sec"><div class="sec-h"><h2>Dimension weighting (Cement vs group)</h2><div class="rule"></div></div>'+
   '<div class="card"><table class="tbl"><tr class="trh"><th>Dimension</th><th class="num">Group default</th><th class="num">Cement</th></tr>'+DIMS.map(function(d){return '<tr><td>'+d.n+'</td><td class="num">'+d.w+'%</td><td class="num"><b>'+(ACCL_WEIGHTS[d.id])+'%</b></td></tr>';}).join('')+'</table></div></div>';
 }
+var MMEAS_PAT={aided:/Awareness \(Aided\)/i,toma:/Top-of-Mind/i,pq:/Perceived Quality/i,pref:/Brand Preference/i,dloy:/Dealer Loyalty/i,cont:/Contractor Recommendation/i,cons:/Brand Consideration/i,nps:/NPS/i,sov:/Share of Voice/i,msh:/Market Share/i,vol:/Sales Volume/i,dist:/Distribution Reach/i,rev:/Brand Revenue/i,romi:/ROMI/i,sos:/Share of Search/i,eng:/Digital Presence/i,guide:/Guideline Compliance/i,camp:/Campaign Effectiveness/i};
+function measurementActuals(){
+  try{ var s=localStorage.getItem('akij_mms_measure_v1'); if(!s) return null; var o=JSON.parse(s); var k='cement'; return (o[k]&&o[k].actuals)?o[k].actuals:null; }catch(e){ return null; }
+}
+function liveMeasured(b){
+  var ma=measurementActuals();
+  if(!ma) return '<div class="sec"><div class="card"><p class="note">No Measurement inputs found in this browser yet. Open the <b>Measurement</b> portal, enter KPI values, save, then reload this dashboard — this KPI Scorecard will show the measured performance.</p></div></div>';
+  var rows='',n=0;
+  Object.keys(ma).forEach(function(id){
+    var pat=MMEAS_PAT[id]; if(!pat) return;
+    var kp=null; for(var i=0;i<ACCL_KPIS.length;i++){ if(pat.test(ACCL_KPIS[i].k)){ kp=ACCL_KPIS[i]; break; } }
+    if(!kp) return;
+    var act=Number(ma[id]); if(isNaN(act)) return;
+    var tgt=kp.fy[0]; if(tgt==null||tgt===0) return;
+    var att=act/tgt; var sc=Math.max(0,Math.min(5,att/1.1*5));
+    var cls=att>=1?'High':att>=0.9?'Med':'Low';
+    var label=att>=1?'On/above plan':att>=0.9?'Near plan':'Below plan';
+    rows+='<tr><td><b>'+kp.k+'</b></td><td class="num">'+fmt(kp,tgt)+'</td><td class="num"><b>'+fmt(kp,act)+'</b></td><td class="num">'+(att*100).toFixed(0)+'%</td><td class="num">'+sc.toFixed(1)+'/5</td><td><span class="badge '+cls+'">'+label+'</span></td></tr>';
+    n++;
+  });
+  if(!n) return '<div class="sec"><div class="card"><p class="note">Measurement inputs found, but none matched a KPI in this scorecard.</p></div></div>';
+  return '<div class="sec"><div class="sec-h"><h2>Measured performance — live from the Measurement portal</h2><div class="rule"></div><span class="cap">'+n+' KPIs · entered by custodian · target = FY26-27</span></div>'+
+    '<div class="card"><table class="tbl"><tr class="trh"><th>KPI</th><th class="num">FY26-27 target</th><th class="num">Entered actual</th><th class="num">Attainment</th><th class="num">Score</th><th>Status</th></tr>'+rows+'</table>'+
+    '<p class="note">Source: the Measurement portal (same browser/origin). Enter values there, save, reload this dashboard — the measured KPIs and the obtained performance appear here. Targets are the FY26-27 strategy targets.</p></div></div>';
+}
+function mScore(kp,v){ if(v==null)return null; var t=kp.fy[4]; if(t==null||t===0)return null; var s=Math.max(0,Math.min(100,(Number(v)/t*100)*SCORE_SCALE)); return s/20; }
+function liveMeasured(b){
+  var ma=measurementActuals();
+  if(!ma) return '<div class="sec"><div class="card"><p class="note">No Measurement inputs found in this browser yet. Open the <b>Measurement</b> portal, enter KPI values, save, then reload this dashboard — this KPI Scorecard will show baseline vs current and the movement.</p></div></div>';
+  var rows='',n=0,imp=0,dec=0,sum=0;
+  Object.keys(ma).forEach(function(id){
+    var pat=MMEAS_PAT[id]; if(!pat) return;
+    var kp=null; for(var i=0;i<ACCL_KPIS.length;i++){ if(pat.test(ACCL_KPIS[i].k)){ kp=ACCL_KPIS[i]; break; } }
+    if(!kp) return;
+    var act=Number(ma[id]); if(isNaN(act)) return;
+    var bs=parseFloat(score5(kp,-1)); var cs=mScore(kp,act);
+    if(bs==null||cs==null) return;
+    var d=cs-bs; sum+=d; if(d>0.05)imp++; else if(d<-0.05)dec++;
+    var dcol=d>0.05?'var(--green)':d<-0.05?'var(--red)':'var(--mut)';
+    var dsign=(d>0?'+':'')+d.toFixed(1);
+    var read=d>0.05?'Improving':d<-0.05?'Declining':'Flat';
+    var cls=d>0.05?'High':d<-0.05?'Low':'Med';
+    rows+='<tr><td><b>'+kp.k+'</b></td><td class="num">'+fmt(kp,kp.base)+'</td><td class="num"><b>'+fmt(kp,act)+'</b></td><td class="num">'+bs.toFixed(1)+'</td><td class="num">'+cs.toFixed(1)+'</td><td class="num" style="color:'+dcol+';font-weight:800">'+dsign+'</td><td><span class="badge '+cls+'">'+read+'</span></td></tr>';
+    n++;
+  });
+  if(!n) return '<div class="sec"><div class="card"><p class="note">Measurement inputs found, but none matched a KPI in this scorecard.</p></div></div>';
+  var avg=sum/n;
+  return '<div class="sec"><div class="sec-h"><h2>Baseline vs current — outcome of activities</h2><div class="rule"></div><span class="cap">'+n+' KPIs · '+imp+' improving · '+dec+' declining · avg Δ '+(avg>0?'+':'')+avg.toFixed(1)+' pts</span></div>'+
+    '<div class="card"><table class="tbl"><tr class="trh"><th>KPI</th><th class="num">Baseline</th><th class="num">Current (entered)</th><th class="num">Baseline score</th><th class="num">Current score</th><th class="num">Δ score</th><th>Read</th></tr>'+rows+'</table>'+
+    '<p class="note">Scores are on the scorecard’s 0–5 scale (vs FY30-31 target). <b>Δ score</b> = current − baseline, i.e. the movement from the custodian-entered inputs — a direct read on whether the activities are working. Source: the Measurement portal (same browser/origin); enter values there, save, and reload this dashboard.</p></div></div>';
+}
 function scorecard(b){
   return '<div class="banner"><h1>KPI Scorecard</h1><div class="sub">The 21 active KPIs with FY-wise targets and 0\u20135 scores, and the BEI / BHI / BPI roll-up.</div></div>'+
+  '<div style="display:flex;justify-content:flex-end;margin:-4px 0 6px"><button onclick="alertCustodian()" style="background:#A61C1C;color:#fff;border:0;border-radius:8px;padding:9px 16px;font-weight:800;font-size:12.5px;cursor:pointer">⚠ Alert custodian — performance shortfall</button></div>'+
+  liveMeasured(b)+
   scoreCards(b)+
   kpiPoints(b)+
   '<div class="sec"><div class="sec-h"><h2>KPI Scoring \u2014 Quarter-to-quarter (every KPI \u00d7 every FY \u00d7 every quarter)</h2><div class="rule"></div><span class="cap">select a fiscal year</span></div>'+
@@ -788,8 +841,160 @@ function setScoreFy(fi){
   for(var i=0;i<5;i++){ var b=document.getElementById('scfy'+i); if(b) b.className='stab'+(i===fi?' active':''); }
   document.getElementById('scwrap').innerHTML = scorecardQMatrix(SBUS[0], fi);
 }
+function simClamp(v){return Math.max(0,Math.min(5,v));}
+function simField(label,id,val){return '<div style="margin-bottom:8px"><label style="display:block;font-size:10.5px;color:var(--mut);font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">'+label+'</label><input type="number" step="0.1" id="'+id+'" value="'+val+'" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:12.5px;font-family:inherit"></div>';}
+function simKpi(v,l,s,color){return '<div class="kpi" style="border-left:4px solid '+(color||'var(--gold)')+'"><div class="v">'+v+'</div><div class="l">'+l+'</div><div class="s">'+s+'</div></div>';}
+function numv(id,d){var el=document.getElementById(id);var x=el?parseFloat(el.value):NaN;return isNaN(x)?d:x;}
+function simulator(b){
+ var gm=b.marketCAGR;
+ return '<div class="banner"><h1>Growth Simulator</h1><div class="sub">If revenue grows X%, what happens to market share and the brand indices — and the cut-off growth needed to just retain current share.</div></div>'+
+ '<div class="sec"><div class="sec-h"><h2>Inputs</h2><div class="rule"></div></div><div class="card">'+
+ '<div class="grid2">'+simField('Market growth (% / yr)','sim-gm',gm)+simField('Your revenue growth (%)','sim-g',gm)+'</div>'+
+ '<div class="grid3" style="margin-top:8px">'+simField('BEI sensitivity (/5 per pp share)','sim-ebei','0.10')+simField('BHI sensitivity (/5 per pp share)','sim-ebhi','0.15')+simField('BPI sensitivity (/5 per pp share)','sim-ebpi','0.20')+'</div>'+
+ '<div class="actions" style="margin-top:10px"><button class="btn gold" onclick="renderSim()">Simulate</button></div>'+
+ '<p class="note">Share math is exact: share = base × (1+g) ÷ (1+market growth). Index elasticities are planning assumptions (perception does not automatically follow revenue) — set to 0 to hold equity/health flat.</p></div></div>'+
+ '<div id="simout"></div>';
+}
+function renderSim(){
+ var b=SBUS[0];
+ var gm=numv('sim-gm',b.marketCAGR), g=numv('sim-g',gm), eB=numv('sim-ebei',0.10),eH=numv('sim-ebhi',0.15),eP=numv('sim-ebpi',0.20);
+ var base=b.marketShareBase, revBase=b.revenueBase, rev0=b.revenue[0];
+ var bei=parseFloat(indexScore5(b,['equity'],-1))||0;
+ var bhi=parseFloat(indexScore5(b,['health','position','digital'],-1))||0;
+ var bpi=parseFloat(indexScore5(b,['equity','health','position','market','finance','digital','exec'],-1))||0;
+ var den=(1+gm/100)||0.0001;
+ var gCut=gm;
+ var gPlan=(rev0/revBase-1)*100;
+ var ps=base*(1+g/100)/den; var d=ps-base;
+ var verdict=g<gCut-0.01?'Share falls':(g>gCut+0.01?'Share gains':'Share retained');
+ var vcol=g<gCut-0.01?'var(--red)':(g>gCut+0.01?'var(--green)':'var(--amber)');
+ var scen=[-10,-5,0,3,6,9,12,15,20,Math.round(gPlan*10)/10,Math.round(g*10)/10];
+ scen=scen.filter(function(v,i,a){return a.indexOf(v)===i;}).sort(function(x,y){return x-y;});
+ var rows=scen.map(function(gg){
+   var sh=base*(1+gg/100)/den; var dd=sh-base;
+   var pbei=simClamp(bei+dd*eB),pbhi=simClamp(bhi+dd*eH),pbpi=simClamp(bpi+dd*eP);
+   var hit=Math.abs(gg-gCut)<0.05, mine=Math.abs(gg-g)<0.05;
+   var style=hit?' style="background:#FFF8E6"':(mine?' style="background:#EEF2F8"':'');
+   return '<tr'+style+'><td><b>'+(gg>0?'+':'')+gg.toFixed(1)+'%</b>'+(hit?' <span class="badge Med">cut-off</span>':'')+(mine?' <span class="badge Web">you</span>':'')+'</td>'+
+     '<td class="num">'+Math.round(revBase*(1+gg/100)).toLocaleString('en-IN')+'</td>'+
+     '<td class="num"><b>'+sh.toFixed(2)+'%</b></td>'+
+     '<td class="num" style="color:'+(dd>=0?'var(--green)':'var(--red)')+'">'+(dd>0?'+':'')+dd.toFixed(2)+'pp</td>'+
+     '<td class="num">'+pbei.toFixed(2)+'</td><td class="num">'+pbhi.toFixed(2)+'</td><td class="num"><b>'+pbpi.toFixed(2)+'</b></td></tr>';
+ }).join('');
+ document.getElementById('simout').innerHTML=
+  '<div class="kpis">'+
+   simKpi(crm(revBase*(1+g/100)),'Projected revenue',(g>0?'+':'')+g+'% growth','var(--blue)')+
+   simKpi(ps.toFixed(2)+'%','Projected share','<span style="color:'+vcol+'">'+verdict+'</span> · '+(d>0?'+':'')+d.toFixed(2)+'pp','var(--gold)')+
+   simKpi(gCut.toFixed(1)+'%','Cut-off growth (retain share)','= market growth','var(--red)')+
+   simKpi(gPlan.toFixed(1)+'%','Growth to hit FY26-27 share plan','implied by the revenue plan','var(--green)')+
+  '</div>'+
+  '<div class="sec"><div class="sec-h"><h2>Scenario table — growth vs share &amp; indices</h2><div class="rule"></div><span class="cap">BEI/BHI/BPI in /5</span></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Revenue growth</th><th class="num">Revenue (Cr)</th><th class="num">Share</th><th class="num">Δ share</th><th class="num">BEI</th><th class="num">BHI</th><th class="num">BPI</th></tr>'+rows+
+  '<tr style="background:#F2F5FA;font-weight:800"><td>Today (baseline)</td><td class="num">'+Math.round(revBase).toLocaleString('en-IN')+'</td><td class="num">'+base.toFixed(2)+'%</td><td class="num">—</td><td class="num">'+bei.toFixed(2)+'</td><td class="num">'+bhi.toFixed(2)+'</td><td class="num">'+bpi.toFixed(2)+'</td></tr>'+
+  '</table><p class="note">Cut-off = the minimum revenue growth that holds current share (= market growth). Below it, share falls even if revenue rises. Index columns move by the elasticities above; with 0 elasticity, revenue growth changes share but not perception.</p></div></div>';
+}
+function simSlider(v){var el=document.getElementById('sim-gval');if(el)el.textContent=v+'%';}
+function simulatorCard(b){
+ var gDefault=30;
+ return '<div class="sec"><div class="card">'+
+  '<h2 style="font-size:15px;font-weight:800;margin:0 0 4px;color:var(--navy)">What-if simulator — market share</h2>'+
+  '<div style="color:var(--mut);font-size:12.5px;margin-bottom:14px">Project market share for a hypothetical brand revenue-growth rate.</div>'+
+  '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">'+
+   '<select id="sim-sbu" style="border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13px;font-weight:700;min-width:210px;background:#fff">'+SBUS.map(function(x,i){return '<option'+(i===0?' selected':'')+'>'+esc(x.name)+'</option>';}).join('')+'</select>'+
+   '<input type="range" id="sim-gr" min="-10" max="50" step="1" value="'+gDefault+'" oninput="simSlider(this.value)" style="flex:1;min-width:240px;accent-color:#1F4E79;height:6px">'+
+   '<span id="sim-gval" style="font-weight:800;font-size:15px;min-width:56px;text-align:right">'+gDefault+'%</span>'+
+   '<button onclick="renderSimCard()" style="background:#C9A227;color:#0B1B33;border:0;border-radius:8px;padding:9px 18px;font-weight:800;font-size:13px;cursor:pointer">Run</button>'+
+  '</div>'+
+ '</div></div>'+
+ '<div id="simout"></div>';
+}
+function renderSimCard(){
+ var b=SBUS[0];
+ var grEl=document.getElementById('sim-gr'); var g=grEl?parseFloat(grEl.value):30; if(isNaN(g))g=30;
+ var gm=b.marketCAGR, den=(1+gm/100)||0.0001;
+ var base=b.marketShareBase, revBase=b.revenueBase, rev0=b.revenue[0];
+ var gCut=gm, gPlan=(rev0/revBase-1)*100;
+ var ps=base*(1+g/100)/den, change=ps-base;
+ var eB=0.10,eH=0.15,eP=0.20;
+ var bei=parseFloat(indexScore5(b,['equity'],-1))||0;
+ var bhi=parseFloat(indexScore5(b,['health','position','digital'],-1))||0;
+ var bpi=parseFloat(indexScore5(b,['equity','health','position','market','finance','digital','exec'],-1))||0;
+ var pbei=simClamp(bei+change*eB),pbhi=simClamp(bhi+change*eH),pbpi=simClamp(bpi+change*eP);
+ var html='<div class="grid3" style="margin-top:14px">'+
+  simKpi(base.toFixed(2)+'%','Current share','Akij Cement','#C9A227')+
+  simKpi(ps.toFixed(2)+'%','Projected share @ '+g+'% growth','market growth '+gm+'%','#2E7D6B')+
+  simKpi((change>0?'+':'')+change.toFixed(2)+'pp','Share change',(g<gCut-0.01?'below cut-off — share falls':(g>gCut+0.01?'above cut-off — share gains':'at cut-off — share retained')),'#7C5CBF')+
+ '</div>'+
+ '<div class="grid2" style="margin-top:14px">'+
+  simKpi(gCut.toFixed(1)+'%','Cut-off growth (retain share)','minimum growth to just hold share','#A61C1C')+
+  simKpi(gPlan.toFixed(1)+'%','Growth to hit FY26-27 share plan','implied by the revenue plan','#1E6B3C')+
+ '</div>'+
+ '<div class="sec"><div class="sec-h"><h2>Index movement at '+g+'% revenue growth</h2><div class="rule"></div><span class="cap">/5 · perception elasticity</span></div>'+
+ '<div class="grid3">'+
+  simKpi(bei.toFixed(2)+' → <b>'+pbei.toFixed(2)+'</b>','BEI','equity · +'+eB.toFixed(2)+'/pp','#1F4E79')+
+  simKpi(bhi.toFixed(2)+' → <b>'+pbhi.toFixed(2)+'</b>','BHI','health · +'+eH.toFixed(2)+'/pp','#2E7D6B')+
+  simKpi(bpi.toFixed(2)+' → <b>'+pbpi.toFixed(2)+'</b>','BPI','performance · +'+eP.toFixed(2)+'/pp','#C9A227')+
+ '</div></div>'+
+ '<div class="note">Assumptions: market growth '+gm+'% (the cut-off), BEI/BHI/BPI sensitivity '+eB+'/'+eH+'/'+eP+' per pp of share. Revenue growth moves share; perception moves only by the elasticity set here.</div>';
+ var scen=[-10,-5,0,3,6,9,12,15,20,Math.round(gPlan*10)/10,Math.round(g*10)/10].filter(function(v,i,a){return a.indexOf(v)===i;}).sort(function(x,y){return x-y;});
+ html+='<div class="sec"><div class="sec-h"><h2>Scenario table — growth vs share &amp; indices</h2><div class="rule"></div></div><div class="card"><table class="tbl"><tr class="trh"><th>Revenue growth</th><th class="num">Revenue (Cr)</th><th class="num">Share</th><th class="num">Δ share</th><th class="num">BEI</th><th class="num">BHI</th><th class="num">BPI</th></tr>';
+ scen.forEach(function(gg){var sh=base*(1+gg/100)/den;var dd=sh-base;var p1=simClamp(bei+dd*eB),p2=simClamp(bhi+dd*eH),p3=simClamp(bpi+dd*eP);var hit=Math.abs(gg-gCut)<0.05,mine=Math.abs(gg-g)<0.05;var st=hit?' style="background:#FFF8E6"':(mine?' style="background:#EEF2F8"':'');html+='<tr'+st+'><td><b>'+(gg>0?'+':'')+gg.toFixed(1)+'%</b>'+(hit?' <span class="badge Med">cut-off</span>':'')+(mine?' <span class="badge Web">you</span>':'')+'</td><td class="num">'+Math.round(revBase*(1+gg/100)).toLocaleString('en-IN')+'</td><td class="num"><b>'+sh.toFixed(2)+'%</b></td><td class="num" style="color:'+(dd>=0?'#1E6B3C':'#A61C1C')+'">'+(dd>0?'+':'')+dd.toFixed(2)+'pp</td><td class="num">'+p1.toFixed(2)+'</td><td class="num">'+p2.toFixed(2)+'</td><td class="num"><b>'+p3.toFixed(2)+'</b></td></tr>';});
+ html+='</table></div></div>';
+ document.getElementById('simout').innerHTML=html;
+}
+function custShortfalls(){
+  var ma=measurementActuals(); if(!ma) return {state:'none'};
+  var out=[];
+  Object.keys(ma).forEach(function(id){
+    var pat=MMEAS_PAT[id]; if(!pat) return;
+    var kp=null; for(var i=0;i<ACCL_KPIS.length;i++){ if(pat.test(ACCL_KPIS[i].k)){ kp=ACCL_KPIS[i]; break; } }
+    if(!kp) return;
+    var act=Number(ma[id]); if(isNaN(act)) return;
+    var tgt=kp.fy[0]; if(tgt==null||tgt===0) return;
+    var att=act/tgt; var bs=parseFloat(score5(kp,-1)); var cs=mScore(kp,act); var d=(cs!=null&&bs!=null)?(cs-bs):0;
+    if(att<0.999 || d<-0.05) out.push({name:kp.k,act:act,tgt:tgt,att:att,d:d});
+  });
+  return {state:'ok',rows:out};
+}
+function alertCustodian(){
+  var res=custShortfalls();
+  var cust=SBUS[0].custodian||'the brand custodian';
+  var today=new Date().toISOString().slice(0,10);
+  var body='', text='AKIJ Cement — KPI performance shortfall alert\nCustodian: '+cust+'\nDate: '+today+'\n\n';
+  if(res.state==='none'){
+    body='<p class="note">No Measurement inputs found yet. Ask the custodian to enter KPI values in the Measurement portal first.</p>';
+    text+='No Measurement inputs found.\n';
+  } else if(!res.rows.length){
+    body='<div class="okbox">No shortfall — every measured KPI is on/above plan, with no score decline.</div>';
+    text+='No shortfall — all measured KPIs are on/above plan.\n';
+  } else {
+    body='<p class="note" style="margin-bottom:8px"><b>'+res.rows.length+' KPI(s)</b> below plan or declining. Alert the custodian to act:</p>'+
+      '<table class="tbl"><tr class="trh"><th>KPI</th><th class="num">Target (FY26-27)</th><th class="num">Actual</th><th class="num">Attainment</th><th class="num">Δ score</th></tr>'+
+      res.rows.map(function(r){return '<tr><td><b>'+r.name+'</b></td><td class="num">'+r.tgt+'</td><td class="num">'+r.act+'</td><td class="num">'+(r.att*100).toFixed(0)+'%</td><td class="num" style="color:'+(r.d<0?'#A61C1C':'#1E6B3C')+';font-weight:800">'+(r.d>0?'+':'')+r.d.toFixed(1)+'</td></tr>';}).join('')+'</table>';
+    text+='KPIs below plan / declining:\n'+res.rows.map(function(r){return '- '+r.name+': actual '+r.act+' vs target '+r.tgt+' ('+(r.att*100).toFixed(0)+'% attainment)';}).join('\n')+'\n';
+  }
+  window.ALERT_TEXT=text;
+  var ov=document.createElement('div'); ov.id='alertModal';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(11,27,51,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  ov.setAttribute('onclick','if(event.target===this)this.remove()');
+  ov.innerHTML='<div style="background:#fff;border-radius:14px;max-width:760px;width:100%;max-height:82vh;overflow:auto;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3)">'+
+    '<h2 style="margin:0 0 4px;font-size:18px;color:#0B1B33">⚠ Performance shortfall alert</h2>'+
+    '<div style="color:#5A6B7C;font-size:12.5px;margin-bottom:12px">Custodian: <b>'+esc(cust)+'</b> · '+today+'</div>'+
+    body+
+    '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">'+
+      '<button onclick="copyAlert()" style="background:#C9A227;color:#0B1B33;border:0;border-radius:8px;padding:8px 14px;font-weight:800;cursor:pointer">Copy message</button>'+
+      '<button onclick="document.getElementById(\'alertModal\').remove()" style="background:#EEF1F6;color:#0B1B33;border:1px solid #E6EBF2;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer">Close</button>'+
+    '</div></div>';
+  document.body.appendChild(ov);
+}
+function copyAlert(){
+  var t=window.ALERT_TEXT||'';
+  try{ if(navigator.clipboard) navigator.clipboard.writeText(t); }catch(e){}
+  var m=document.getElementById('alertModal');
+  if(m){ var bs=m.querySelectorAll('button'); if(bs.length){ bs[0].textContent='Copied ✓'; } }
+}
 function buildTabs(){
-  var tabs=[['overview','Overview'],['framework','Framework & Justification'],['strategyMap','Strategy \u2192 KPI Map'],['dictionary','KPI Dictionary (61)'],['emphasis','SBU Emphasis'],['scorecard','KPI Scorecard'],['market','Market & Competition'],['equity','Brand Equity & Health'],['digital','Digital Benchmark'],['p4','4P Scorecard'],['ramp','Quarterly & FY Ramp'],['atlbtl','ATL / BTL / Digital Shift'],['growth','Growth Mechanism'],['capture','Competitive & Share Capture'],['matrix','Activity - KPI Matrix'],['win','Where / How to Win & Share Plan'],['insights','Insights & Actions'],['gaps','Data Gaps']];
+  var tabs=[['overview','Overview'],['framework','Framework & Justification'],['strategyMap','Strategy \u2192 KPI Map'],['dictionary','KPI Dictionary (61)'],['emphasis','SBU Emphasis'],['scorecard','KPI Scorecard'],['simulator','Growth Simulator'],['market','Market & Competition'],['equity','Brand Equity & Health'],['digital','Digital Benchmark'],['p4','4P Scorecard'],['ramp','Quarterly & FY Ramp'],['atlbtl','ATL / BTL / Digital Shift'],['growth','Growth Mechanism'],['capture','Competitive & Share Capture'],['matrix','Activity - KPI Matrix'],['win','Where / How to Win & Share Plan'],['insights','Insights & Actions'],['gaps','Data Gaps']];
   var h='';tabs.forEach(function(t){h+='<button class="tab" data-tab="'+t[0]+'" onclick="switchTab(\''+t[0]+'\')">'+t[1]+'</button>';});
   document.getElementById('tabs').innerHTML=h;
   var s='';SBUS.forEach(function(b,i){s+='<option value="'+i+'"'+(i===0?' selected':'')+'>'+b.name+' — '+b.sbu+'</option>';});
@@ -806,6 +1011,7 @@ function render(tab){var b=SBUS[0];var v=document.getElementById('view');
   else if(tab==='dictionary')v.innerHTML=dictionary(b);
   else if(tab==='emphasis')v.innerHTML=emphasis(b);
   else if(tab==='scorecard')v.innerHTML=scorecard(b);
+  else if(tab==='simulator'){v.innerHTML=simulatorCard(b);renderSimCard();}
   else if(tab==='market')v.innerHTML=market(b);
   else if(tab==='equity')v.innerHTML=equity(b);
   else if(tab==='digital')v.innerHTML=digital(b);
