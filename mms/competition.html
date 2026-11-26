@@ -106,8 +106,8 @@ function load(){try{var s=localStorage.getItem(KEY);if(s)return JSON.parse(s);}c
 let STORE=load();
 function ensure(k){if(!STORE[k])STORE[k]={competitors:[],activities:[]};if(!STORE[k].activities)STORE[k].activities=[];return STORE[k];}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(STORE));}catch(e){}}
-let cur=localStorage.getItem('akij_mms_comp_sbu')||'cement';ensure(cur);
-function switchSbu(k){cur=k;ensure(k);localStorage.setItem('akij_mms_comp_sbu',k);render();}
+let cur=localStorage.getItem('akij_mms_sbu')||localStorage.getItem('akij_mms_comp_sbu')||'cement';ensure(cur);
+function switchSbu(k){cur=k;ensure(k);localStorage.setItem('akij_mms_sbu',k);localStorage.setItem('akij_mms_comp_sbu',k);render();}
 function measurement(k){try{var s=localStorage.getItem('akij_mms_measure_v2')||localStorage.getItem('akij_mms_measure_v1');var o=JSON.parse(s||'{}');var m=o[k];return m&&m.actuals?m.actuals:null;}catch(e){return null;}}
 function ownShare(k){var m=measurement(k);if(m&&m.msh!=null)return Number(m.msh);return OWN[k]!=null?OWN[k]:null;}
 function ownSov(k){var m=measurement(k);if(m&&m.sov!=null)return Number(m.sov);return null;}

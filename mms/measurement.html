@@ -121,11 +121,11 @@ function loadAll(){try{var s=localStorage.getItem(KEY);if(s)return JSON.parse(s)
 let STORE=loadAll();
 function ensure(sbu){if(!STORE[sbu]){STORE[sbu]={actuals:seedActuals(),waves:[],actions:[]};persist();}return STORE[sbu];}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(STORE));}catch(e){}}
-let curSbu=localStorage.getItem('akij_mms_measure_sbu')||'cement';ensure(curSbu);
+let curSbu=localStorage.getItem('akij_mms_sbu')||localStorage.getItem('akij_mms_measure_sbu')||'cement';ensure(curSbu);
 let WORK=Object.assign({},STORE[curSbu].actuals);
 let editWave=false;
 
-function switchSbu(s){curSbu=s;ensure(s);WORK=Object.assign({},STORE[curSbu].actuals);localStorage.setItem('akij_mms_measure_sbu',s);render();}
+function switchSbu(s){curSbu=s;ensure(s);WORK=Object.assign({},STORE[curSbu].actuals);localStorage.setItem('akij_mms_sbu',s);localStorage.setItem('akij_mms_measure_sbu',s);render();}
 function setAct(id,v){WORK[id]=v===''?'':Number(v);editWave=true;render();}
 function resetWave(){WORK=Object.assign({},STORE[curSbu].actuals);editWave=false;render();}
 

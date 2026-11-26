@@ -663,7 +663,7 @@ function emphasis(b){
 }
 var MMEAS_PAT={aided:/Awareness \(Aided\)/i,toma:/Top-of-Mind/i,pq:/Perceived Quality/i,pref:/Brand Preference/i,dloy:/Dealer Loyalty/i,cont:/Contractor Recommendation/i,trust:/Brand Trust/i,cons:/Brand Consideration/i,nps:/NPS/i,sov:/Share of Voice/i,sos:/Share of Search/i,msh:/Market Share/i,vol:/Sales Volume/i,dist:/Distribution Reach/i,rev:/Brand Revenue/i,npm:/Net Profit/i,romi:/ROMI/i,eng:/Digital Presence/i,guide:/Guideline Compliance/i,camp:/Campaign Effectiveness/i,budg:/Budget Efficiency/i};
 function measurementActuals(){
-  try{ var s=localStorage.getItem('akij_mms_measure_v2')||localStorage.getItem('akij_mms_measure_v1'); if(!s) return null; var o=JSON.parse(s); var k='cement'; return (o[k]&&o[k].actuals)?o[k].actuals:null; }catch(e){ return null; }
+  try{ var s=localStorage.getItem('akij_mms_measure_v2')||localStorage.getItem('akij_mms_measure_v1'); if(!s) return null; var o=JSON.parse(s); var k=localStorage.getItem('akij_mms_sbu')||'cement'; return (o[k]&&o[k].actuals)?o[k].actuals:null; }catch(e){ return null; }
 }
 function liveMeasured(b){
   var ma=measurementActuals();
@@ -745,13 +745,13 @@ function atlbtl(b){
   '<div class="sec"><div class="sec-h"><h2>Quarterly ATL / BTL / Digital budget</h2><div class="rule"></div><span class="cap">select a fiscal year</span></div>'+
   '<div class="card"><div class="stabbar">'+FY.map(function(f,i){ return '<button class="stab'+(i===0?' active':'')+'" id="ab'+i+'" onclick="setAtlbtlFy('+i+')">'+f+'</button>'; }).join('')+'</div><div id="abwrap">'+atlbtlQMatrix(b,0)+'</div></div>';
 }
-function market(b){ return compSection(b); }
+function market(b){ return compSection(b)+liveImpactLine(b); }
 function growth(b){ return causalSection(b); }
 function capture(b){
   return '<div class="banner"><h1>Competitive & Share Capture</h1><div class="sub">How our activities capture share from each competitor.</div></div>'+
   '<div class="sec"><div class="sec-h"><h2>Share capture \u2014 who we take from</h2><div class="rule"></div></div>'+
   '<div class="card"><table class="tbl"><tr class="trh"><th>Competitor</th><th>How we win their share</th></tr>'+SHARE_CAPTURE.map(function(s){return '<tr><td><b>'+s[0]+'</b></td><td>'+s[1]+'</td></tr>';}).join('')+'</table>'+
-  '<p class="note">Total +4.36 pp (4.51% \u2192 8.87%). Share handoff is shown in the Market & Competition tab (FY & Q).</p></div></div>';
+  '<p class="note">Total +4.36 pp (4.51% \u2192 8.87%). Share handoff is shown in the Market & Competition tab (FY & Q).</p></div></div>'+liveCompetitorImpact(b);
 }
 function matrix(b){
   return '<div class="banner"><h1>Activity - KPI Matrix</h1><div class="sub">Which activity targets which KPI \u2014 standalone or in combination.</div></div>'+
@@ -994,6 +994,43 @@ function copyAlert(){
   try{ if(navigator.clipboard) navigator.clipboard.writeText(t); }catch(e){}
   var m=document.getElementById('alertModal');
   if(m){ var bs=m.querySelectorAll('button'); if(bs.length){ bs[0].textContent='Copied âœ“'; } }
+}
+function compData(){ try{ var s=localStorage.getItem('akij_mms_competitors_v1'); var o=JSON.parse(s||'{}'); var k=localStorage.getItem('akij_mms_sbu')||'cement'; return o[k]||{competitors:[],activities:[]}; }catch(e){ return {competitors:[],activities:[]}; } }
+function liveOwnShare(){ try{ var s=localStorage.getItem('akij_mms_measure_v2')||localStorage.getItem('akij_mms_measure_v1'); var o=JSON.parse(s||'{}'); var k2=localStorage.getItem('akij_mms_sbu')||'cement'; var m=o[k2]&&o[k2].actuals; return {share:(m&&m.msh!=null)?Number(m.msh):4.51, sov:(m&&m.sov!=null)?Number(m.sov):null}; }catch(e){ return {share:4.51,sov:null}; } }
+function cType(t){return {price_cut:'Price cut',promotion:'Promotion',tvc:'TV / mass media',digital:'Digital / social',dealer_scheme:'Dealer / trade scheme',new_product:'New product / SKU',other:'Other'}[t]||t;}
+function cCombat(t){return {price_cut:'Do not match price â€” defend value/quality + dealer loyalty.',promotion:'Counter with value + availability; protect repeat.',tvc:'Protect SOV; pair ATL with trade to convert.',digital:'Raise search/performance; defend conversion.',dealer_scheme:'Protect dealer loyalty; target contested territories.',new_product:'Assess overlap; targeted NPD or differentiated claim.',other:'Monitor; validate with next wave.'}[t]||'Monitor.';}
+function actImpact(a, ownShare, compShare){
+  var BASE={price_cut:0.62,promotion:0.46,tvc:0.40,digital:0.30,dealer_scheme:0.52,new_product:0.56,other:0.25};
+  var base=BASE[a.type]||0.25;
+  var spendF=Math.max(0,Math.min(1,(Number(a.budget)||0)/50000000));
+  var reachF=Math.max(0,Math.min(1,(Number(a.reach)||0)/2000000));
+  var intensity=Math.max(0,Math.min(1, base*0.55 + spendF*0.25 + reachF*0.20));
+  var t=Math.round(intensity*100);
+  return {threat:t, level:t>=65?'high':t>=40?'med':'low', our:-(intensity*0.12*ownShare), their:(intensity*0.10*ownShare)};
+}
+function liveImpactLine(b){ var d=compData(); var acts=d.activities||[]; if(!acts.length) return ''; var own=liveOwnShare(); var byName={};(d.competitors||[]).forEach(function(c){byName[c.name]=c;}); var totOur=0,totTheir=0,maxT=0; acts.forEach(function(a){var c=byName[a.competitor]||{share:0};var im=actImpact(a,own.share,Number(c.share)||0);totOur+=im.our;totTheir+=im.their;maxT=Math.max(maxT,im.threat);}); return '<div class="okbox" style="margin-top:12px"><b>Live competitor activity impact:</b> '+acts.length+' activities Â· max threat '+maxT+'/100 Â· est. our share '+(totOur>0?'+':'')+totOur.toFixed(2)+'pp Â· their share +'+totTheir.toFixed(2)+'pp (logged on the Competitor Repository page).</div>'; }
+function liveCompetitorImpact(b){
+  var d=compData(); var comps=d.competitors||[]; var acts=d.activities||[]; var own=liveOwnShare();
+  var byName={}; comps.forEach(function(c){byName[c.name]=c;});
+  var rows=''; var totOur=0,totTheir=0,totBud=0,totReach=0,maxT=0; var byComp={};
+  acts.slice().reverse().forEach(function(a){
+    var c=byName[a.competitor]||{share:0}; var im=actImpact(a,own.share,Number(c.share)||0);
+    totOur+=im.our; totTheir+=im.their; totBud+=Number(a.budget)||0; totReach+=Number(a.reach)||0; maxT=Math.max(maxT,im.threat);
+    byComp[a.competitor]=byComp[a.competitor]||{share:Number(c.share)||0,their:0}; byComp[a.competitor].their+=im.their;
+    var cls=im.level==='high'?'Low':im.level==='med'?'Med':'High';
+    rows+='<tr><td><b>'+esc(a.competitor)+'</b></td><td>'+esc(a.campaign)+'</td><td>'+cType(a.type)+'</td><td class="num">'+(a.budget?Number(a.budget).toLocaleString('en-IN'):'â€”')+'</td><td class="num">'+(a.reach?Number(a.reach).toLocaleString('en-IN'):'â€”')+'</td><td><span class="badge '+cls+'">'+im.level+'</span> '+im.threat+'</td><td class="num" style="color:#A61C1C">'+im.our.toFixed(2)+'pp</td><td class="num" style="color:#1E6B3C">+'+im.their.toFixed(2)+'pp</td><td class="note">'+cCombat(a.type)+'</td></tr>';
+  });
+  var srows='<tr><td><b>Us (Akij Cement)</b></td><td class="num">'+own.share.toFixed(2)+'%</td><td class="num" style="color:#A61C1C">'+totOur.toFixed(2)+'pp</td><td class="num"><b>'+(own.share+totOur).toFixed(2)+'%</b></td></tr>';
+  Object.keys(byComp).forEach(function(n){var x=byComp[n];srows+='<tr><td>'+esc(n)+'</td><td class="num">'+x.share.toFixed(2)+'%</td><td class="num" style="color:#1E6B3C">'+((x.their>0?'+':'')+x.their.toFixed(2))+'pp</td><td class="num"><b>'+(x.share+x.their).toFixed(2)+'%</b></td></tr>';});
+  var types=[]; acts.forEach(function(a){ if(types.indexOf(a.type)<0) types.push(a.type); });
+  return '<div class="sec"><div class="sec-h"><h2>Live â€” custodian inputs: competitor activities &amp; share impact</h2><div class="rule"></div><span class="cap">absorbed from Competitor Repository + Measurement</span></div>'+
+    '<div class="kpis">'+ simKpi(acts.length,'Activities','logged','#1F4E79') + simKpi('BDT '+totBud.toLocaleString('en-IN'),'Est. budget','sum of logged','#C9A227') + simKpi(totReach.toLocaleString('en-IN'),'Est. reach','sum of logged','#2E7D6B') + simKpi(maxT+'/100','Max threat','activity intensity','#A61C1C') + '</div>'+
+    '<div class="grid2" style="margin-top:12px">'+
+      '<div class="card"><div class="sec-h" style="margin-bottom:6px"><span>Estimated share impact â€” us vs them</span></div><table class="tbl"><tr class="trh"><th>Party</th><th class="num">Share now</th><th class="num">Activity impact</th><th class="num">Projected</th></tr>'+srows+'</table><p class="note">Planning estimate from logged activities (type Ã— budget Ã— reach).</p></div>'+
+      '<div class="card"><div class="sec-h" style="margin-bottom:6px"><span>Combative actions</span></div>'+(types.length?types.map(function(t){return '<div class="note" style="font-size:12.5px;margin:3px 0"><b>'+cType(t)+'</b> â€” '+cCombat(t)+'</div>';}).join(''):'<p class="note">No competitor activities logged yet.</p>')+'</div>'+
+    '</div>'+
+    '<div class="card" style="overflow:auto;margin-top:12px"><table class="tbl"><tr class="trh"><th>Competitor</th><th>Campaign</th><th>Type</th><th class="num">Budget</th><th class="num">Reach</th><th>Threat</th><th class="num">Our Î”</th><th class="num">Their Î”</th><th>Action</th></tr>'+(rows||'<tr><td colspan="9" class="note">No activities logged â€” use the Competitor Repository page.</td></tr>')+'</table></div>'+
+  '</div>';
 }
 function buildTabs(){
   var tabs=[['overview','Overview'],['framework','Framework & Justification'],['strategyMap','Strategy \u2192 KPI Map'],['dictionary','KPI Dictionary (61)'],['emphasis','SBU Emphasis'],['scorecard','KPI Scorecard'],['simulator','Growth Simulator'],['market','Market & Competition'],['equity','Brand Equity & Health'],['digital','Digital Benchmark'],['p4','4P Scorecard'],['ramp','Quarterly & FY Ramp'],['atlbtl','ATL / BTL / Digital Shift'],['growth','Growth Mechanism'],['capture','Competitive & Share Capture'],['matrix','Activity - KPI Matrix'],['win','Where / How to Win & Share Plan'],['insights','Insights & Actions'],['gaps','Data Gaps']];
