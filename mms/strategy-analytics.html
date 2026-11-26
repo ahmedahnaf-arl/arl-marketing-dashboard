@@ -39,11 +39,7 @@ footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top
 <div class="wrap">
   <div class="banner"><h1>Strategy &amp; Analytics — per SBU</h1><div class="sub">Pick an SBU. See its snapshot, then work each lever (ethics, price/demand/volume, CLV/CAC, value, 7P, demand-vs-sales, analysts, data sources, statistical validity, 4P position, thinking modes, incentives).</div></div>
 
-  <div class="benefit">
-    <div class="bcard"><b>Brand Custodian — diagnose &amp; act</b><p>See where each lever stands, the gap to target, and exactly what campaign/activity to run — with the KPI to watch.</p></div>
-    <div class="bcard"><b>SBU Head — plan &amp; decide</b><p>Plan vs target, share/penetration gaps, budget and activity mix; decide what to fund, hold or cut.</p></div>
-    <div class="bcard"><b>MD / CBDO — compare &amp; allocate</b><p>Compare SBUs on the same lens, spot risk, and allocate capital/attention where the gap and opportunity are largest.</p></div>
-  </div>
+  <div id="own"></div>
 
   <div class="snap" id="snap"></div>
   <div class="stabbar" id="tabs"></div>
@@ -88,7 +84,8 @@ function render(){
     '<div class="kpi"><div class="k">Marketing budget</div><div class="v">'+fmt(d.budget,' Cr')+'</div><div class="s">FY27</div></div>';
   document.getElementById('tabs').innerHTML=TABS.map(function(t){return '<button class="stab'+(t[0]===curTab?' active':'')+'" onclick="go(\''+t[0]+'\')">'+t[1]+'</button>';}).join('');
   var f=({ethics:cEthics,price:cPrice,clv:cClv,cac:cCac,value:cValue,pricing:cPricing,'7p':c7p,demand:cDemand,consumer:cConsumer,market:cMarket,sources:cSources,lln:cLLn,'4p':c4p,creative:cCreative,analytical:cAnalytical,reward:cReward}[curTab])||cEthics;
-  document.getElementById('view').innerHTML=f();
+  document.getElementById('own').innerHTML=ownHTML();
+  document.getElementById('view').innerHTML=f()+ownBlock(curTab);
 }
 function cEthics(){var d=D();return h2('Ethics — trust &amp; compliance ('+d.n+')')+
  '<p>Guardrails for what '+d.n+' publishes and does.</p>'+
@@ -142,6 +139,28 @@ function cAnalytical(){return h2('Analytical Thinking (deductive)')+
 function cReward(){return h2('Reward or Punish — incentives &amp; SLA')+
  '<table class="tbl"><tr><th>Signal</th><th>Reward</th><th>Punish/flag</th></tr><tr><td>KPI ≥100%</td><td><span class="badge b-green">Bonus</span></td><td>—</td></tr><tr><td>90–99%</td><td><span class="badge b-amber">Partial</span></td><td>improvement plan</td></tr><tr><td>&lt;90% / declining</td><td>—</td><td><span class="badge b-red">Flag; CBDO review</span></td></tr><tr><td>Baselines on time</td><td>data credit</td><td>—</td></tr></table>'+close();}
 function calcLLN(){var n=parseFloat((document.getElementById('ln-n')||{}).value)||0;var p=parseFloat((document.getElementById('ln-p')||{}).value)||0.5;if(!n||n<=0){document.getElementById('ln-out').textContent='Enter n.';return;}var m=1.96*Math.sqrt(p*(1-p)/n)*100;document.getElementById('ln-out').textContent='±'+m.toFixed(1)+'% at 95% · n='+n+' · '+(n>=400?'meets n≥400':'below n≥400');}
+var OWNER_TAB={ethics:['Publish only evidenced claims','Brand Custodian','This week','Compliance 100%'],price:['Hold price, push value','SBU Head + Brand OS','Q3 FY27','Price premium'],clv:['Stand up CRM-based CLV','CRM Lead','Q3 FY27','CLV/CAC ratio'],cac:['Cut CAC 20%','Digital Lead','Q4 FY27','CAC'],value:['Shift message to value','Brand Custodian','Q3 FY27','Relative PQ'],pricing:['Premium where proof is strong','SBU Head','Q3 FY27','Price premium'],'7p':['Fix the weakest P','Brand Custodian','Q3 FY27','7P score'],demand:['Close the remaining revenue','Sales Head','Ongoing','Revenue'],consumer:['Run n≥400 tracker','Research','Q3 FY27','BEI/BHI'],market:['Publish share + SOV monthly','Market Analyst','Monthly','Share/SOV'],sources:['Close the 3P market-data gap','Analyst','Q3 FY27','Coverage'],lln:['Score only at n≥400','Research','Immediate','Validity'],'4p':['Attack on the weakest P','Brand Custodian','Q3 FY27','Share'],creative:['Ship 3 tested concepts','Creative Lead','Q4 FY27','Campaign'],analytical:['Gate spend on ROMI','CBDO','Monthly','ROMI'],reward:['Tie bonus to KPI','HR + CBDO','Q4 FY27','Attainment']};
+function tabName(t){for(var i=0;i<TABS.length;i++)if(TABS[i][0]===t)return TABS[i][1];return t;}
+function ownHTML(){var d=D();var revGap=(typeof d.rev27==='number'&&typeof d.ytd==='number')?(d.rev27-d.ytd):null;var shareGap=(typeof d.share==='number'&&typeof d.shareT==='number')?(d.shareT-d.share):null;var owner=localStorage.getItem('akij_mms_owner')||'';
+ function g(k,v,s){return '<div class="kpi"><div class="k">'+k+'</div><div class="v">'+v+'</div><div class="s">'+s+'</div></div>';}
+ var rows='';
+ if(revGap!=null)rows+='<tr><td>Deliver remaining revenue</td><td>Revenue</td><td>Sales Head</td><td>Q4 FY27</td><td>'+revGap.toFixed(1)+' Cr left</td></tr>';
+ if(shareGap!=null&&shareGap>0)rows+='<tr><td>Close share gap</td><td>Market share</td><td>SBU Head</td><td>Q4 FY27</td><td>+'+shareGap.toFixed(2)+' pts</td></tr>';
+ if(d.health<70)rows+='<tr><td>Brand-health program</td><td>Awareness / preference</td><td>Brand Custodian</td><td>Q3 FY27</td><td>Health '+d.health+'→70</td></tr>';
+ rows+='<tr><td>Lock baseline + tracker (n≥400)</td><td>BEI/BHI validity</td><td>Research</td><td>Q3 FY27</td><td>n≥400</td></tr>';
+ return '<div class="card"><h2>Ownership Brief — '+d.n+'</h2>'+
+ '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px"><label style="font-size:11px;color:var(--mut);font-weight:700">I own this SBU as</label><input id="own-name" value="'+esc(owner)+'" placeholder="Your name" style="border:1px solid var(--line);border-radius:8px;padding:7px;font-size:12px" onchange="setOwner(this.value)"><span class="badge b-blue">Owner</span></div>'+
+ '<div class="snap" style="grid-template-columns:repeat(3,1fr)">'+g('Revenue gap to FY27',(revGap!=null?revGap.toFixed(1)+' Cr':'—'),'target '+fmt(d.rev27,' Cr'))+g('Share gap',(shareGap!=null?shareGap.toFixed(2)+' pts':'—'),fmt(d.share,'%')+' → '+fmt(d.shareT,'%'))+g('Brand health',fmt(d.health),'maturity '+(d.mat||'—'))+'</div>'+
+ '<h3 style="font-size:12px;color:var(--navy);margin:8px 0 6px">My action plan</h3>'+
+ '<table class="tbl"><tr><th>Action</th><th>KPI</th><th>Owner</th><th>Due</th><th>Target</th></tr>'+rows+'</table>'+
+ '<h3 style="font-size:12px;color:var(--navy);margin:10px 0 6px">My commitments</h3>'+
+ '<label style="font-size:11.5px;display:block"><input type="checkbox" '+(localStorage.getItem('akij_mms_c1_'+CUR)==='1'?'checked':'')+' onchange="commit(1,this.checked)"> Baseline locked &amp; approved this quarter</label>'+
+ '<label style="font-size:11.5px;display:block"><input type="checkbox" '+(localStorage.getItem('akij_mms_c2_'+CUR)==='1'?'checked':'')+' onchange="commit(2,this.checked)"> At least one action launched against my biggest gap</label>'+
+ '<label style="font-size:11.5px;display:block"><input type="checkbox" '+(localStorage.getItem('akij_mms_c3_'+CUR)==='1'?'checked':'')+' onchange="commit(3,this.checked)"> KPI movement reported monthly to CBDO</label>'+
+ '</div>';}
+function ownBlock(tab){var m=OWNER_TAB[tab]||['Execute plan','Custodian','Q4 FY27','KPI movement'];return '<div class="card" style="border-left:4px solid var(--gold)"><h2>Own it — '+tabName(tab)+'</h2><table class="tbl"><tr><th>Decision</th><th>Owner</th><th>By</th><th>Measure</th></tr><tr><td><b>'+m[0]+'</b></td><td>'+m[1]+'</td><td>'+m[2]+'</td><td>'+m[3]+'</td></tr></table><p class="note">Ownership test: if this is not done, nothing changes — so assign it, date it, report it.</p></div>';}
+function setOwner(v){try{localStorage.setItem('akij_mms_owner',v);}catch(e){}}
+function commit(n,v){try{localStorage.setItem('akij_mms_c'+n+'_'+CUR,v?'1':'0');}catch(e){}}
 render();
 </script>
 </body>
