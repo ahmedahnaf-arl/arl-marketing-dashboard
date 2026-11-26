@@ -659,9 +659,9 @@ function emphasis(b){
   '<div class="sec"><div class="sec-h"><h2>Dimension weighting (Cement vs group)</h2><div class="rule"></div></div>'+
   '<div class="card"><table class="tbl"><tr class="trh"><th>Dimension</th><th class="num">Group default</th><th class="num">Cement</th></tr>'+DIMS.map(function(d){return '<tr><td>'+d.n+'</td><td class="num">'+d.w+'%</td><td class="num"><b>'+(ACCL_WEIGHTS[d.id])+'%</b></td></tr>';}).join('')+'</table></div></div>';
 }
-var MMEAS_PAT={aided:/Awareness \(Aided\)/i,toma:/Top-of-Mind/i,pq:/Perceived Quality/i,pref:/Brand Preference/i,dloy:/Dealer Loyalty/i,cont:/Contractor Recommendation/i,cons:/Brand Consideration/i,nps:/NPS/i,sov:/Share of Voice/i,msh:/Market Share/i,vol:/Sales Volume/i,dist:/Distribution Reach/i,rev:/Brand Revenue/i,romi:/ROMI/i,sos:/Share of Search/i,eng:/Digital Presence/i,guide:/Guideline Compliance/i,camp:/Campaign Effectiveness/i};
+var MMEAS_PAT={aided:/Awareness \(Aided\)/i,toma:/Top-of-Mind/i,pq:/Perceived Quality/i,pref:/Brand Preference/i,dloy:/Dealer Loyalty/i,cont:/Contractor Recommendation/i,trust:/Brand Trust/i,cons:/Brand Consideration/i,nps:/NPS/i,sov:/Share of Voice/i,sos:/Share of Search/i,msh:/Market Share/i,vol:/Sales Volume/i,dist:/Distribution Reach/i,rev:/Brand Revenue/i,npm:/Net Profit/i,romi:/ROMI/i,eng:/Digital Presence/i,guide:/Guideline Compliance/i,camp:/Campaign Effectiveness/i,budg:/Budget Efficiency/i};
 function measurementActuals(){
-  try{ var s=localStorage.getItem('akij_mms_measure_v1'); if(!s) return null; var o=JSON.parse(s); var k='cement'; return (o[k]&&o[k].actuals)?o[k].actuals:null; }catch(e){ return null; }
+  try{ var s=localStorage.getItem('akij_mms_measure_v2')||localStorage.getItem('akij_mms_measure_v1'); if(!s) return null; var o=JSON.parse(s); var k='cement'; return (o[k]&&o[k].actuals)?o[k].actuals:null; }catch(e){ return null; }
 }
 function liveMeasured(b){
   var ma=measurementActuals();

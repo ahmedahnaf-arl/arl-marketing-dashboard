@@ -88,38 +88,33 @@ footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top
 
 <script>
 const SBUS=[['cement','Akij Cement (ACCL)'],['ispot','Akij Ispat'],['readymix','AKIJ Readymix'],['essential','AKIJ Essential'],['feed','Akij Feed'],['enovar','Enovar'],['benzol','Benzol Lubricants'],['tyres','Tyres (AAIL)'],['orca','ORCA'],['air','AKIJ AIR'],['nextjobz','Nextjobz'],['pharmacy','AKIJ Pharmacy'],['mediplex','Akij Mediplex']];
-const DIMS={D1:{n:'Brand Equity',w:25,idx:'BEI'},D2:{n:'Brand Health',w:15,idx:'BHI'},D3:{n:'Positioning & Competitive',w:10,idx:'BHI'},D4:{n:'Market Performance',w:20,idx:'BPI'},D5:{n:'Brand Financial Value',w:15,idx:'BPI'},D6:{n:'Digital Brand Strength',w:5,idx:'BHI'},D7:{n:'Execution & Governance',w:10,idx:'BPI'}};
+const DIMS={D1:{n:'Brand Equity',w:28,idx:'BEI'},D2:{n:'Brand Health',w:13,idx:'BHI'},D3:{n:'Positioning & Competitive',w:9,idx:'BHI'},D4:{n:'Market Performance',w:20,idx:'BPI'},D5:{n:'Brand Financial Value',w:15,idx:'BPI'},D6:{n:'Digital Brand Strength',w:4,idx:'BHI'},D7:{n:'Execution & Governance',w:11,idx:'BPI'}};
 const KPI=[
- ['aided','D1','Aided awareness','%','h',25,55,58,'Brand'],
- ['toma','D1','TOMA','%','h',20,18,20,'Brand'],
- ['pq','D1','Perceived quality','/100','h',25,60,62,'Brand'],
- ['pref','D1','Brand preference','%','h',20,40,44,'Brand'],
- ['dloy','D1','Dealer loyalty','/100','h',10,62,66,'Sales'],
- ['cont','D2','Contractor recommendation','%','h',30,42,46,'Sales'],
- ['cons','D2','Consideration','%','h',25,45,48,'Brand'],
- ['nps','D2','NPS','pts','h',25,22,26,'CRM'],
- ['csat','D2','CSAT','%','h',20,72,74,'CRM'],
- ['sov','D3','SOV/SOM ratio','x','l',30,2.0,1.8,'Media'],
- ['sos','D3','Share of search','%','h',20,6,8,'Digital'],
- ['rpq','D3','Relative perceived quality','ratio','h',30,0.95,1.00,'Brand'],
- ['rank','D3','Market rank','rank','l',20,7,7,'Strategy'],
- ['msh','D4','Market share','%','h',35,4.51,5.31,'Sales'],
- ['vol','D4','Volume growth','%','h',25,-8.85,3,'Sales'],
- ['dist','D4','Numeric distribution','%','h',25,38,42,'Sales'],
- ['rep','D4','Repeat purchase','%','h',15,45,48,'Sales'],
- ['rev','D5','Revenue','Cr','h',40,1923,2263,'Finance'],
- ['price','D5','Price premium index','index','h',25,105,106,'Finance'],
- ['romi','D5','ROMI','x','h',20,1.8,2.0,'Marketing'],
- ['cac','D5','CAC','BDT','l',15,4500,4300,'Marketing'],
- ['eng','D6','Digital engagement','%','h',60,2.0,2.3,'Digital'],
- ['leads','D6','Digital leads / conversion','count','h',40,17,20,'Digital'],
- ['guide','D7','Guideline compliance','%','h',35,70,80,'Brand'],
- ['camp','D7','Campaign effectiveness','%','h',35,65,70,'Brand'],
- ['plan','D7','Marketing plan achievement','%','h',30,80,85,'Brand']
+ ['aided','D1','Brand Awareness (Aided)','%','h',5,62,68,'Brand'],
+ ['toma','D1','Top-of-Mind Awareness','%','h',4,16,19,'Brand'],
+ ['pq','D1','Perceived Quality','index','h',5,68,72,'Brand'],
+ ['pref','D1','Brand Preference','%','h',5,20,24,'Brand'],
+ ['dloy','D1','Dealer Loyalty','%','h',4,55,60,'Sales'],
+ ['cont','D1','Contractor Recommendation','%','h',3,45,52,'Sales'],
+ ['trust','D1','Brand Trust & Credibility','%','h',2,70,74,'Brand'],
+ ['cons','D2','Brand Consideration','%','h',7,30,34,'Brand'],
+ ['nps','D2','Net Promoter Score (NPS)','score','h',6,28,32,'CRM'],
+ ['sov','D3','Share of Voice (SOV)','%','h',9,8,9,'Media'],
+ ['sos','D3','Share of Search','%','h',2,7,8,'Digital'],
+ ['msh','D4','Market Share','%','h',9,4.51,5.50,'Sales'],
+ ['vol','D4','Sales Volume Growth','% YoY','h',6,-8.85,29.3,'Sales'],
+ ['dist','D4','Distribution Reach','%','h',5,65,70,'Sales'],
+ ['rev','D5','Brand Revenue Contribution','BDT Cr','h',7,1750.59,2263,'Finance'],
+ ['npm','D5','Net Profit Margin','%','h',4,10.7,6.4,'Finance'],
+ ['romi','D5','Marketing ROI / ROMI','x','h',4,3.5,4.0,'Marketing'],
+ ['eng','D6','Digital Presence Score','/5','h',2,2.5,3.0,'Digital'],
+ ['guide','D7','Brand Guideline Compliance','%','h',4,75,85,'Brand'],
+ ['camp','D7','Campaign Effectiveness','%','h',4,70,75,'Brand'],
+ ['budg','D7','Budget Efficiency','%','h',3,85,90,'Finance']
 ].map(function(r){return {id:r[0],dim:r[1],name:r[2],unit:r[3],dir:r[4],w:r[5],base:r[6],tgt:r[7],owner:r[8]};});
-function seedActuals(){return {aided:56,toma:17,pq:61,pref:42,dloy:64,cont:43,cons:46,nps:24,csat:73,sov:1.9,sos:7.2,rpq:0.96,rank:7,msh:4.51,vol:-8.85,dist:39,rep:44,rev:1923,price:105,romi:1.7,cac:4700,eng:2.0,leads:17,guide:68,camp:63,plan:78};}
+function seedActuals(){return {aided:56.3,toma:18.5,pq:60,pref:40.6,dloy:56.3,cont:43.6,trust:71.8,cons:46,nps:23,sov:2.9,sos:7.2,msh:5.5,vol:-8.8,dist:39.5,rev:1923,npm:1.7,romi:1.9,eng:1.8,guide:68,camp:63,budg:75};}
 
-const KEY='akij_mms_measure_v1';
+const KEY='akij_mms_measure_v2';
 function loadAll(){try{var s=localStorage.getItem(KEY);if(s)return JSON.parse(s);}catch(e){}return {};}
 let STORE=loadAll();
 function ensure(sbu){if(!STORE[sbu]){STORE[sbu]={actuals:seedActuals(),waves:[],actions:[]};persist();}return STORE[sbu];}
@@ -140,8 +135,8 @@ function ragText(k){var c=ragOf(k);return c==='b-green'?'Green':c==='b-amber'?'A
 function dimScore(d){var ws=0,ss=0;KPI.forEach(function(k){if(k.dim===d){var s=scoreOf(k);if(s!=null){ss+=s*k.w;ws+=k.w;}}});return ws?ss/ws:null;}
 function indices(){var ds={};Object.keys(DIMS).forEach(function(d){ds[d]=dimScore(d);});
  var bei=ds.D1;
- var bhi=(ds.D2!=null&&ds.D3!=null&&ds.D6!=null)?((ds.D2*15+ds.D3*10+ds.D6*5)/30):null;
- var bpi=(ds.D4!=null&&ds.D5!=null&&ds.D7!=null)?((ds.D4*20+ds.D5*15+ds.D7*10)/45):null;
+ var bhi=(ds.D2!=null&&ds.D3!=null&&ds.D6!=null)?((ds.D2*13+ds.D3*9+ds.D6*4)/26):null;
+ var bpi=(ds.D4!=null&&ds.D5!=null&&ds.D7!=null)?((ds.D4*20+ds.D5*15+ds.D7*11)/46):null;
  var num=0,den=0;Object.keys(DIMS).forEach(function(d){if(ds[d]!=null){num+=ds[d]*DIMS[d].w;den+=DIMS[d].w;}});
  var comp=den?num/den:null;
  return {ds:ds,bei:bei,bhi:bhi,bpi:bpi,comp:comp};}
