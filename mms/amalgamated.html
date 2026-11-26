@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKIJ Resource — Brand KPI Dashboard · Pilot: Akij Cement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#212529;--navy2:#343a40;--blue:#007bff;--blue2:#0062cc;--gold:#3c8dbc;--gold2:#2e6da4;--bg:#f4f6f9;--card:#ffffff;--card2:#f8f9fa;--ink:#212529;--mut:#6c757d;--line:#dee2e6;--green:#28a745;--amber:#e0a800;--red:#dc3545;--teal:#17a2b8;--shadow:0 1px 3px rgba(0,0,0,.08),0 8px 24px rgba(0,0,0,.06);--rowalt:#f8f9fa;--rowhl:#fff3cd;--pillbg:#e9ecef;--expandbg:#f8f9fa;--sub:#6c757d;--badge-g:#1e7e34;--badge-a:#b8860b;--badge-r:#c82333;--badge-b:#0069d9}
+body.dark{--bg:#292e32;--card:#2d3238;--card2:#343a40;--ink:#e9ecef;--mut:#9aa5b1;--line:#3d464d;--amber:#ffc107;--shadow:0 1px 3px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.3);--rowalt:rgba(255,255,255,.02);--rowhl:rgba(60,141,188,.18);--pillbg:rgba(255,255,255,.08);--expandbg:rgba(255,255,255,.03);--sub:#c9d4de;--badge-g:#28a745;--badge-a:#ffc107;--badge-r:#ff6b81;--badge-b:#5aa9ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Roboto',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+.topbar{position:sticky;top:0;z-index:50;background:var(--navy);color:#fff;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:0 2px 12px rgba(0,0,0,.4);border-bottom:1px solid var(--line)}
+.topbar .brand{font-weight:800;font-size:16px;letter-spacing:.4px;white-space:nowrap}
+.topbar .brand b{color:var(--gold)}
+.topbar .pilot{font-size:10px;font-weight:800;background:var(--gold);color:#fff;padding:3px 9px;border-radius:20px;letter-spacing:.5px}
+.topbar .spacer{flex:1}
+.sbu-wrap{display:flex;align-items:center;gap:8px}
+.sbu-wrap label{font-size:10.5px;color:#adb5bd;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
+select#sbuSelect{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;min-width:220px;outline:none}
+select#sbuSelect option{background:var(--card);color:var(--ink)}
+.tabs{display:flex;gap:4px;background:var(--navy);padding:6px;border-radius:12px;flex-wrap:wrap;border:1px solid var(--line)}
+.tab{border:0;background:transparent;color:#ced4da;padding:9px 16px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap}
+.tab:hover{background:rgba(255,255,255,.08);color:#fff}
+.tab.on{background:var(--gold);color:#fff}
+.stabbar{display:inline-flex;gap:4px;background:var(--card2);border-radius:10px;padding:4px;margin-bottom:14px;flex-wrap:wrap;border:1px solid var(--line)}
+.stab{padding:6px 15px;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;background:transparent;color:var(--mut);border:1px solid transparent}
+.stab:hover{color:var(--ink)}
+.stab.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+.wrap{max-width:1340px;margin:0 auto;padding:24px 28px 80px}
+.banner{background:linear-gradient(120deg,#1f2a33,#0f4c81);border-radius:14px;color:#fff;padding:24px 26px;margin-bottom:20px;position:relative;overflow:hidden;border:1px solid var(--line)}
+.banner::after{content:'';position:absolute;right:-40px;top:-40px;width:210px;height:210px;border-radius:50%;background:rgba(60,141,188,.15)}
+.banner h1{font-size:23px;font-weight:800;letter-spacing:-.4px}
+.banner .sub{font-size:12.5px;color:var(--sub);margin-top:7px;line-height:1.6;max-width:1000px}
+.banner .pills{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap}
+.pill{font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;background:rgba(255,255,255,.12);color:#fff}
+.pill.rag{background:#fff;color:#212529}
+.pill.bud{background:var(--gold);color:#fff}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:16px 0 4px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 16px 14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold)}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-1px;color:var(--ink)}
+.kpi .l{font-size:11px;color:var(--mut);font-weight:600;margin-top:4px;line-height:1.35}
+.kpi .s{font-size:10px;color:var(--mut);margin-top:5px;line-height:1.4}
+.kpi.g::before{background:var(--green)}.kpi.r::before{background:var(--red)}.kpi.a::before{background:var(--amber)}.kpi.b::before{background:var(--blue)}.kpi.t::before{background:var(--teal)}
+.sec{margin:26px 0}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin-bottom:13px}
+.sec-h h2{font-size:15px;font-weight:800;letter-spacing:-.2px;color:var(--ink)}
+.sec-h .rule{flex:1;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+.sec-h .cap{font-size:11px;color:var(--mut);font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:19px;box-shadow:var(--shadow)}
+.card h3{font-size:13px;font-weight:800;margin-bottom:11px;color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:8px}
+.card h3 .ai{font-weight:600;font-size:9.5px;color:var(--gold);margin-left:6px}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;color:var(--ink)}
+.tbl th,.tbl td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl .trh th{background:var(--navy2);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.4px}
+.tbl tr:nth-child(even) td{background:var(--rowalt)}
+.tbl td.num,.tbl th.num{text-align:right;font-variant-numeric:tabular-nums}
+.kv{width:100%;border-collapse:collapse;font-size:12.5px}
+.kv td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+.kv td:first-child{color:var(--mut);font-weight:600;width:34%;font-size:11.5px}
+.badge{font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:11px;white-space:nowrap}
+.badge.High{background:rgba(40,167,69,.15);color:var(--badge-g)}.badge.Med{background:rgba(255,193,7,.15);color:var(--badge-a)}.badge.Low{background:rgba(220,53,69,.15);color:var(--badge-r)}.badge.Web{background:rgba(0,123,255,.15);color:var(--badge-b)}.badge.Gap{background:rgba(255,255,255,.08);color:var(--mut)}
+.note{font-size:11px;color:var(--mut);margin-top:8px;line-height:1.5}
+.s5{font-size:9px;color:var(--mut);font-weight:600;white-space:nowrap}
+tr.hl td{background:var(--rowhl) !important; box-shadow:inset 3px 0 0 var(--gold)}
+.hlhint{font-size:9.5px;color:var(--gold);font-weight:700;margin-bottom:6px}
+.flagbox{background:rgba(220,53,69,.1);border:1px solid rgba(220,53,69,.35);border-left:4px solid var(--red);border-radius:10px;padding:14px 16px;font-size:12.5px;line-height:1.55;color:var(--ink)}
+.flagbox b{color:var(--red)}
+.okbox{background:rgba(40,167,69,.1);border:1px solid rgba(40,167,69,.35);border-left:4px solid var(--green);border-radius:10px;padding:14px 16px;font-size:12.5px;line-height:1.55;color:var(--ink)}
+.fygrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.fycell{border:1px solid var(--line);border-radius:9px;padding:9px 6px;text-align:center;background:var(--card)}
+.fycell .fy{font-size:9px;color:var(--mut);font-weight:700;text-transform:uppercase}
+.fycell .vv{font-size:14px;font-weight:800;margin-top:3px;color:var(--ink)}
+.fycell.base{background:var(--navy2)}
+.mbar{height:9px;background:var(--line);border-radius:6px;overflow:hidden;margin:7px 0 3px}
+.mbar>span{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.p4{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.p4c{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow);border-top:3px solid var(--gold)}
+.p4c h3{font-size:13px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:8px;color:var(--ink);border:none;padding:0}
+.p4c h3 .ic{width:24px;height:24px;border-radius:6px;background:var(--navy2);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.list{margin:0;padding:0;list-style:none}
+.list li{padding:6px 0 6px 16px;position:relative;font-size:12px;line-height:1.45;border-bottom:1px dashed var(--line);color:var(--ink)}
+.list li:last-child{border-bottom:none}
+.list li::before{content:'▸';position:absolute;left:0;color:var(--gold);font-weight:700}
+.chipbar{display:flex;height:24px;border-radius:6px;overflow:hidden;margin-top:8px}
+.chipbar>span{display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;white-space:nowrap;overflow:hidden}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:9px;font-size:10.5px;color:var(--mut)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+.score-dot{width:12px;height:12px;border-radius:3px;display:inline-block;vertical-align:middle}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.grid3,.grid2,.p4{grid-template-columns:1fr}.fygrid{grid-template-columns:repeat(3,1fr)}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="topbar">
+  <span class="brand">AKIJ <b>Resource</b></span>
+  <span class="pilot">PILOT · SBU 1 OF 13</span>
+  <span class="spacer"></span>
+  <div class="sbu-wrap"><label for="sbuSelect">Select SBU</label>
+    <select id="sbuSelect" onchange="onSbuChange(this.value)"></select>
+  </div>
+  <button id="themeToggle" onclick="toggleTheme()" title="Toggle light / dark theme" style="background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer">🌙 Dark</button>
+</div>
+<nav class="tabs" id="tabs"></nav>
+<main class="wrap" id="view"></main>
+
+<script>
+var FY=['FY26-27','FY27-28','FY28-29','FY29-30','FY30-31'];
+var BASE_FY='FY25-26';
+
+var SBUS=[{
+  id:'ACCL', code:'ACCL', name:'Akij Cement', sbu:'Akij Cement Company Ltd.', cat:'Cement · Building Material', model:'B2B2C',
+  custodian:'Tariqul Hossain Tishad', custodianNote:'(activation tracker + maturity audit)',
+  businessHead:'Asadul Haque Sufyani', rag:'Amber', logo:'AC',
+  revenueBase:1750.59, revenue:[2263,2644,3036,3790,4608],
+  netProfit:[186.92,145,208,249,303,339],
+  marketShareBase:4.51, marketShareNote:'7th of 12 — losing share (volume −8.85% YTD vs industry +1.30%)',
+  marketCAGR:6, marketCAGRNote:'assumption — BD cement market',
+  ytd:480.8, ttm:1940.2, budget:22.98, budgetQ:[2.12,6.80,8.70,5.35],
+  maturityScore:1.56, maturityLevel:'L1 — Initial',
+  maturityDims:{strategy:3.0,identity:4.33,governance:2.6,cx:3.67,digital:2.33,measurement:2.5},
+  positioning:'For the Bangladeshi mason, contractor and house owner, Akij Cement gives stronger, safer construction with consistent quality and technical assurance — iron-slag based, backed by on-site engineers, a mobile lab and mason training.',
+  promise:'Stronger, safer construction — best price on the shelf.',
+  portfolio:'Hero Akij Cement (CEM-II / AM); iron-slag based · 22+ years · first VRM in BD',
+  target:'House owners (ICP 05) + small/mid contractors (ICP 04), 30–60',
+  segments:['House owner (ICP 05)','Contractor (ICP 04)','Dealer/distributor (ICP 01)','Retailer (ICP 02)','Engineer (ICP 03)'],
+  competitors:[['Shah Cement','~17.25%'],['Fresh','~11.95%'],['Crown','~11.51%'],['Seven Rings','~11.51%']],
+  price:'Akij NSP highest (BDT 472.24/bag) but retail net lowest (BDT 519/bag)',
+  distribution:'Dealers/distributors + retail + B2B',
+  channelMix:{TV:23.5,Digital:16.7,OOH:33.6,Trade:16.3,BTL:8.6,PR:1.3},
+  campaigns:['TVC airing (Jan–Mar 2027)','Brand ambassador + 360°','OOH Q2–Q3 FY peak','BTL dealer/engineer/mason meets'],
+  emphasis:['Brand preference','Perceived quality','Dealer loyalty','Contractor recommendation'],
+  /* digital presence — web-fetched 25/11/2026 */
+  digitalBench:[
+    ['Akij Cement','akijcement.com','FB · LinkedIn · Instagram · YouTube (4)','Blog, calculator, careers, events','2.5 / 5'],
+    ['Shah Cement','shahcement.com (Abul Khair Group)','FB + social','Corporate site','3.0 / 5'],
+    ['Fresh','freshcement.com.bd','FB + social','Corporate site','3.0 / 5'],
+    ['Crown Cement','crowncement.com (PLC)','FB · LinkedIn · YouTube (3)','Investor portal, learning portal, newsroom','3.5 / 5'],
+    ['Seven Rings','sevenringscement.com','FB + social + video','Video, order form, media center, projects','4.0 / 5']
+  ],
+  gaps:['ERP/DWH link down — actual GL revenue not reconciling','Awareness/consideration/NPS baseline pending (Quantum ongoing)','Digital analytics tracking = No (audit L3.3)','SWOT empty','Budget +49.9% YoY with no measurement']
+}];
+
+var DIMS=[
+  {id:'equity',n:'Brand Equity',w:25},{id:'health',n:'Brand Health',w:15},{id:'position',n:'Brand Positioning & Competitive',w:10},
+  {id:'market',n:'Market Performance & Penetration',w:20},{id:'finance',n:'Brand Financial Value',w:15},{id:'digital',n:'Digital Brand Strength',w:5},{id:'exec',n:'Brand Execution & Governance',w:10}
+];
+var ACCL_WEIGHTS={equity:28,health:13,position:9,market:20,finance:15,digital:4,exec:11};
+
+/* Cement KPI set — every KPI has a concrete baseline + FY1–FY5 target.
+   conf: High=strategy/ERP · Med=derived · Low=benchmark-derived (validate) · Web=web-fetched */
+var ACCL_KPIS=[
+  {k:'Brand Awareness (Aided)',   dim:'equity', w:5,  base:62,  unit:'%',      freq:'Annual',    fy:[68,72,76,80,83],    conf:'Low'},
+  {k:'Top-of-Mind Awareness',     dim:'equity', w:4,  base:16,  unit:'%',      freq:'Annual',    fy:[19,22,26,30,34],    conf:'Low'},
+  {k:'Perceived Quality',         dim:'equity', w:5,  base:68,  unit:'index',  freq:'Annual',    fy:[72,76,79,82,85],    conf:'Low'},
+  {k:'Brand Preference',          dim:'equity', w:5,  base:20,  unit:'%',      freq:'Annual',    fy:[24,28,32,36,40],    conf:'Low'},
+  {k:'Dealer Loyalty',            dim:'equity', w:4,  base:55,  unit:'%',      freq:'Annual',    fy:[60,65,70,75,80],    conf:'Low'},
+  {k:'Contractor Recommendation', dim:'equity', w:3,  base:45,  unit:'%',      freq:'Annual',    fy:[52,58,64,70,75],    conf:'Low'},
+  {k:'Brand Trust & Credibility', dim:'equity', w:2,  base:70,  unit:'%',      freq:'Annual',    fy:[74,78,81,84,87],    conf:'Low'},
+  {k:'Brand Consideration',       dim:'health', w:7,  base:30,  unit:'%',      freq:'Annual',    fy:[34,38,42,46,50],    conf:'Low'},
+  {k:'Net Promoter Score (NPS)',  dim:'health', w:6,  base:28,  unit:'score',  freq:'Quarterly', fy:[32,36,40,44,48],    conf:'Low'},
+  {k:'Share of Voice (SOV)',      dim:'position',w:9,  base:8,   unit:'%',      freq:'Quarterly', fy:[9,10,11,12,13],     conf:'Low'},
+  {k:'Market Share',              dim:'market', w:9,  base:4.51,unit:'%',      freq:'Quarterly', fy:[5.50,6.06,6.57,7.73,8.87],conf:'Med'},
+  {k:'Sales Volume Growth',       dim:'market', w:6,  base:-8.85,unit:'% YoY', freq:'Monthly',   fy:[29.3,16.8,14.8,24.8,21.6],conf:'Med'},
+  {k:'Distribution Reach',        dim:'market', w:5,  base:65,  unit:'%',      freq:'Quarterly', fy:[70,75,80,85,90],    conf:'Low'},
+  {k:'Brand Revenue Contribution',dim:'finance',w:7,  base:1750.59,unit:'BDT Cr',freq:'Monthly', fy:[2263,2644,3036,3790,4608],conf:'High'},
+  {k:'Net Profit Margin',         dim:'finance',w:4,  base:10.7, unit:'%',      freq:'Quarterly', fy:[6.4,7.9,8.2,8.0,7.4],conf:'High'},
+  {k:'Marketing ROI / ROMI',      dim:'finance',w:4,  base:3.5,  unit:'x',      freq:'Quarterly', fy:[4.0,4.5,5.0,5.5,6.0],conf:'Low'},
+  {k:'Share of Search',           dim:'digital',w:2,  base:7,   unit:'%',      freq:'Monthly',   fy:[8,9,10,11,12],      conf:'Low'},
+  {k:'Digital Presence Score',    dim:'digital',w:2,  base:2.5,  unit:'/5',     freq:'Quarterly', fy:[3.0,3.3,3.7,4.0,4.3],conf:'Web'},
+  {k:'Brand Guideline Compliance',dim:'exec',  w:4,  base:75,  unit:'%',      freq:'Quarterly', fy:[85,90,93,95,97],    conf:'Low'},
+  {k:'Campaign Effectiveness',    dim:'exec',  w:4,  base:70,  unit:'%',      freq:'Quarterly', fy:[75,80,85,88,90],    conf:'Low'},
+  {k:'Budget Efficiency',         dim:'exec',  w:3,  base:85,  unit:'%',      freq:'Monthly',   fy:[90,92,94,95,96],    conf:'Med'}
+];
+
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function crm(n){return n==null?'—':('BDT '+Number(n).toLocaleString('en-IN',{maximumFractionDigits:1})+' Cr');}
+function pct2(n){return n==null?'—':(Number(n).toFixed(2)+'%');}
+function fmt(kp,v){ if(v==null)return '—'; if(kp.unit==='BDT Cr')return Number(v).toLocaleString('en-IN'); if(kp.unit==='%'||kp.unit==='% YoY')return Number(v).toFixed(kp.unit==='% YoY'?1:1)+'%'; if(kp.unit==='score'||kp.unit==='index')return Number(v).toFixed(0); if(kp.unit==='x')return Number(v).toFixed(1)+'x'; if(kp.unit==='/5')return Number(v).toFixed(1); return String(v); }
+function qFmt(kp,v){ if(v==null)return '—'; if(kp.unit==='BDT Cr')return Number(v).toLocaleString('en-IN'); if(kp.unit==='%'||kp.unit==='% YoY')return Number(v).toFixed(1); if(kp.unit==='score'||kp.unit==='index')return Number(v).toFixed(0); if(kp.unit==='x')return Number(v).toFixed(1); if(kp.unit==='/5')return Number(v).toFixed(1); return String(v); }
+/* quarter phasing: revenue = seasonal; others = linear 4-step from prior year-end to FY target */
+function phaseQuarter(kp,fi){ var annual=kp.fy[fi]; var prev=fi===0?kp.base:kp.fy[fi-1]; if(kp.k==='Brand Revenue Contribution'){var s=[0.22,0.24,0.27,0.27];return s.map(function(x){return Math.round(annual*x);});} var st=(annual-prev)/4; return [prev+st,prev+2*st,prev+3*st,annual]; }
+function qMatrixHTML(b,fi){
+  var rows=ACCL_KPIS.map(function(kp){ var q=phaseQuarter(kp,fi); return '<tr><td><b>'+kp.k+'</b><div style="font-size:9px;color:var(--mut)">'+kp.unit+' · '+kp.conf+'</div></td>'+q.map(function(v){return '<td class="num">'+qFmt(kp,v)+'</td>';}).join('')+'<td class="num"><b>'+qFmt(kp,kp.fy[fi])+'</b></td></tr>'; }).join('');
+  return '<table class="tbl"><tr class="trh"><th>KPI</th><th class="num">Q1 (Jul–Sep)</th><th class="num">Q2 (Oct–Dec)</th><th class="num">Q3 (Jan–Mar)</th><th class="num">Q4 (Apr–Jun)</th><th class="num">FY total</th></tr>'+rows+'</table>';
+}
+function setQFy(fi){
+  for(var i=0;i<5;i++){var b=document.getElementById('qfy'+i); if(b)b.className='stab'+(i===fi?' active':'');}
+  document.getElementById('qwrap').innerHTML=qMatrixHTML(SBUS[0],fi);
+}
+function shareTraj(b){var o=[];for(var i=0;i<5;i++){o.push(Math.round(b.marketShareBase*(b.revenue[i]/b.revenueBase)/Math.pow(1+b.marketCAGR/100,i+1)*100)/100);}return o;}
+function cagr(b){return Math.round((Math.pow(b.revenue[4]/b.revenueBase,1/5)-1)*1000)/10;}
+function revQuarters(b){ return b.revenue.map(function(r){ var s=[0.22,0.24,0.27,0.27]; return s.map(function(x){return Math.round(r*x);}); }); }
+function dimName(id){ var m={equity:'Brand Equity',health:'Brand Health',position:'Positioning & Competitive',market:'Market Perf. & Penetration',finance:'Brand Financial Value',digital:'Digital Brand Strength',exec:'Execution & Governance'}; return m[id]||id; }
+function kpiPoints(b){
+  var rows=ACCL_KPIS.map(function(kp){
+    var cells='<td class="num">'+fmt(kp,kp.base)+' <span class="s5">('+score5(kp,-1)+'/5)</span></td>';
+    kp.fy.forEach(function(v,i){cells+='<td class="num">'+fmt(kp,v)+' <span class="s5">('+score5(kp,i)+'/5)</span></td>';});
+    return '<tr data-d="'+kp.dim+'"><td><b>'+kp.k+'</b><div style="font-size:9px;color:var(--mut)">'+dimName(kp.dim)+' · '+kp.unit+'</div></td>'+cells+'</tr>';
+  }).join('');
+  var ALL_DIMS=['equity','health','position','market','finance','digital','exec'];
+  var bpi=[-1,0,1,2,3,4].map(function(y){return indexScore5(b, ALL_DIMS, y);});
+  return '<div class="sec"><div class="sec-h"><h2>KPI Scoring — year-wise targets</h2><div class="rule"></div><span class="cap">'+ACCL_KPIS.length+' KPIs · single scoring scale (x/5) · revenue in BDT Crore</span></div>'+
+  '<div class="card"><table class="tbl" id="kpiTable"><tr class="trh"><th>KPI</th><th class="num">Baseline ('+BASE_FY+')</th><th class="num">FY26-27</th><th class="num">FY27-28</th><th class="num">FY28-29</th><th class="num">FY29-30</th><th class="num">FY30-31</th></tr>'+rows+
+  '<tr style="background:var(--rowalt);font-weight:800"><td>Total — BPI (x/5)</td>'+bpi.map(function(s){return '<td class="num">'+s+'</td>';}).join('')+'</tr>'+
+  '</table><p class="note">Each cell shows the target plus its score <b>(x/5)</b> — on-plan ≈ 4.3/5, 5/5 = best-in-class (exceeds plan). The <b>Total (BPI)</b> row is the weighted roll-up of all 21 KPI scores and matches the "Where we are going" BPI trajectory. Revenue KPIs are in <b>BDT Crore</b>. Quarter-by-quarter phasing is in the <b>Brand KPI Framework</b> tab.</p></div></div>';
+}
+function revBuild(b){
+  var rq=revQuarters(b); var cols=['#1F4E79','#2E7D6B','#C9A227','#B08A1B'];
+  var table='<table class="tbl"><tr class="trh"><th>Fiscal year</th><th class="num">Q1 (Jul–Sep)</th><th class="num">Q2 (Oct–Dec)</th><th class="num">Q3 (Jan–Mar)</th><th class="num">Q4 (Apr–Jun)</th><th class="num">Annual</th><th class="num">YoY growth</th></tr>';
+  var bars=''; var prev=b.revenueBase; var maxRev=b.revenue[4];
+  b.revenue.forEach(function(r,i){
+    var yoy=((r/prev)-1)*100;
+    table+='<tr><td><b>'+FY[i]+'</b></td>'+rq[i].map(function(q){return '<td class="num">'+q.toLocaleString()+'</td>';}).join('')+'<td class="num"><b>'+r.toLocaleString()+'</b></td><td class="num">'+(yoy>=0?'+':'')+yoy.toFixed(1)+'%</td></tr>';
+    bars+='<div style="display:grid;grid-template-columns:64px 1fr;align-items:center;gap:8px;margin:5px 0"><span style="font-size:10.5px;font-weight:700">'+FY[i]+'</span><div style="background:var(--line);border-radius:6px;height:24px;overflow:hidden"><div class="chipbar" style="margin-top:0;width:'+(r/maxRev*100)+'%">'+rq[i].map(function(q,qi){return '<span style="width:'+(q/r*100)+'%;background:'+cols[qi]+'" title="Q'+(qi+1)+': '+q.toLocaleString()+' Cr">Q'+(qi+1)+'</span>';}).join('')+'</div></div></div>';
+    prev=r;
+  });
+  table+='</table>';
+  return '<div class="sec"><div class="sec-h"><h2>5-Year Revenue — how each quarter builds the strategy</h2><div class="rule"></div><span class="cap">BDT Cr · seasonal phase 22/24/27/27</span></div>'+
+  '<div class="card">'+table+
+  '<div style="margin-top:16px"><div style="font-size:11px;color:var(--mut);font-weight:700;margin-bottom:6px">Quarterly composition (bar length = that year\'s revenue vs FY30-31)</div>'+bars+
+  '<div class="legend"><span><i style="background:#1F4E79"></i>Q1</span><span><i style="background:#2E7D6B"></i>Q2</span><span><i style="background:#C9A227"></i>Q3</span><span><i style="background:#B08A1B"></i>Q4</span></div></div>'+
+  '<p class="note">Each year\'s four quarters sum to the annual revenue; the annuals compound at ~'+cagr(b)+'% CAGR to deliver the FY30-31 target of '+crm(b.revenue[4])+' (from '+crm(b.revenueBase)+' in '+BASE_FY+'). <b>Each quarter cell = BDT Crore</b> of revenue earned in that quarter.</p></div></div>';
+}
+/* ---- unified realistic KPI scoring (0-100; on-plan ≈ 85, 100 = best-in-class) ---- */
+var SCORE_SCALE=0.85; /* realistic plan achievement: the FY30-31 target is a stretch; on-plan lands at ~85, 100 = best-in-class */
+function score100(kp, y){ var v=y<0?kp.base:kp.fy[y]; var t=kp.fy[4]; if(t==null||t===0)return null; return Math.max(0,Math.min(100,(v/t*100)*SCORE_SCALE)); }
+function score5(kp, y){ var s=score100(kp,y); return s==null?null:(s/20).toFixed(1); }
+function indexScore5(b, dims, y){ var tw=0,sum=0; ACCL_KPIS.forEach(function(kp){ if(dims.indexOf(kp.dim)>=0){ var s=score5(kp,y); if(s!=null){ sum+=parseFloat(s)*kp.w; tw+=kp.w; } } }); return tw===0?null:(sum/tw).toFixed(1); }
+var _hlKey=null;
+function hlDim(dims){
+  var rows=document.querySelectorAll('#kpiTable tr[data-d]');
+  var key=dims.join(',');
+  if(_hlKey===key){ for(var i=0;i<rows.length;i++) rows[i].classList.remove('hl'); _hlKey=null; return; }
+  for(var i=0;i<rows.length;i++){ var d=rows[i].getAttribute('data-d'); if(dims.indexOf(d)>=0){ rows[i].classList.add('hl'); } else { rows[i].classList.remove('hl'); } }
+  _hlKey=key;
+  var t=document.getElementById('kpiTable'); if(t && t.scrollIntoView) t.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function scoreCards(b){
+  var series=[
+    {id:'BEI',name:'Brand Equity Index',dims:['equity'],desc:'Intangible strength — awareness, quality, loyalty, preference (7 KPIs).'},
+    {id:'BHI',name:'Brand Health Index',dims:['health','position','digital'],desc:'Current perception & competitive health — NPS, consideration, SOV, digital (5 KPIs).'},
+    {id:'BPI',name:'Brand Performance Index',dims:['equity','health','position','market','finance','digital','exec'],desc:'Overall performance — all 7 dimensions, 21 KPIs (the master score).'}
+  ];
+  var cards=series.map(function(s){
+    var vals=[-1,0,1,2,3,4].map(function(y){return indexScore5(b,s.dims,y);});
+    var cur=parseFloat(vals[0]);
+    var curCol=cur>=4?'var(--green)':cur>=3?'var(--amber)':'var(--red)';
+    var bars=vals.map(function(v,i){ var h=Math.round(parseFloat(v)/5*52); return '<div style="flex:1;text-align:center"><div style="height:52px;display:flex;align-items:flex-end;justify-content:center"><div style="width:62%;background:'+(i===5?'var(--gold)':'var(--blue)')+';border-radius:3px 3px 0 0;height:'+h+'px"></div></div><div style="font-size:8.5px;color:var(--mut);font-weight:700;margin-top:2px">'+(i===0?'Base':FY[i-1])+'</div><div style="font-size:10.5px;font-weight:800">'+v+'</div></div>'; }).join('');
+    var click="hlDim(["+s.dims.map(function(d){return "'"+d+"'";}).join(',')+"])";
+    return '<div class="card" style="border-top:3px solid var(--gold);cursor:pointer" onclick="'+click+'"><h3>'+s.id+' — '+s.name+'</h3>'+
+    '<div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:40px;font-weight:800;color:'+curCol+'">'+cur.toFixed(1)+'</span><span style="font-size:11.5px;color:var(--mut)">/5 today → <b>~4.3</b> by FY30-31 (on-plan)</span></div>'+
+    '<p style="font-size:11px;color:var(--mut);margin:6px 0 12px">'+s.desc+'</p>'+
+    '<div style="display:flex;gap:4px;align-items:flex-end">'+bars+'</div>'+
+    '<div class="hlhint" style="margin-top:12px">▸ Click to highlight its KPIs below · click again to unselect</div></div>';
+  }).join('');
+  return '<div class="sec"><div class="sec-h"><h2>Where we are going — KPI Score trajectory</h2><div class="rule"></div><span class="cap">0–5 · on-plan ≈ 4.3 · click a card to highlight its KPIs · <a href="#" onclick="switchTab(\'method\');return false;" style="color:var(--gold);font-weight:700;text-decoration:underline">Scoring methodology →</a></span></div><div class="grid3">'+cards+'</div></div>';
+}
+
+/* ================= Optimized Marketing Plan ================= */
+var CHCOL = {TV:'#1F4E79', Digital:'#C9A227', OOH:'#7A8794', Trade:'#2E7D6B', BTL:'#B08A1B', PR:'#9FB2C8'};
+var CATS = [
+  {label:'ATL — TV + OOH (mass media)', chans:['TV','OOH'], color:'#1F4E79'},
+  {label:'BTL — Trade + Activation', chans:['Trade','BTL'], color:'#2E7D6B'},
+  {label:'Digital / TTL', chans:['Digital'], color:'#C9A227'},
+  {label:'PR / Other', chans:['PR'], color:'#9FB2C8'}
+];
+function catPct(b, cat){ return cat.chans.reduce(function(a,x){ return a + (b.channelMix[x]||0); }, 0); }
+var QNAMES = ['Q1 (Jul\u2013Sep)','Q2 (Oct\u2013Dec)','Q3 (Jan\u2013Mar)','Q4 (Apr\u2013Jun)'];
+var _optFY = 0, _optQ = 0;
+function optBudget(b){
+  var intensity = b.budget / b.revenue[0];
+  var phase = b.budgetQ.map(function(q){ return q / b.budget; });
+  var out = [];
+  b.revenue.forEach(function(r, i){
+    var annual = Math.round(r * intensity * 100) / 100;
+    var q = (i===0) ? b.budgetQ.slice() : phase.map(function(p){ return Math.round(annual * p * 100) / 100; });
+    out.push({ fy: FY[i], annual: annual, q: q });
+  });
+  return out;
+}
+function optCardsHTML(b, ob){
+  var yr = ob[_optFY], qb = yr.q[_optQ];
+  var inten = b.budget / b.revenue[0] * 100;
+  var yoy = _optFY === 0 ? 0 : (ob[_optFY].annual / ob[_optFY-1].annual - 1) * 100;
+  return '<div class="kpi b"><div class="v">'+yr.annual.toFixed(2)+' Cr</div><div class="l">'+yr.fy+' annual budget</div><div class="s">'+(_optFY===0?'actual plan':'optimum (revenue \u00d7 '+inten.toFixed(2)+'%)')+'</div></div>'+
+  '<div class="kpi g"><div class="v">'+qb.toFixed(2)+' Cr</div><div class="l">'+yr.fy+' '+QNAMES[_optQ]+'</div><div class="s">'+(qb/yr.annual*100).toFixed(1)+'% of annual</div></div>'+
+  '<div class="kpi a"><div class="v">'+inten.toFixed(2)+'%</div><div class="l">Marketing intensity (% of sales)</div><div class="s">constant across 5 years</div></div>'+
+  '<div class="kpi r"><div class="v">'+(yoy>=0?'+':'')+yoy.toFixed(1)+'%</div><div class="l">Budget YoY growth</div><div class="s">'+(_optFY===0?'baseline year':'vs previous FY')+'</div></div>';
+}
+function optTableHTML(b, ob){
+  var yr = ob[_optFY];
+  var chans = Object.keys(b.channelMix);
+  var rows = '<table class="tbl"><tr class="trh"><th>Channel</th><th class="num">Mix %</th><th class="num">'+yr.fy+' budget (Cr)</th></tr>';
+  chans.forEach(function(c){
+    rows += '<tr><td><span style="color:'+CHCOL[c]+';font-weight:800">\u25a0</span> '+c+'</td><td class="num">'+b.channelMix[c]+'%</td><td class="num">'+(yr.annual*b.channelMix[c]/100).toFixed(2)+'</td></tr>';
+  });
+  rows += '</table>';
+  var cat = '<table class="tbl" style="margin-top:12px"><tr class="trh"><th>Category (ATL/BTL)</th><th class="num">Mix %</th><th class="num">'+yr.fy+' budget (Cr)</th></tr>';
+  CATS.forEach(function(c){
+    var pct = catPct(b, c);
+    cat += '<tr><td><span style="color:'+c.color+';font-weight:800">\u25a0</span> '+c.label+'</td><td class="num">'+pct.toFixed(1)+'%</td><td class="num">'+(yr.annual*pct/100).toFixed(2)+'</td></tr>';
+  });
+  cat += '</table>';
+  var qr = '<table class="tbl" style="margin-top:12px"><tr class="trh"><th>Quarter</th><th class="num">Budget (Cr)</th><th class="num">% of annual</th></tr>';
+  yr.q.forEach(function(qv, i){
+    qr += '<tr'+(i===_optQ?' class="hl"':'')+'><td>'+QNAMES[i]+'</td><td class="num">'+qv.toFixed(2)+'</td><td class="num">'+(qv/yr.annual*100).toFixed(1)+'%</td></tr>';
+  });
+  qr += '</table>';
+  return rows + cat + qr;
+}
+var _charts = {};
+function renderOptCharts(b){
+  var ob = optBudget(b);
+  if(document.getElementById('optCards')) document.getElementById('optCards').innerHTML = optCardsHTML(b, ob);
+  if(document.getElementById('optTable')) document.getElementById('optTable').innerHTML = optTableHTML(b, ob);
+  var fl = document.getElementById('optFyLabel'); if(fl) fl.textContent = ob[_optFY].fy;
+  Object.keys(_charts).forEach(function(k){ if(_charts[k]){ try{_charts[k].destroy();}catch(e){} } });
+  _charts = {};
+  if(window.Chart){
+    var c1 = document.getElementById('cAnn');
+    if(c1){ _charts.a = new Chart(c1, {type:'bar', data:{labels:FY, datasets:[{label:'Budget (Cr)', data:ob.map(function(x){return x.annual;}), backgroundColor:FY.map(function(_,i){return i===_optFY?'#C9A227':'#1F4E79';}), borderRadius:6, maxBarThickness:46}]}, options:{plugins:{legend:{display:false}}, scales:{y:{grid:{color:'#EEF1F6'}}, x:{grid:{display:false}}}, maintainAspectRatio:false}}); }
+    var c2 = document.getElementById('cQtr');
+    if(c2){ _charts.q = new Chart(c2, {type:'bar', data:{labels:['Q1','Q2','Q3','Q4'], datasets:[{label:'Budget (Cr)', data:ob[_optFY].q, backgroundColor:['#1F4E79','#2E7D6B','#C9A227','#B08A1B'], borderRadius:6, maxBarThickness:46}]}, options:{plugins:{legend:{display:false}}, scales:{y:{grid:{color:'#EEF1F6'}}, x:{grid:{display:false}}}, maintainAspectRatio:false}}); }
+    var c3 = document.getElementById('cCh');
+    if(c3){ var chans = Object.keys(b.channelMix); _charts.c = new Chart(c3, {type:'doughnut', data:{labels:chans, datasets:[{data:chans.map(function(c){return b.channelMix[c];}), backgroundColor:chans.map(function(c){return CHCOL[c];}), borderColor:'#fff', borderWidth:2}]}, options:{plugins:{legend:{position:'right'}}, cutout:'55%', maintainAspectRatio:false}}); }
+    var c4 = document.getElementById('cCat');
+    if(c4){ _charts.cat = new Chart(c4, {type:'doughnut', data:{labels:CATS.map(function(c){return c.label;}), datasets:[{data:CATS.map(function(c){return catPct(b,c);}), backgroundColor:CATS.map(function(c){return c.color;}), borderColor:'#fff', borderWidth:2}]}, options:{plugins:{legend:{position:'right'}}, cutout:'55%', maintainAspectRatio:false}}); }
+  }
+}
+function optSetFY(v){ _optFY = parseInt(v,10); renderOptCharts(SBUS[0]); }
+function optSetQ(v){ _optQ = parseInt(v,10); renderOptCharts(SBUS[0]); }
+/* ---- Strategic marketing plan data ---- */
+var ACTIVITIES = [
+  ['TVC \u2014 mass-media awareness','Brand Awareness (Aided) \u00b7 TOMA \u00b7 Brand Consideration','Standalone (broad reach)'],
+  ['OOH \u2014 outdoor (highways, retail zones)','Brand Awareness \u00b7 Brand Salience','Combination with TVC'],
+  ['Digital \u2014 social + search + website','Digital Presence \u00b7 Share of Search \u00b7 Social Engagement \u00b7 Consideration','Standalone'],
+  ['Trade \u2014 dealer / retailer programs','Dealer Loyalty \u00b7 Distribution Reach \u00b7 Market Share','Standalone'],
+  ['BTL \u2014 mason / engineer / contractor meets','Contractor Recommendation \u00b7 Brand Preference \u00b7 Perceived Quality','Standalone'],
+  ['On-site engineers + mobile lab','Perceived Quality \u00b7 Trust \u00b7 Contractor Recommendation','Combination with BTL'],
+  ['Mason training program','Contractor Recommendation \u00b7 Brand Preference \u00b7 Dealer Loyalty','Standalone'],
+  ['PR \u2014 corporate & trade press','Brand Trust & Credibility \u00b7 Share of Voice','Standalone'],
+  ['Brand guideline enforcement','Brand Guideline Compliance \u00b7 Brand Consistency','Standalone (governance)'],
+  ['Campaign measurement & attribution','Campaign Effectiveness \u00b7 ROMI \u00b7 Budget Efficiency','Standalone (governance)']
+];
+var SHARE_CAPTURE = [
+  ['Shah Cement (~17.25%)','Best price-on-shelf + engineer specification \u2014 win price-sensitive house owners & small contractors'],
+  ['Fresh (~11.95%)','Iron-slag \u201cstronger/safer\u201d + on-site engineer support \u2014 win contractors on technical assurance'],
+  ['Crown (~11.51%)','Mobile lab + mason training proof of quality \u2014 win masons who influence the counter choice'],
+  ['Seven Rings (~11.51%)','Tier-2/3 distribution push + dealer loyalty \u2014 win regional dealers & retailers']
+];
+var CAUSAL = [
+  {act:'TVC + OOH (mass awareness)', kpi:'Brand Awareness (Aided)', kpiBase:62, kpiFy:[68,72,76,80,83], unit:'%', w:0.20, kpis:'Brand Awareness \u00b7 TOMA \u00b7 Consideration'},
+  {act:'BTL mason/engineer meets + training', kpi:'Contractor Recommendation', kpiBase:45, kpiFy:[52,58,64,70,75], unit:'%', w:0.25, kpis:'Contractor Recommendation \u00b7 Preference \u00b7 Dealer Loyalty'},
+  {act:'Trade dealer / retailer programs', kpi:'Dealer Loyalty', kpiBase:55, kpiFy:[60,65,70,75,80], unit:'%', w:0.25, kpis:'Dealer Loyalty \u00b7 Distribution Reach'},
+  {act:'Digital (social + search + website)', kpi:'Digital Presence Score', kpiBase:2.5, kpiFy:[3.0,3.3,3.7,4.0,4.3], unit:'/5', w:0.10, kpis:'Digital Presence \u00b7 Share of Search \u00b7 Consideration'},
+  {act:'On-site engineers + mobile lab', kpi:'Perceived Quality', kpiBase:68, kpiFy:[72,76,79,82,85], unit:'index', w:0.15, kpis:'Perceived Quality \u00b7 Trust'},
+  {act:'Governance (guideline + measurement)', kpi:'Brand Guideline Compliance', kpiBase:75, kpiFy:[85,90,93,95,97], unit:'%', w:0.05, kpis:'Compliance \u00b7 ROMI \u00b7 Budget Efficiency'}
+];
+var CAMPAIGN_PLAN = [
+  ['FY26-27','Foundation','BTL mason/engineer meets \u00b7 trade dealer program \u00b7 fix measurement (no big media)','22.98','Awareness 62\u219268% \u00b7 Share 4.51\u21925.50%'],
+  ['FY27-28','Awareness','First mass wave: TVC + OOH \u00b7 on-site engineer + mobile lab \u00b7 digital social/search','26.85','Awareness 68\u219272% \u00b7 Share 5.50\u21926.06%'],
+  ['FY28-29','Specification','Mason training at scale \u00b7 engineer/architect spec program \u00b7 PR trust','30.83','Share 6.06\u21926.57% \u00b7 Preference up'],
+  ['FY29-30','Expansion','Tier-2/3 dealer + distribution \u00b7 regional OOH + BTL \u00b7 digital lead-gen','38.49','Share 6.57\u21927.73%'],
+  ['FY30-31','Leadership','Full-funnel ATL+BTL+Digital \u00b7 brand valuation \u00b7 continuous compliance','46.79','Share 7.73\u21928.87% (top-3)']
+];
+var CHANGES = [
+  ['Product (4P)','Scale iron-slag CEM-II/AM hero SKU; strengthen \u201cstronger/safer\u201d proof via mobile lab + on-site engineers'],
+  ['Price (4P)','Convert the BDT 7/bag shelf advantage into demand; hold best-price-on-shelf vs Shah'],
+  ['Place (4P)','Push tier-2/3 towns; grow non-corporate + retail + B2B route; numeric distribution 65\u219290%'],
+  ['Promotion (4P)','Rebalance the OOH-heavy mix; integrate ATL (awareness) + BTL (conversion) + digital (consideration)'],
+  ['Brand guide','Enforce guideline V5 across packaging/outlets/vehicles; quarterly compliance audit (75\u219297%)'],
+  ['ICP','Refine ICP 04 (contractors) + ICP 03 (engineers) \u2014 the specifiers; add ICP 05 house-owner decision journey']
+];
+
+function compTraj(b){
+  var akij = [b.marketShareBase].concat(shareTraj(b));
+  var compBase = {'Shah Cement':17.25,'Fresh':11.95,'Crown':11.51,'Seven Rings':11.51,'Others':43.27};
+  var compTotal = 100 - b.marketShareBase;
+  var rows = [];
+  Object.keys(compBase).forEach(function(name){
+    var base = compBase[name];
+    var fy = akij.map(function(a,i){ return i===0 ? base : Math.round(base*(100-a)/compTotal*100)/100; });
+    rows.push({name:name, fy:fy, ours:false});
+  });
+  rows.push({name:'Akij Cement', fy:akij, ours:true});
+  return rows;
+}
+function compQ(row){
+  var out=[];
+  for(var i=1;i<row.fy.length;i++){
+    var step=(row.fy[i]-row.fy[i-1])/4;
+    out.push([row.fy[i-1]+step, row.fy[i-1]+2*step, row.fy[i-1]+3*step, row.fy[i]].map(function(v){return Math.round(v*100)/100;}));
+  }
+  return out;
+}
+function compMatrixHTML(b, fi){
+  var rows = compTraj(b);
+  var tr = rows.map(function(r){
+    var j = fi + 1;
+    var step = (r.fy[j] - r.fy[j-1]) / 4;
+    var cells = '';
+    for(var q=1; q<=4; q++){ cells += '<td class="num">'+(r.fy[j-1]+step*q).toFixed(2)+'%</td>'; }
+    cells += '<td class="num"><b>'+r.fy[j].toFixed(2)+'%</b></td>';
+    return '<tr><td><b>'+(r.ours?'<span style="color:var(--gold)">':'')+r.name+(r.ours?'</span>':'')+'</b>'+(r.ours?' <span class="badge Web">Ours</span>':'')+'</td>'+cells+'</tr>';
+  }).join('');
+  return '<table class="tbl"><tr class="trh"><th>Brand</th><th class="num">Q1 (Jul\u2013Sep)</th><th class="num">Q2 (Oct\u2013Dec)</th><th class="num">Q3 (Jan\u2013Mar)</th><th class="num">Q4 (Apr\u2013Jun)</th><th class="num">FY total</th></tr>'+tr+'</table>';
+}
+function setCompFy(fi){
+  for(var i=0;i<5;i++){ var b=document.getElementById('compFy'+i); if(b) b.className='stab'+(i===fi?' active':''); }
+  document.getElementById('compwrap').innerHTML = compMatrixHTML(SBUS[0], fi);
+}
+function compSection(b){
+  return '<div class="sec"><div class="sec-h"><h2>Competitors & Market Share \u2014 FY & Q growth</h2><div class="rule"></div><span class="cap">select a fiscal year</span></div>'+
+  '<div class="card"><div class="stabbar">'+FY.map(function(f,i){ return '<button class="stab'+(i===0?' active':'')+'" id="compFy'+i+'" onclick="setCompFy('+i+')">'+f+'</button>'; }).join('')+'</div><div id="compwrap">'+compMatrixHTML(b,0)+'</div>'+
+  '<p class="note">Akij grows 4.51% \u2192 8.87% (+4.36 pp). Competitors\u2019 share declines proportionally so the market always sums to 100% \u2014 Akij\u2019s gain is the competitors\u2019 loss. Quarter values interpolate linearly within each FY.</p></div></div>';
+}
+function campaignMatrixHTML(b, fi){
+  var ob = optBudget(b);
+  var akij = null; compTraj(b).forEach(function(r){ if(r.ours) akij = r; });
+  var qshare = compQ(akij)[fi];
+  var qrev = revQuarters(b)[fi];
+  var qbud = ob[fi].q;
+  var plan = CAMPAIGN_PLAN[fi];
+  var header = '<div style="margin-bottom:12px"><b style="font-size:13px;color:var(--ink)">'+plan[0]+' \u2014 '+plan[1]+'</b><div style="font-size:11px;color:var(--mut);margin-top:3px">'+plan[2]+'</div></div>';
+  var rows = '<table class="tbl"><tr class="trh"><th>Metric</th><th class="num">Q1 (Jul\u2013Sep)</th><th class="num">Q2 (Oct\u2013Dec)</th><th class="num">Q3 (Jan\u2013Mar)</th><th class="num">Q4 (Apr\u2013Jun)</th><th class="num">FY total</th></tr>';
+  rows += '<tr><td><b>Budget (Cr)</b></td>'+qbud.map(function(v){return '<td class="num">'+v.toFixed(2)+'</td>';}).join('')+'<td class="num"><b>'+ob[fi].annual.toFixed(2)+'</b></td></tr>';
+  rows += '<tr><td><b>Market share</b></td>'+qshare.map(function(v){return '<td class="num">'+v.toFixed(2)+'%</td>';}).join('')+'<td class="num"><b>'+shareTraj(b)[fi].toFixed(2)+'%</b></td></tr>';
+  rows += '<tr><td><b>Revenue (Cr)</b></td>'+qrev.map(function(v){return '<td class="num">'+v.toLocaleString('en-IN')+'</td>';}).join('')+'<td class="num"><b>'+b.revenue[fi].toLocaleString('en-IN')+'</b></td></tr>';
+  rows += '</table>';
+  return header + rows;
+}
+function setCampFy(fi){
+  for(var i=0;i<5;i++){ var b=document.getElementById('campFy'+i); if(b) b.className='stab'+(i===fi?' active':''); }
+  document.getElementById('campwrap').innerHTML = campaignMatrixHTML(SBUS[0], fi);
+}
+function budToggle(i){ var el=document.getElementById('budQ_'+i); if(!el) return; el.style.display = (el.style.display==='none'||el.style.display==='') ? 'table-row' : 'none'; }
+function campaignSection(b){
+  return '<div class="sec"><div class="sec-h"><h2>Year-by-year Gradual Campaign Plan (FY26-27 \u2192 FY30-31)</h2><div class="rule"></div><span class="cap">select a fiscal year</span></div>'+
+  '<div class="card"><div class="stabbar">'+FY.map(function(f,i){ return '<button class="stab'+(i===0?' active':'')+'" id="campFy'+i+'" onclick="setCampFy('+i+')">'+f+'</button>'; }).join('')+'</div><div id="campwrap">'+campaignMatrixHTML(b,0)+'</div>'+
+  '<p class="note">Each phase builds on the previous one (no big-bang leap). Select a fiscal year to see its quarterly budget, market share and revenue ramp \u2014 same FY & Q structure as the Growth Mechanism.</p></div></div>';
+}
+function budgetSection(b){
+  var ob = optBudget(b);
+  var rows = ob.map(function(x, i){
+    var prev = i===0 ? null : ob[i-1].annual;
+    var yoy = prev ? ((x.annual/prev - 1)*100) : 0;
+    return '<tr style="cursor:pointer" onclick="budToggle('+i+')"><td><b>'+x.fy+'</b> <span style="font-size:9px;color:var(--mut)">\u25be</span></td><td class="num">'+x.annual.toFixed(2)+'</td><td class="num">'+(i===0?'\u2014':(yoy>=0?'+':'')+yoy.toFixed(1)+'%')+'</td><td class="num">'+x.q.map(function(q){return q.toFixed(2);}).join(' \u00b7 ')+'</td></tr>'+
+    '<tr id="budQ_'+i+'" style="display:none"><td colspan="4" style="padding:0"><div style="padding:8px 10px;background:var(--expandbg);border-bottom:2px solid var(--line)">'+
+    '<div style="font-size:10px;font-weight:700;color:var(--mut);margin-bottom:6px">Quarterly & ATL/BTL category split \u2014 click again to collapse</div>'+
+    '<table class="tbl" style="font-size:10.5px"><tr class="trh"><th>Quarter</th><th>Budget (Cr)</th><th>% of annual</th><th>ATL (TV+OOH)</th><th>BTL (Trade+Act)</th><th>Digital</th><th>PR</th></tr>'+
+    (function(){ var h=''; x.q.forEach(function(qv,qi){ var atl=qv*(b.channelMix.TV+b.channelMix.OOH)/100; var btl=qv*(b.channelMix.Trade+b.channelMix.BTL)/100; var dig=qv*b.channelMix.Digital/100; var pr=qv*b.channelMix.PR/100; h+='<tr><td>Q'+(qi+1)+' ('+['Jul\u2013Sep','Oct\u2013Dec','Jan\u2013Mar','Apr\u2013Jun'][qi]+')</td><td class="num">'+qv.toFixed(2)+'</td><td class="num">'+(qv/x.annual*100).toFixed(1)+'%</td><td class="num">'+atl.toFixed(2)+'</td><td class="num">'+btl.toFixed(2)+'</td><td class="num">'+dig.toFixed(2)+'</td><td class="num">'+pr.toFixed(2)+'</td></tr>'; }); return h; })()+
+    '</table></div></td></tr>';
+  }).join('');
+  return '<div class="sec"><div class="sec-h"><h2>Budget reference (annual \u00d7 quarterly)</h2><div class="rule"></div><span class="cap">click a row to expand quarter & category split</span></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Fiscal year</th><th class="num">Annual (Cr)</th><th class="num">YoY</th><th class="num">Quarterly (Q1\u00b7Q2\u00b7Q3\u00b7Q4)</th></tr>'+rows+'</table>'+
+  '<p class="note">Budget = revenue \u00d7 1.02% intensity. ATL/BTL/Digital/PR split follows the FY26-27 channel mix.</p></div></div>';
+}
+function causalMatrixHTML(b, fi){
+  var shBase = b.marketShareBase, shFy = shareTraj(b);
+  var revBase = b.revenueBase, revFy = b.revenue;
+  var rows = CAUSAL.map(function(c){
+    var kpi = [c.kpiBase].concat(c.kpiFy);
+    var sh = [shBase].concat(shFy.map(function(s){ return shBase + (s - shBase) * c.w; }));
+    var rev = [revBase].concat(revFy.map(function(r){ return revBase + (r - revBase) * c.w; }));
+    var j = fi + 1;
+    var kstep = (kpi[j]-kpi[j-1])/4, sstep = (sh[j]-sh[j-1])/4, rstep = (rev[j]-rev[j-1])/4;
+    var cells = '';
+    for(var q=1; q<=4; q++){
+      var kv = kpi[j-1]+kstep*q, sv = sh[j-1]+sstep*q, rv = rev[j-1]+rstep*q;
+      cells += '<td class="num"><b>'+kv.toFixed(1)+' '+c.unit+'</b><div style="font-size:9px;color:var(--mut);font-weight:600">'+sv.toFixed(2)+'% \u00b7 '+Math.round(rv).toLocaleString('en-IN')+' Cr</div></td>';
+    }
+    cells += '<td class="num"><b>'+kpi[j].toFixed(1)+' '+c.unit+'</b><div style="font-size:9px;color:var(--mut);font-weight:600">'+sh[j].toFixed(2)+'% \u00b7 '+Math.round(rev[j]).toLocaleString('en-IN')+' Cr</div></td>';
+    return '<tr><td><b>'+c.act+'</b><div style="font-size:9px;color:var(--mut)">'+c.kpis+'</div></td>'+cells+'</tr>';
+  }).join('');
+  return '<table class="tbl"><tr class="trh"><th>Activity</th><th class="num">Q1 (Jul\u2013Sep)</th><th class="num">Q2 (Oct\u2013Dec)</th><th class="num">Q3 (Jan\u2013Mar)</th><th class="num">Q4 (Apr\u2013Jun)</th><th class="num">FY total</th></tr>'+rows+'</table>';
+}
+function setCausalFy(fi){
+  for(var i=0;i<5;i++){ var b=document.getElementById('cfy'+i); if(b) b.className='stab'+(i===fi?' active':''); }
+  document.getElementById('cwrap').innerHTML = causalMatrixHTML(SBUS[0], fi);
+}
+function causalSection(b){
+  return '<div class="sec"><div class="sec-h"><h2>Causal Model \u2014 Activity \u2192 KPI \u2192 Revenue / Share (FY & Q)</h2><div class="rule"></div><span class="cap">select a fiscal year</span></div>'+
+  '<div class="card"><div class="stabbar">'+FY.map(function(f,i){ return '<button class="stab'+(i===0?' active':'')+'" id="cfy'+i+'" onclick="setCausalFy('+i+')">'+f+'</button>'; }).join('')+'</div><div id="cwrap">'+causalMatrixHTML(b,0)+'</div>'+
+  '<p class="note">Each cell = the activity\u2019s primary KPI at end of quarter, plus the market share and revenue it is attributed (weight \u00d7 total gain). Share and revenue interpolate linearly within each FY. 5-year totals: TVC/OOH +0.87pp & +571 Cr \u00b7 BTL +1.09pp & +714 Cr \u00b7 Trade +1.09pp & +714 Cr \u00b7 Digital +0.44pp & +286 Cr \u00b7 On-site eng. +0.65pp & +429 Cr \u00b7 Governance +0.22pp & +143 Cr.</p></div></div>';
+}
+function strategyTab(b){
+  var capRows = SHARE_CAPTURE.map(function(s){ return '<tr><td><b>'+s[0]+'</b></td><td>'+s[1]+'</td></tr>'; }).join('');
+  return '<div class="banner"><h1>Whom to Play \u00b7 Where to Play \u00b7 How to Win \u00b7 How to Gain Share</h1><div class="sub">The strategic frame, the competitor landscape with FY/Q growth, and how our activities capture competitor share.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Whom to Play \u00b7 Where to Play \u00b7 How to Win \u00b7 How to Gain Share</h2><div class="rule"></div></div>'+
+  '<div class="grid2">'+
+  '<div class="card"><h3>Whom to Play</h3><ul class="list"><li>House owners (ICP 05) \u2014 final buyer at the counter</li><li>Contractors (ICP 04) \u2014 volume buyers</li><li>Engineers / architects (ICP 03) \u2014 specifiers</li><li>Masons \u2014 the on-site influencers</li></ul></div>'+
+  '<div class="card"><h3>Where to Play</h3><ul class="list"><li>Tier-2/3 towns (under-served)</li><li>Dealers / distributors + retail + B2B</li><li>Non-corporate (individual home-build) segment</li></ul></div>'+
+  '<div class="card"><h3>How to Win</h3><ul class="list"><li>Iron-slag \u201cstronger/safer\u201d differentiation</li><li>Best price on the shelf (BDT 7/bag edge)</li><li>On-site engineers + mobile lab + mason training</li></ul></div>'+
+  '<div class="card"><h3>How to Gain Share</h3><ul class="list"><li>Take mid-tier (Fresh / Crown / Seven Rings) via quality + price</li><li>Take Shah via engineer specification + price edge</li><li>Tier-2/3 expansion for uncontested volume</li><li>Net: 4.51% \u2192 8.87% (+4.36 pp) by FY30-31</li></ul></div>'+
+  '</div></div>'+
+  compSection(b)+
+  '<div class="sec"><div class="sec-h"><h2>Market Share Capture \u2014 how our activities eat into competitors</h2><div class="rule"></div><span class="cap">separate view</span></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Competitor</th><th>How we win their share</th></tr>'+capRows+'</table>'+
+  '<p class="note">The +4.36 pp share gain is captured from the mid-tier (Fresh, Crown, Seven Rings) via quality + price differentiation, and from the leader (Shah) via specification and the price edge. Each capture lever maps to a specific activity in the Optimized Marketing Plan tab.</p></div></div>';
+}
+function optplan(b){
+  var ob = optBudget(b);
+  var actRows = ACTIVITIES.map(function(a){ var mode = a[2].indexOf('governance')>=0 ? 'Low' : (a[2].indexOf('Combination')>=0 ? 'Med' : 'High'); return '<tr><td><b>'+a[0]+'</b></td><td>'+a[1]+'</td><td><span class="badge '+mode+'">'+a[2]+'</span></td></tr>'; }).join('');
+  var chgRows = CHANGES.map(function(c){ return '<tr><td><b>'+c[0]+'</b></td><td>'+c[1]+'</td></tr>'; }).join('');
+  return '<div class="banner"><h1>Optimized Marketing Plan</h1><div class="sub">The causal model (activity \u2192 KPI \u2192 revenue/share), the activity-to-KPI targeting matrix, the gradual campaign plan, and where to change (4P \u00b7 brand guide \u00b7 ICP). Strategy, competitors and share capture live in the \u201cWhom to Play\u201d tab.</div></div>'+
+
+  causalSection(b)+
+
+  '<div class="sec"><div class="sec-h"><h2>Activity \u2192 KPI Targeting (standalone / combination)</h2><div class="rule"></div><span class="cap">which activity drives which KPI</span></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Activity</th><th>KPI(s) it targets</th><th>Standalone / Combination</th></tr>'+actRows+'</table></div></div>'+
+
+  campaignSection(b)+
+
+  '<div class="sec"><div class="sec-h"><h2>Where to Change \u2014 4P \u00b7 Brand Guide \u00b7 ICP</h2><div class="rule"></div><span class="cap">kothay ki change kora lagbe</span></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Area</th><th>Change required</th></tr>'+chgRows+'</table></div></div>'+
+
+  budgetSection(b);
+}
+
+/* ================= 61-KPI Dictionary ================= */
+var DICT = [
+ ['Brand Awareness (Aided)','Brand Equity','Prompted recognition of the brand'],
+ ['Top-of-Mind Awareness','Brand Equity','First-mention, unprompted, in category'],
+ ['Brand Recall','Brand Equity','Unprompted memory of the brand'],
+ ['Brand Recognition','Brand Equity','Ability to identify the brand from cues'],
+ ['Brand Associations','Brand Equity','Strength of image / personality associations'],
+ ['Perceived Quality','Brand Equity','Consumer rating of product quality'],
+ ['Brand Loyalty','Brand Equity','Repurchase / stay-with-brand intent'],
+ ['Brand Preference','Brand Equity','Preference over alternatives'],
+ ['Brand Trust & Credibility','Brand Equity','Trustworthiness / credibility rating'],
+ ['Brand Differentiation','Brand Equity','Perceived distinctiveness vs competitors'],
+ ['Brand Consideration','Brand Health','Inclusion in the consideration set'],
+ ['Purchase Intent','Brand Health','Likelihood to buy in the near term'],
+ ['Customer Satisfaction (CSAT)','Brand Health','Satisfaction with product/service'],
+ ['Net Promoter Score (NPS)','Brand Health','Promoters % \u2212 Detractors %'],
+ ['Customer Retention','Brand Health','% retained / repurchasing'],
+ ['Customer Churn','Brand Health','% lost in a period'],
+ ['Brand Sentiment','Brand Health','Net positive vs negative mentions'],
+ ['Customer Advocacy','Brand Health','Willingness to recommend / refer'],
+ ['Brand Relevance','Brand Health','Perceived relevance to customer needs'],
+ ['Positioning Clarity','Positioning & Competitive','Clarity of the brand position'],
+ ['USP Recognition','Positioning & Competitive','Recall of the distinctive benefit'],
+ ['Share of Voice (SOV)','Positioning & Competitive','Brand share of category media voice'],
+ ['Share of Search','Positioning & Competitive','Brand share of category search demand'],
+ ['Competitive Brand Preference','Positioning & Competitive','Preference vs named competitors'],
+ ['Relative Perceived Quality','Positioning & Competitive','Quality vs leading competitor'],
+ ['Market Leadership / Ranking','Positioning & Competitive','Rank by volume/value share'],
+ ['Competitive Differentiation','Positioning & Competitive','Perceived differentiation vs rivals'],
+ ['Market Share','Market Perf. & Penetration','Value/volume share of category'],
+ ['Market Share Growth','Market Perf. & Penetration','YoY change in share'],
+ ['Sales Volume Growth','Market Perf. & Penetration','YoY change in units/volume'],
+ ['Geographic Penetration','Market Perf. & Penetration','Presence across regions/towns'],
+ ['Distribution Reach','Market Perf. & Penetration','% of target outlets stocked'],
+ ['Numeric Distribution','Market Perf. & Penetration','% of outlets carrying the brand'],
+ ['Weighted Distribution','Market Perf. & Penetration','Outlet share weighted by volume'],
+ ['Category Penetration','Market Perf. & Penetration','% of category buyers buying brand'],
+ ['Repeat Purchase Rate','Market Perf. & Penetration','% repurchasing within a window'],
+ ['Brand Revenue Contribution','Brand Financial Value','Revenue attributable to the brand'],
+ ['Brand Profitability','Brand Financial Value','EBITDA / NP contribution'],
+ ['Price Premium','Brand Financial Value','Price index vs category average'],
+ ['Brand Valuation','Brand Financial Value','Financial value of the brand asset'],
+ ['Brand Contribution to Growth','Brand Financial Value','Share of total business growth'],
+ ['Customer Lifetime Value (CLV)','Brand Financial Value','Net value of a customer over time'],
+ ['Marketing ROI / ROMI','Brand Financial Value','Incremental revenue/profit per spend'],
+ ['Customer Acquisition Cost (CAC)','Brand Financial Value','Cost to acquire one customer'],
+ ['Digital Brand Awareness','Digital Brand Strength','Aided awareness via digital'],
+ ['Social Media Engagement','Digital Brand Strength','Engagement rate per follower'],
+ ['Digital Share of Voice','Digital Brand Strength','Brand share of digital mentions'],
+ ['Search Visibility','Digital Brand Strength','Ranking / visibility in search'],
+ ['Website Traffic','Digital Brand Strength','Sessions / visitors'],
+ ['Online Reputation','Digital Brand Strength','Net online reputation score'],
+ ['Customer Reviews & Ratings','Digital Brand Strength','Star rating and review volume'],
+ ['Digital Lead Gen & Conversion','Digital Brand Strength','Digital leads and conversion rate'],
+ ['Brand Guideline Compliance','Brand Execution & Governance','% assets compliant with guidelines'],
+ ['Brand Consistency','Brand Execution & Governance','Consistency of identity/message'],
+ ['Campaign Effectiveness','Brand Execution & Governance','Campaigns meeting uplift targets'],
+ ['Marketing Plan Achievement','Brand Execution & Governance','% of plan executed'],
+ ['Budget Efficiency','Brand Execution & Governance','Spend vs budget and cost-per-outcome'],
+ ['Creative Effectiveness','Brand Execution & Governance','Creative quality / recall'],
+ ['Brand Activation Effectiveness','Brand Execution & Governance','Activation impact on trial/traffic'],
+ ['Brand Portfolio Governance','Brand Execution & Governance','Portfolio architecture & roles'],
+ ['Proprietary Brand Assets','Brand Execution & Governance','Trademarks / distinctive assets']
+];
+var DIM_ORDER = ['Brand Equity','Brand Health','Positioning & Competitive','Market Perf. & Penetration','Brand Financial Value','Digital Brand Strength','Brand Execution & Governance'];
+/* ================= ATL / BTL / Digital shift ================= */
+var ATLBTL = [
+ ['FY26-27',57.1,24.9,16.7,1.3,'Awareness-led (current mix)'],
+ ['FY27-28',55.0,27.0,16.7,1.3,'Awareness + start BTL'],
+ ['FY28-29',50.0,30.0,18.7,1.3,'Shift to specification'],
+ ['FY29-30',46.0,32.0,20.7,1.3,'Expansion (more BTL)'],
+ ['FY30-31',42.0,34.0,22.7,1.3,'Full-funnel (balanced)']
+];
+/* ================= Insights & Actions ================= */
+var INSIGHTS = [
+ ['Critical','Share loss vs strategy','YTD volume \u22128.85% vs industry +1.30% while strategy needs +29.3%','Reverse share loss: BTL mason/engineer + trade dealer program in FY26-27'],
+ ['High','Digital is the weakest capability','Digital & Data maturity 2.33; no analytics; share of search 7%','Build digital analytics + presence (2.5\u21924.3/5 by FY30-31)'],
+ ['High','No brand measurement','Awareness/NPS/preference unmeasured; brand KPIs not defined','Commission Quantum baseline + monthly brand dashboard'],
+ ['Medium','OOH-heavy, awareness-led mix','57.1% ATL with OOH 33.6% \u2014 under-invested in conversion','Shift to BTL + digital over 5 years (ATL 57\u219242%)'],
+ ['Medium','Price edge untapped','BDT 7/bag shelf advantage not converted to demand','Best-price-on-shelf message + engineer specification'],
+ ['Low','Budget +49.9% YoY without measurement','Bigger budget but no attribution','Wire spend\u2194revenue for ROMI before scaling further']
+];
+/* ================= Strategy \u2192 KPI map ================= */
+var STRATMAP = [
+ ['Whom to Play \u2014 house owners, contractors, engineers, masons','Brand Awareness \u00b7 Brand Preference \u00b7 Consideration \u00b7 Contractor Recommendation'],
+ ['Where to Play \u2014 tier-2/3 towns, dealers + retail + B2B','Distribution Reach \u00b7 Market Share \u00b7 Dealer Loyalty'],
+ ['How to Win \u2014 iron-slag stronger/safer, best price, on-site engineers','Perceived Quality \u00b7 Brand Trust \u00b7 Price Premium'],
+ ['How to Gain Share \u2014 take mid-tier (Fresh/Crown/Seven Rings) + Shah','Market Share \u00b7 Share of Search \u00b7 Share of Voice']
+];
+
+/* ================= new tab render functions ================= */
+function framework(b){
+  return '<div class="banner"><h1>Framework & Justification</h1><div class="sub">The CBDO framework applied: 7 dimensions, the proposed weightage, three indices (BEI / BHI / BPI), SBU-specific emphasis, and the single 0\u20135 scoring scale.</div></div>'+
+  '<div class="grid2">'+
+  '<div class="card"><h3>7 dimensions & group weightage</h3><table class="tbl"><tr class="trh"><th>Dimension</th><th class="num">Weight</th></tr>'+DIMS.map(function(d){return '<tr><td>'+d.n+'</td><td class="num"><b>'+d.w+'%</b></td></tr>';}).join('')+'<tr><td><b>Total</b></td><td class="num"><b>100%</b></td></tr></table>'+
+  '<p class="note">Cement re-weights to Equity 28 / Health 13 / Position 9 / Market 20 / Finance 15 / Digital 4 / Execution 11 (B2B2C building material).</p></div>'+
+  '<div class="card"><h3>Three indices + scoring</h3><table class="kv"><tr><td>BEI</td><td>Brand Equity Index \u2014 intangible strength (awareness, quality, loyalty, preference).</td></tr><tr><td>BHI</td><td>Brand Health Index \u2014 current perception & competitive health (NPS, consideration, SOV, digital).</td></tr><tr><td>BPI</td><td>Brand Performance Index \u2014 all 7 dimensions (master score).</td></tr><tr><td>Score</td><td>Score (0\u20135) = (value \u00f7 FY30-31 target \u00d7 5) \u00d7 0.85. on-plan \u2248 4.3/5, 5/5 = best-in-class.</td></tr></table></div>'+
+  '</div>'+
+  '<div class="sec"><div class="sec-h"><h2>Why this framework</h2><div class="rule"></div></div>'+
+  '<div class="grid3">'+
+  '<div class="card"><h3>Strategy-linked</h3><p style="font-size:12px">Every KPI target derives from the SBU 5-year strategy, so hitting KPIs delivers the strategy.</p></div>'+
+  '<div class="card"><h3>SBU-specific</h3><p style="font-size:12px">No identical KPI set \u2014 Cement is weighted to equity & market performance, not forced onto a generic set.</p></div>'+
+  '<div class="card"><h3>Single scoring scale</h3><p style="font-size:12px">One 0\u20135 scale connects every table; realistic (no 5/5 at plan; 100 = best-in-class).</p></div>'+
+  '</div></div>';
+}
+function strategyMap(b){
+  return '<div class="banner"><h1>Strategy \u2192 KPI Map</h1><div class="sub">Each strategic choice maps to the KPIs it moves \u2014 the bridge from strategy to measurement.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Strategy element \u2192 KPIs</h2><div class="rule"></div></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Strategy element</th><th>KPIs it drives</th></tr>'+STRATMAP.map(function(s){return '<tr><td><b>'+s[0]+'</b></td><td>'+s[1]+'</td></tr>';}).join('')+'</table></div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Whom / Where / How \u2192 KPI (FY & Q impact)</h2><div class="rule"></div><span class="cap">which KPI moves and by how much</span></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Strategy</th><th>Primary KPI</th><th class="num">FY26</th><th class="num">FY31</th><th class="num">FY move</th><th class="num">QoQ (per FY)</th></tr>'+
+  '<tr><td><b>Whom to Play</b></td><td>Brand Awareness</td><td class="num">62%</td><td class="num">83%</td><td class="num">+21pp</td><td class="num">+~5pp/yr</td></tr>'+
+  '<tr><td><b>How to Win</b></td><td>Perceived Quality</td><td class="num">68</td><td class="num">85</td><td class="num">+17</td><td class="num">+~4/yr</td></tr>'+
+  '<tr><td><b>Where to Play</b></td><td>Distribution Reach</td><td class="num">65%</td><td class="num">90%</td><td class="num">+25pp</td><td class="num">+~6pp/yr</td></tr>'+
+  '<tr><td><b>How to Gain Share</b></td><td>Market Share</td><td class="num">4.51%</td><td class="num">8.87%</td><td class="num">+4.36pp</td><td class="num">+~0.2pp/qtr</td></tr>'+
+  '</table></div></div>';
+}
+function dictionary(b){
+  var rows = '';
+  DIM_ORDER.forEach(function(dim){
+    var kps = DICT.filter(function(k){ return k[1]===dim; });
+    rows += '<tr class="trh"><th colspan="2">'+dim+' ('+kps.length+' KPIs)</th></tr>';
+    kps.forEach(function(k){ rows += '<tr><td>'+k[0]+'</td><td style="font-size:10.5px;color:var(--mut)">'+k[2]+'</td></tr>'; });
+  });
+  return '<div class="banner"><h1>KPI Dictionary ('+DICT.length+')</h1><div class="sub">The full 61-KPI framework across 7 dimensions. '+ACCL_KPIS.length+' are active for Akij Cement; the rest are available for other SBUs.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Full KPI library</h2><div class="rule"></div><span class="cap">61 KPIs</span></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>KPI</th><th>Definition</th></tr>'+rows+'</table></div></div>';
+}
+function emphasis(b){
+  return '<div class="banner"><h1>SBU Emphasis</h1><div class="sub">Cement is a B2B2C building material \u2014 its KPIs are weighted to brand preference, perceived quality, dealer loyalty and contractor recommendation (MD guidance).</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Akij Cement \u2014 emphasis KPIs</h2><div class="rule"></div><span class="cap">what matters most for this business</span></div>'+
+  '<div class="card"><div style="display:flex;flex-wrap:wrap;gap:7px">'+b.emphasis.map(function(e){return '<span class="pill" style="background:var(--pillbg);color:var(--ink)">'+esc(e)+'</span>';}).join('')+'</div>'+
+  '<p class="note">Why: the category is won at the counter (preference), on the site (quality), and through trade (dealer loyalty) and specifiers (contractor recommendation).</p></div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Dimension weighting (Cement vs group)</h2><div class="rule"></div></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Dimension</th><th class="num">Group default</th><th class="num">Cement</th></tr>'+DIMS.map(function(d){return '<tr><td>'+d.n+'</td><td class="num">'+d.w+'%</td><td class="num"><b>'+(ACCL_WEIGHTS[d.id])+'%</b></td></tr>';}).join('')+'</table></div></div>';
+}
+function scorecard(b){
+  return '<div class="banner"><h1>KPI Scorecard</h1><div class="sub">The 21 active KPIs with FY-wise targets and 0\u20135 scores, and the BEI / BHI / BPI roll-up.</div></div>'+
+  scoreCards(b)+
+  kpiPoints(b)+
+  '<div class="sec"><div class="sec-h"><h2>KPI Scoring \u2014 Quarter-to-quarter (every KPI \u00d7 every FY \u00d7 every quarter)</h2><div class="rule"></div><span class="cap">select a fiscal year</span></div>'+
+  '<div class="card"><div class="stabbar">'+FY.map(function(f,i){ return '<button class="stab'+(i===0?' active':'')+'" id="scfy'+i+'" onclick="setScoreFy('+i+')">'+f+'</button>'; }).join('')+'</div><div id="scwrap">'+scorecardQMatrix(b,0)+'</div>'+
+  '<p class="note">Each cell = the KPI value at end of quarter plus its 0\u20135 score. Q4 = the FY target (on-plan \u2248 4.3/5).</p></div></div>';
+}
+function equity(b){
+  var rows = '';
+  var eq = ACCL_KPIS.filter(function(kp){ return kp.dim==='equity' || kp.dim==='health'; });
+  eq.forEach(function(kp){ rows += '<tr><td><b>'+kp.k+'</b></td><td class="num">'+fmt(kp,kp.base)+'</td>'+kp.fy.map(function(v){return '<td class="num">'+fmt(kp,v)+'</td>';}).join('')+'<td class="num"><b>'+score5(kp,4)+'/5</b></td></tr>'; });
+  var qdata = eq.map(function(kp){ return {name: kp.k, sub: dimName(kp.dim), vals: [kp.base].concat(kp.fy), unit: kp.unit}; });
+  return '<div class="banner"><h1>Brand Equity & Health</h1><div class="sub">The equity (intangible strength) and health (current perception) KPIs, with FY progression and scores.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Equity & Health KPIs \u2014 FY progression</h2><div class="rule"></div></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>KPI</th><th class="num">Baseline</th><th class="num">FY26-27</th><th class="num">FY27-28</th><th class="num">FY28-29</th><th class="num">FY29-30</th><th class="num">FY30-31</th><th class="num">Score</th></tr>'+rows+'</table></div></div>'+
+  gqSection('Quarterly \u2014 equity & health KPIs \u00d7 every FY \u00d7 every quarter','select a fiscal year', qdata, gqFmt, 'Linear 4-step progression within each FY; Q4 = the FY target.')+
+  scoreCards(b);
+}
+function atlbtl(b){
+  var ob = optBudget(b);
+  var rows = ATLBTL.map(function(x, i){
+    return '<tr><td><b>'+x[0]+'</b></td><td>'+x[5]+'</td><td class="num">'+x[1]+'%</td><td class="num">'+x[2]+'%</td><td class="num">'+x[3]+'%</td><td class="num">'+x[4]+'%</td><td class="num"><b>'+ob[i].annual.toFixed(2)+'</b></td></tr>';
+  }).join('');
+  return '<div class="banner"><h1>ATL / BTL / Digital Shift</h1><div class="sub">As the brand matures, budget shifts from awareness (ATL-heavy) to conversion and specification (BTL + digital).</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Budget mix shift (FY26-27 \u2192 FY30-31)</h2><div class="rule"></div></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>FY</th><th>Phase</th><th class="num">ATL (TV+OOH)</th><th class="num">BTL (Trade+Act)</th><th class="num">Digital</th><th class="num">PR</th><th class="num">Budget (Cr)</th></tr>'+rows+'</table>'+
+  '<p class="note">ATL 57.1% \u2192 42% while BTL 24.9% \u2192 34% and Digital 16.7% \u2192 22.7% \u2014 the mix shifts from awareness to conversion as share is captured.</p></div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Quarterly ATL / BTL / Digital budget</h2><div class="rule"></div><span class="cap">select a fiscal year</span></div>'+
+  '<div class="card"><div class="stabbar">'+FY.map(function(f,i){ return '<button class="stab'+(i===0?' active':'')+'" id="ab'+i+'" onclick="setAtlbtlFy('+i+')">'+f+'</button>'; }).join('')+'</div><div id="abwrap">'+atlbtlQMatrix(b,0)+'</div></div>';
+}
+function market(b){ return compSection(b); }
+function growth(b){ return causalSection(b); }
+function capture(b){
+  return '<div class="banner"><h1>Competitive & Share Capture</h1><div class="sub">How our activities capture share from each competitor.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Share capture \u2014 who we take from</h2><div class="rule"></div></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Competitor</th><th>How we win their share</th></tr>'+SHARE_CAPTURE.map(function(s){return '<tr><td><b>'+s[0]+'</b></td><td>'+s[1]+'</td></tr>';}).join('')+'</table>'+
+  '<p class="note">Total +4.36 pp (4.51% \u2192 8.87%). Share handoff is shown in the Market & Competition tab (FY & Q).</p></div></div>';
+}
+function matrix(b){
+  return '<div class="banner"><h1>Activity - KPI Matrix</h1><div class="sub">Which activity targets which KPI \u2014 standalone or in combination.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Activity \u2192 KPI</h2><div class="rule"></div></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Activity</th><th>KPI(s) it targets</th><th>Standalone / Combination</th></tr>'+ACTIVITIES.map(function(a){ var mode = a[2].indexOf('governance')>=0 ? 'Low' : (a[2].indexOf('Combination')>=0 ? 'Med' : 'High'); return '<tr><td><b>'+a[0]+'</b></td><td>'+a[1]+'</td><td><span class="badge '+mode+'">'+a[2]+'</span></td></tr>'; }).join('')+'</table></div></div>';
+}
+function win(b){
+  return '<div class="banner"><h1>Where / How to Win & Share Plan</h1><div class="sub">Whom to Play, Where to Play, How to Win, How to Gain Share \u2014 plus the gradual campaign plan.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Whom to Play \u00b7 Where to Play \u00b7 How to Win \u00b7 How to Gain Share</h2><div class="rule"></div></div>'+
+  '<div class="grid2">'+
+  '<div class="card"><h3>Whom to Play</h3><ul class="list"><li>House owners (ICP 05)</li><li>Contractors (ICP 04)</li><li>Engineers / architects (ICP 03)</li><li>Masons</li></ul></div>'+
+  '<div class="card"><h3>Where to Play</h3><ul class="list"><li>Tier-2/3 towns</li><li>Dealers / distributors + retail + B2B</li><li>Non-corporate home-build</li></ul></div>'+
+  '<div class="card"><h3>How to Win</h3><ul class="list"><li>Iron-slag stronger/safer</li><li>Best price on shelf (BDT 7/bag)</li><li>On-site engineers + mobile lab</li></ul></div>'+
+  '<div class="card"><h3>How to Gain Share</h3><ul class="list"><li>Take mid-tier via quality + price</li><li>Take Shah via spec + price</li><li>Tier-2/3 for uncontested volume</li><li>Net: 4.51% \u2192 8.87% (+4.36pp)</li></ul></div>'+
+  '</div></div>'+
+  campaignSection(b);
+}
+function ramp(b){
+  return '<div class="banner"><h1>Quarterly & FY Ramp</h1><div class="sub">Every KPI \u00d7 every FY \u00d7 every quarter, with the FY ramp to FY30-31.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Quarter-wise Phasing \u2014 every KPI \u00d7 every FY \u00d7 every quarter</h2><div class="rule"></div><span class="cap">select a fiscal year</span></div>'+
+  '<div class="card"><div class="stabbar">'+FY.map(function(f,i){ return '<button class="stab'+(i===0?' active':'')+'" id="qfy'+i+'" onclick="setQFy('+i+')">'+f+'</button>'; }).join('')+'</div><div id="qwrap">'+qMatrixHTML(b,0)+'</div>'+
+  '<p class="note">Revenue is phased by construction seasonality (22/24/27/27); other KPIs progress linearly (4 steps) to the FY target. Q4 = the FY target.</p></div></div>';
+}
+function insights(b){
+  return '<div class="banner"><h1>Insights & Actions</h1><div class="sub">Key insights and recommended actions, with severity.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Insights & Actions</h2><div class="rule"></div></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Severity</th><th>Insight</th><th>Evidence</th><th>Action</th></tr>'+INSIGHTS.map(function(x){ var c = x[0]==='Critical'?'Low':(x[0]==='High'?'Med':(x[0]==='Medium'?'Med':'High')); return '<tr><td><span class="badge '+c+'">'+x[0]+'</span></td><td><b>'+x[1]+'</b></td><td style="font-size:10.5px">'+x[2]+'</td><td>'+x[3]+'</td></tr>'; }).join('')+'</table></div></div>';
+}
+
+function gqFmt(v, unit){ if(unit==='%'||unit==='% YoY') return v.toFixed(1)+'%'; if(unit==='BDT Cr') return Math.round(v).toLocaleString('en-IN'); if(unit==='index'||unit==='score') return v.toFixed(0); if(unit==='x') return v.toFixed(1)+'x'; if(unit==='/5') return v.toFixed(1); return v.toFixed(1); }
+var _GQDATA=null, _GQFMT=null;
+function gqMatrix(data, fmt, fi){
+  var tr = data.map(function(r){
+    var j = fi+1, step = (r.vals[j]-r.vals[j-1])/4;
+    var cells='';
+    for(var q=1;q<=4;q++){ cells += '<td class="num">'+fmt(r.vals[j-1]+step*q, r.unit)+'</td>'; }
+    cells += '<td class="num"><b>'+fmt(r.vals[j], r.unit)+'</b></td>';
+    return '<tr><td><b>'+r.name+'</b>'+(r.sub?'<div style="font-size:9px;color:var(--mut)">'+r.sub+'</div>':'')+'</td>'+cells+'</tr>';
+  }).join('');
+  return '<table class="tbl"><tr class="trh"><th></th><th class="num">Q1 (Jul\u2013Sep)</th><th class="num">Q2 (Oct\u2013Dec)</th><th class="num">Q3 (Jan\u2013Mar)</th><th class="num">Q4 (Apr\u2013Jun)</th><th class="num">FY total</th></tr>'+tr+'</table>';
+}
+function gqGo(fi){
+  for(var i=0;i<5;i++){ var b=document.getElementById('gq'+i); if(b) b.className='stab'+(i===fi?' active':''); }
+  document.getElementById('gqwrap').innerHTML = gqMatrix(_GQDATA, _GQFMT, fi);
+}
+function gqSection(title, cap, data, fmt, note){
+  _GQDATA = data; _GQFMT = fmt;
+  return '<div class="sec"><div class="sec-h"><h2>'+title+'</h2><div class="rule"></div><span class="cap">'+cap+'</span></div>'+
+  '<div class="card"><div class="stabbar">'+FY.map(function(f,i){ return '<button class="stab'+(i===0?' active':'')+'" id="gq'+i+'" onclick="gqGo('+i+')">'+f+'</button>'; }).join('')+'</div><div id="gqwrap">'+gqMatrix(data,fmt,0)+'</div>'+
+  (note?'<p class="note">'+note+'</p>':'')+'</div></div>';
+}
+var P4QDATA = [
+  {name:'Product \u2014 Perceived Quality', sub:'iron-slag CEM-II/AM hero SKU', vals:[68,72,76,79,82,85], unit:'index'},
+  {name:'Price \u2014 Price Premium', sub:'BDT 7/bag shelf edge', vals:[100,102,104,106,108,110], unit:'index'},
+  {name:'Place \u2014 Distribution Reach', sub:'dealers + retail + B2B', vals:[65,70,75,80,85,90], unit:'%'},
+  {name:'Promotion \u2014 Brand Awareness', sub:'TVC + OOH + BTL', vals:[62,68,72,76,80,83], unit:'%'}
+];
+function atlbtlQMatrix(b, fi){
+  var ob = optBudget(b), yr = ob[fi], mix = ATLBTL[fi];
+  var QL = ['Jul\u2013Sep','Oct\u2013Dec','Jan\u2013Mar','Apr\u2013Jun'];
+  var rows = '<table class="tbl"><tr class="trh"><th>Quarter</th><th>Budget (Cr)</th><th>ATL (TV+OOH)</th><th>BTL (Trade+Act)</th><th>Digital</th><th>PR</th></tr>';
+  yr.q.forEach(function(qv, qi){
+    rows += '<tr><td>Q'+(qi+1)+' ('+QL[qi]+')</td><td class="num"><b>'+qv.toFixed(2)+'</b></td><td class="num">'+(qv*mix[1]/100).toFixed(2)+'</td><td class="num">'+(qv*mix[2]/100).toFixed(2)+'</td><td class="num">'+(qv*mix[3]/100).toFixed(2)+'</td><td class="num">'+(qv*mix[4]/100).toFixed(2)+'</td></tr>';
+  });
+  rows += '</table>';
+  return rows;
+}
+function setAtlbtlFy(fi){
+  for(var i=0;i<5;i++){ var b=document.getElementById('ab'+i); if(b) b.className='stab'+(i===fi?' active':''); }
+  document.getElementById('abwrap').innerHTML = atlbtlQMatrix(SBUS[0], fi);
+}
+
+function qScore(v, t){ if(t==null||t===0) return null; return (Math.max(0, Math.min(100, (v/t*100)*SCORE_SCALE))/20).toFixed(1); }
+function scorecardQMatrix(b, fi){
+  var tr = ACCL_KPIS.map(function(kp){
+    var vals = [kp.base].concat(kp.fy);
+    var j = fi + 1, step = (vals[j]-vals[j-1])/4, target = kp.fy[4];
+    var cells = '';
+    for(var q=1; q<=4; q++){
+      var v = vals[j-1] + step*q;
+      cells += '<td class="num"><b>'+gqFmt(v, kp.unit)+'</b><div style="font-size:9px;color:var(--mut);font-weight:600">('+qScore(v, target)+'/5)</div></td>';
+    }
+    cells += '<td class="num"><b>'+gqFmt(vals[j], kp.unit)+'</b><div style="font-size:9px;color:var(--mut);font-weight:600">('+qScore(vals[j], target)+'/5)</div></td>';
+    return '<tr><td><b>'+kp.k+'</b><div style="font-size:9px;color:var(--mut)">'+dimName(kp.dim)+'</div></td>'+cells+'</tr>';
+  }).join('');
+  return '<table class="tbl"><tr class="trh"><th>KPI</th><th class="num">Q1 (Jul\u2013Sep)</th><th class="num">Q2 (Oct\u2013Dec)</th><th class="num">Q3 (Jan\u2013Mar)</th><th class="num">Q4 (Apr\u2013Jun)</th><th class="num">FY total</th></tr>'+tr+'</table>';
+}
+function setScoreFy(fi){
+  for(var i=0;i<5;i++){ var b=document.getElementById('scfy'+i); if(b) b.className='stab'+(i===fi?' active':''); }
+  document.getElementById('scwrap').innerHTML = scorecardQMatrix(SBUS[0], fi);
+}
+function buildTabs(){
+  var tabs=[['overview','Overview'],['framework','Framework & Justification'],['strategyMap','Strategy \u2192 KPI Map'],['dictionary','KPI Dictionary (61)'],['emphasis','SBU Emphasis'],['scorecard','KPI Scorecard'],['market','Market & Competition'],['equity','Brand Equity & Health'],['digital','Digital Benchmark'],['p4','4P Scorecard'],['ramp','Quarterly & FY Ramp'],['atlbtl','ATL / BTL / Digital Shift'],['growth','Growth Mechanism'],['capture','Competitive & Share Capture'],['matrix','Activity - KPI Matrix'],['win','Where / How to Win & Share Plan'],['insights','Insights & Actions'],['gaps','Data Gaps']];
+  var h='';tabs.forEach(function(t){h+='<button class="tab" data-tab="'+t[0]+'" onclick="switchTab(\''+t[0]+'\')">'+t[1]+'</button>';});
+  document.getElementById('tabs').innerHTML=h;
+  var s='';SBUS.forEach(function(b,i){s+='<option value="'+i+'"'+(i===0?' selected':'')+'>'+b.name+' — '+b.sbu+'</option>';});
+  s+='<option disabled>── other SBUs: pending pilot approval ──</option>';
+  document.getElementById('sbuSelect').innerHTML=s;
+}
+function switchTab(name){var tabs=document.querySelectorAll('.tab');for(var i=0;i<tabs.length;i++)tabs[i].classList.toggle('on',tabs[i].dataset.tab===name);render(name);}
+function onSbuChange(idx){if(idx==='0'){switchTab('overview');return;}document.getElementById('view').innerHTML='<div class="banner"><h1>Pilot approval pending</h1><div class="sub">Only <b>Akij Cement</b> is built (pilot). Approve, then I build the remaining 12 SBUs.</div></div>';}
+
+function render(tab){var b=SBUS[0];var v=document.getElementById('view');
+  if(tab==='overview')v.innerHTML=overview(b);
+  else if(tab==='framework')v.innerHTML=framework(b);
+  else if(tab==='strategyMap')v.innerHTML=strategyMap(b);
+  else if(tab==='dictionary')v.innerHTML=dictionary(b);
+  else if(tab==='emphasis')v.innerHTML=emphasis(b);
+  else if(tab==='scorecard')v.innerHTML=scorecard(b);
+  else if(tab==='market')v.innerHTML=market(b);
+  else if(tab==='equity')v.innerHTML=equity(b);
+  else if(tab==='digital')v.innerHTML=digital(b);
+  else if(tab==='p4')v.innerHTML=p4(b);
+  else if(tab==='ramp')v.innerHTML=ramp(b);
+  else if(tab==='atlbtl')v.innerHTML=atlbtl(b);
+  else if(tab==='growth')v.innerHTML=growth(b);
+  else if(tab==='capture')v.innerHTML=capture(b);
+  else if(tab==='matrix')v.innerHTML=matrix(b);
+  else if(tab==='win')v.innerHTML=win(b);
+  else if(tab==='insights')v.innerHTML=insights(b);
+  else if(tab==='gaps')v.innerHTML=gaps(b);
+}
+
+function overview(b){
+  var sh=shareTraj(b);
+  return '<div class="banner"><h1>'+b.name+' — Brand KPI Framework</h1>'+
+  '<div class="sub">'+esc(b.sbu)+' · '+esc(b.cat)+' · '+b.model+' · Custodian: '+esc(b.custodian)+' <span style="opacity:.7">'+esc(b.custodianNote)+'</span> · Business Head: '+esc(b.businessHead)+'</div>'+
+  '<div class="pills"><span class="pill rag">● '+b.rag+' status</span><span class="pill">'+crm(b.revenueBase)+' '+BASE_FY+' base</span><span class="pill">'+crm(b.revenue[4])+' FY30-31 target</span><span class="pill bud">Budget '+b.budget+' Cr</span><span class="pill">Maturity '+b.maturityLevel+' ('+b.maturityScore+'/5)</span></div></div>'+
+  '<div class="kpis">'+
+  '<div class="kpi b"><div class="v">'+crm(b.revenueBase)+'</div><div class="l">'+BASE_FY+' revenue (actual)</div><div class="s">→ '+crm(b.revenue[4])+' FY30-31 · '+cagr(b)+'% CAGR</div></div>'+
+  '<div class="kpi r"><div class="v">'+pct2(b.marketShareBase)+'</div><div class="l">Market share</div><div class="s">'+esc(b.marketShareNote)+'</div></div>'+
+  '<div class="kpi a" style="cursor:pointer" onclick="switchTab(\'gaps\')" title="1.56 = Level 1 (Initial) fully met + 56% of Level 2 (Developing) criteria. 40-criteria audit across 5 levels. Click to open the scoring tab."><div class="v">'+b.maturityScore+'</div><div class="l">Brand maturity (audit)</div><div class="s">'+b.maturityLevel+' · L1 fully met + '+Math.round((b.maturityScore-1)*100)+'% of L2 (40-criteria audit) · <span style="color:var(--gold);font-weight:700">How scored →</span></div></div>'+
+  '<div class="kpi g"><div class="v">'+crm(b.budget)+'</div><div class="l">FY26-27 marketing budget</div><div class="s">Q1 '+b.budgetQ[0]+' · Q2 '+b.budgetQ[1]+' · Q3 '+b.budgetQ[2]+' · Q4 '+b.budgetQ[3]+' Cr</div></div>'+
+  '</div>'+
+  '<div class="sec"><div class="sec-h"><h2>Why Cement (SBU-specific emphasis)</h2><div class="rule"></div><span class="cap">MD guidance</span></div>'+
+  '<div class="card"><div style="display:flex;flex-wrap:wrap;gap:7px">'+b.emphasis.map(function(e){return '<span class="pill" style="background:var(--pillbg);color:var(--ink)">'+esc(e)+'</span>';}).join('')+'</div>'+
+  '<p class="note">B2B2C building material — brand preference, perceived quality, dealer loyalty and contractor recommendation drive the category. Dimension weights re-tuned (Equity 28%).</p></div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Headline finding — reconciliation flag</h2><div class="rule"></div></div>'+
+  '<div class="flagbox"><b>Strategy vs current trend gap.</b> The 5-year strategy plans revenue <b>+29.3%</b> in FY26-27 (→ '+crm(b.revenue[0])+'), lifting share from '+pct2(b.marketShareBase)+' to ~'+pct2(sh[0])+' (assumed '+b.marketCAGR+'% market). But actual YTD is <b>volume −8.85% vs industry +1.30%</b> — the brand is currently <b>losing share</b>. A ~14 pp volume turnaround is required in 3 quarters. See Reconciliation tab.</div></div>'+
+  scoreCards(b)+
+  kpiPoints(b)+
+  revBuild(b);
+}
+
+function kpi(b){
+  var rows=ACCL_KPIS.map(function(kp){
+    return '<tr><td><b>'+kp.k+'</b><div style="font-size:9.5px;color:var(--mut)">'+kp.dim+' · '+kp.freq+'</div></td>'+
+    '<td class="num">'+fmt(kp,kp.base)+' <span class="s5">('+score5(kp,-1)+'/5)</span></td>'+
+    kp.fy.map(function(v,i){return '<td class="num">'+fmt(kp,v)+' <span class="s5">('+score5(kp,i)+'/5)</span></td>';}).join('')+
+    '<td><span class="badge '+kp.conf+'">'+kp.conf+'</span></td></tr>';
+  }).join('');
+  return '<div class="banner"><h1>Brand KPI Framework — FY-wise targets</h1><div class="sub">'+esc(b.sbu)+' · every KPI has a concrete baseline and FY1–FY5 target. <b>High</b> = strategy/ERP · <b>Med</b> = derived · <b>Low</b> = benchmark-derived (to validate with Quantum baseline) · <b>Web</b> = web-fetched competitive benchmark.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Dimension weighting (Cement · '+b.model+')</h2><div class="rule"></div><span class="cap">re-tuned from group default</span></div>'+
+  '<div class="card"><div class="chipbar">'+DIMS.map(function(d,i){var w=ACCL_WEIGHTS[d.id];var cols=['#1F4E79','#2E7D6B','#C9A227','#B08A1B','#7A8794','#5A6B7C','#9FB2C8'];return '<span style="width:'+w+'%;background:'+cols[i]+'" title="'+d.n+' '+w+'%">'+d.n.split(' ')[0]+' '+w+'%</span>';}).join('')+'</div>'+
+  '<div class="legend">'+DIMS.map(function(d,i){var w=ACCL_WEIGHTS[d.id];var cols=['#1F4E79','#2E7D6B','#C9A227','#B08A1B','#7A8794','#5A6B7C','#9FB2C8'];return '<span><i style="background:'+cols[i]+'"></i>'+d.n+' '+w+'%</span>';}).join('')+'</div></div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>KPI targets by fiscal year</h2><div class="rule"></div><span class="cap">'+ACCL_KPIS.length+' KPIs · no TBD</span></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>KPI</th><th class="num">Baseline ('+BASE_FY+')</th><th class="num">FY26-27</th><th class="num">FY27-28</th><th class="num">FY28-29</th><th class="num">FY29-30</th><th class="num">FY30-31</th><th>Conf.</th></tr>'+rows+'</table>'+
+  '<p class="note">Baselines marked <b>Low</b> are benchmark-derived starting points (category norms for a #7 player) — the Quantum baseline study will replace them with measured values. <b>High</b> baselines are actual strategy/ERP figures. Targets are strategy-implied and scoring-ready.</p></div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Quarter-wise Phasing — every KPI × every FY × every quarter</h2><div class="rule"></div><span class="cap">select a fiscal year</span></div>'+
+  '<div class="card"><div class="stabbar">'+FY.map(function(f,i){return '<button class="stab'+(i===0?' active':'')+'" id="qfy'+i+'" onclick="setQFy('+i+')">'+f+'</button>';}).join('')+'</div><div id="qwrap">'+qMatrixHTML(b,0)+'</div>'+
+  '<p class="note"><b>Methodology:</b> Revenue is phased by construction seasonality (Q1 22% · Q2 24% · Q3 27% · Q4 27% of annual). Every other KPI progresses linearly (4 equal steps) from the prior year-end value to the FY target — Q4 equals the annual target. For flow KPIs (revenue) quarters are incremental; for level KPIs (%) they are end-of-quarter values.</p></div></div>';
+}
+
+function recon(b){
+  var sh=shareTraj(b);
+  var rows=b.revenue.map(function(r,i){
+    var revCAGR=Math.round((Math.pow(r/b.revenueBase,1/(i+1))-1)*1000)/10;
+    var d=sh[i]-b.marketShareBase;
+    var flag=sh[i]>b.marketShareBase?'<span class="badge High">share up</span>':'<span class="badge Low">share down</span>';
+    return '<tr><td class="num">'+FY[i]+'</td><td class="num">'+r.toLocaleString()+'</td><td class="num">'+revCAGR+'%</td><td class="num">'+b.marketCAGR+'%</td><td class="num"><b>'+sh[i].toFixed(2)+'%</b></td><td class="num">'+(d>=0?'+':'')+d.toFixed(2)+' pp</td><td>'+flag+'</td></tr>';
+  }).join('');
+  return '<div class="banner"><h1>Revenue &amp; Market Share Reconciliation</h1><div class="sub">Market share reconciles with revenue: <b>share = base share × (revenue growth ÷ market growth)</b>. If revenue grows slower than the market, share falls — and is flagged.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Strategy-implied trajectory (if targets are hit)</h2><div class="rule"></div><span class="cap">market CAGR '+b.marketCAGR+'% ('+esc(b.marketCAGRNote)+')</span></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th class="num">FY</th><th class="num">Revenue (Cr)</th><th class="num">Rev CAGR</th><th class="num">Market CAGR</th><th class="num">Implied share</th><th class="num">Δ vs base</th><th>Direction</th></tr>'+rows+'</table>'+
+  '<p class="note">Base share '+pct2(b.marketShareBase)+' ('+esc(b.marketShareNote)+'). Hitting the strategy lifts share to ~'+sh[4].toFixed(1)+'% by FY30-31 — roughly top-3 from 7th today.</p></div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Reconciliation flag</h2><div class="rule"></div></div>'+
+  '<div class="flagbox"><b>Current trend contradicts the strategy.</b> FY26-27 strategy needs <b>+29.3%</b> revenue, but YTD volume is <b>−8.85%</b> while the industry grows <b>+1.30%</b>. At the current run-rate the brand is <b>losing share</b>, not gaining toward ~5.5%. Required action: ~14 pp volume turnaround in 3 quarters — owned by the custodian, reviewed monthly.</div>'+
+  '<div class="okbox" style="margin-top:12px"><b>What reconciles cleanly:</b> base revenue ('+crm(b.revenueBase)+'), FY targets, NP margin and budget are internally consistent with the approved strategy. Open items: volume↔revenue price/mix bridge, and ERP/DWH actual (link down) — logged in the Data Gap Register.</div></div>';
+}
+
+var P4CAUSAL = [
+  {act:'Product', kpi:'Perceived Quality', kpiBase:68, kpiFy:[72,76,79,82,85], unit:'index', w:0.25, desc:'iron-slag CEM-II/AM hero SKU'},
+  {act:'Price', kpi:'Price Premium', kpiBase:100, kpiFy:[102,104,106,108,110], unit:'index', w:0.20, desc:'BDT 7/bag shelf edge'},
+  {act:'Place', kpi:'Distribution Reach', kpiBase:65, kpiFy:[70,75,80,85,90], unit:'%', w:0.25, desc:'dealers + retail + B2B'},
+  {act:'Promotion', kpi:'Brand Awareness', kpiBase:62, kpiFy:[68,72,76,80,83], unit:'%', w:0.30, desc:'TVC + OOH + BTL'}
+];
+function p4CausalMatrix(b, fi){
+  var shBase = b.marketShareBase, shFy = shareTraj(b);
+  var revBase = b.revenueBase, revFy = b.revenue;
+  var rows = P4CAUSAL.map(function(c){
+    var kpi = [c.kpiBase].concat(c.kpiFy);
+    var sh = [shBase].concat(shFy.map(function(s){ return shBase + (s - shBase) * c.w; }));
+    var rev = [revBase].concat(revFy.map(function(r){ return revBase + (r - revBase) * c.w; }));
+    var j = fi + 1;
+    var kstep = (kpi[j]-kpi[j-1])/4, sstep = (sh[j]-sh[j-1])/4, rstep = (rev[j]-rev[j-1])/4;
+    var cells = '';
+    for(var q=1; q<=4; q++){
+      var kv = kpi[j-1]+kstep*q, sv = sh[j-1]+sstep*q, rv = rev[j-1]+rstep*q;
+      cells += '<td class="num"><b>'+kv.toFixed(1)+' '+c.unit+'</b><div style="font-size:9px;color:var(--mut);font-weight:600">'+sv.toFixed(2)+'% \u00b7 '+Math.round(rv).toLocaleString('en-IN')+' Cr</div></td>';
+    }
+    cells += '<td class="num"><b>'+kpi[j].toFixed(1)+' '+c.unit+'</b><div style="font-size:9px;color:var(--mut);font-weight:600">'+sh[j].toFixed(2)+'% \u00b7 '+Math.round(rev[j]).toLocaleString('en-IN')+' Cr</div></td>';
+    return '<tr><td><b>'+c.act+' \u2014 '+c.kpi+'</b><div style="font-size:9px;color:var(--mut)">'+c.desc+'</div></td>'+cells+'</tr>';
+  }).join('');
+  return '<table class="tbl"><tr class="trh"><th>4P \u2192 KPI</th><th class="num">Q1 (Jul\u2013Sep)</th><th class="num">Q2 (Oct\u2013Dec)</th><th class="num">Q3 (Jan\u2013Mar)</th><th class="num">Q4 (Apr\u2013Jun)</th><th class="num">FY total</th></tr>'+rows+'</table>';
+}
+function setP4Fy(fi){
+  for(var i=0;i<5;i++){ var b=document.getElementById('p4fy'+i); if(b) b.className='stab'+(i===fi?' active':''); }
+  document.getElementById('p4wrap').innerHTML = p4CausalMatrix(SBUS[0], fi);
+}
+function p4(b){
+  var ch=b.channelMix,tot=ch.TV+ch.Digital+ch.OOH+ch.Trade+ch.BTL+ch.PR;
+  var chip=Object.keys(ch).map(function(k){var cols={TV:'#1F4E79',Digital:'#C9A227',OOH:'#7A8794',Trade:'#2E7D6B',BTL:'#B08A1B',PR:'#9FB2C8'};return '<span style="width:'+(ch[k]/tot*100)+'%;background:'+cols[k]+'">'+k+' '+ch[k]+'%</span>';}).join('');
+  return '<div class="banner"><h1>4P Scorecard</h1><div class="sub">Product · Price · Place · Promotion — the marketing-mix view for '+b.name+', sourced from the Brand Marketing Pack + web.</div></div>'+
+  '<div class="p4">'+
+  '<div class="p4c"><h3><span class="ic">P</span> Product</h3><table class="kv"><tr><td>Portfolio</td><td>'+esc(b.portfolio)+'</td></tr><tr><td>Positioning</td><td>'+esc(b.positioning)+'</td></tr><tr><td>Brand promise</td><td>'+esc(b.promise)+'</td></tr><tr><td>Target customer</td><td>'+esc(b.target)+'</td></tr></table></div>'+
+  '<div class="p4c"><h3><span class="ic">P</span> Price</h3><table class="kv"><tr><td>Price position</td><td>'+esc(b.price)+'</td></tr><tr><td>Value story</td><td>"Best price on the shelf" — highest NSP, lowest retail net.</td></tr><tr><td>Implication</td><td>Convert BDT 7/bag shelf advantage into demand.</td></tr></table></div>'+
+  '<div class="p4c"><h3><span class="ic">P</span> Place</h3><table class="kv"><tr><td>Distribution</td><td>'+esc(b.distribution)+'</td></tr><tr><td>Segments</td><td>'+b.segments.map(esc).join(' · ')+'</td></tr><tr><td>Opportunity</td><td>Tier-2/3 town growth; specification via engineers &amp; masons.</td></tr></table></div>'+
+  '<div class="p4c"><h3><span class="ic">P</span> Promotion</h3><div style="font-size:11.5px;color:var(--mut);font-weight:700;margin-bottom:4px">Channel mix (FY26-27)</div><div class="chipbar">'+chip+'</div><ul class="list" style="margin-top:10px">'+b.campaigns.map(function(c){return '<li>'+esc(c)+'</li>';}).join('')+'</ul></div>'+
+  '</div>'+
+  '<div class="sec"><div class="sec-h"><h2>Competitive context</h2><div class="rule"></div></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Competitor</th><th class="num">Market share</th></tr>'+b.competitors.map(function(c){return '<tr><td>'+esc(c[0])+'</td><td class="num">'+esc(c[1])+'</td></tr>';}).join('')+'<tr><td><b>Akij Cement</b></td><td class="num"><b>'+pct2(b.marketShareBase)+'</b></td></tr></table>'+
+  '<p class="note">Akij Cement is 7th of 12. Shah leads at ~17.25% (~3.8× Akij). The strategy target implies closing this gap substantially over 5 years.</p></div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>4P KPI Impactor \u2014 Product / Price / Place / Promotion \u2192 KPI \u2192 Revenue / Share (FY & Q)</h2><div class="rule"></div><span class="cap">select a fiscal year</span></div>'+
+  '<div class="card"><div class="stabbar">'+FY.map(function(f,i){ return '<button class="stab'+(i===0?' active':'')+'" id="p4fy'+i+'" onclick="setP4Fy('+i+')">'+f+'</button>'; }).join('')+'</div><div id="p4wrap">'+p4CausalMatrix(b,0)+'</div>'+
+  '<p class="note">Each P maps to a KPI \u2014 Product\u2192Perceived Quality, Price\u2192Price Premium, Place\u2192Distribution Reach, Promotion\u2192Brand Awareness \u2014 which drives market share and revenue. Attribution weights sum to 100% of the total +4.36 pp gain.</p></div></div>';
+}
+
+function digital(b){
+  var rows=b.digitalBench.map(function(d){
+    var isUs = d[0]==='Akij Cement';
+    return '<tr'+(isUs?' style="background:var(--rowhl)"':'')+'><td><b>'+d[0]+'</b>'+(isUs?' <span class="badge Web">Ours</span>':'')+'</td><td>'+esc(d[1])+'</td><td>'+esc(d[2])+'</td><td>'+esc(d[3])+'</td><td class="num"><b>'+esc(d[4])+'</b></td></tr>';
+  }).join('');
+  return '<div class="banner"><h1>Digital Brand Strength — Competitive Benchmark</h1><div class="sub">Web-fetched 25 Nov 2026 — website + social-channel presence for Akij Cement and its four main competitors. Exact follower counts require a social-listening tool (login-walled); this benchmark uses verifiable web presence.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Digital presence vs competitors</h2><div class="rule"></div><span class="cap">web evidence</span></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Brand</th><th>Website</th><th>Social channels</th><th>Digital content</th><th class="num">Presence score</th></tr>'+rows+'</table>'+
+  '<p class="note">Akij Cement is <b>digitally behind</b> the leaders — Seven Rings (4.0, video + order form) and Crown (3.5, PLC investor portal) lead; Akij (2.5) has 4 channels but no e-commerce/order form and (per audit L3.3) <b>no analytics tracking</b>. This confirms the audit finding that Digital &amp; Data (2.33) is the weakest capability.</p></div></div>'+
+  '<div class="flagbox"><b>Digital gap = share-loss contributor.</b> Akij Cement\'s share of search (7%) and digital presence (2.5/5) trail Shah (~17% share) and Seven Rings. The Digital Brand Strength KPI targets (Share of Search 7→12%, Presence 2.5→4.3) close this gap by FY30-31.</div></div>';
+}
+
+function gaps(b){
+  return '<div class="banner"><h1>Data Gap Register</h1><div class="sub">No data is invented. Measured/derived/benchmark baselines are labelled with confidence; items still needing a source are registered here.</div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Gaps for '+b.name+'</h2><div class="rule"></div></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>#</th><th>Missing item</th><th>Why needed</th><th>Suggested source</th><th>Can proceed?</th></tr>'+
+  '<tr><td>1</td><td><b>Brand awareness / consideration / NPS / preference measured baseline</b></td><td>Replace Low benchmark baselines with measured values; compute BEI/BHI accurately</td><td>Quantum brand research (ongoing)</td><td>Yes (using benchmark targets)</td></tr>'+
+  '<tr><td>2</td><td><b>Dealer loyalty / contractor recommendation baseline</b></td><td>Core Cement KPIs (MD emphasis)</td><td>Trade survey / dealer panel</td><td>Yes (benchmark targets)</td></tr>'+
+  '<tr><td>3</td><td><b>ERP/DWH actual GL revenue (link down)</b></td><td>Reconcile revenue base &amp; YTD against strategy</td><td>ERP GL fix (iBOSDDD)</td><td>Yes (strategy + brand-pack figures)</td></tr>'+
+  '<tr><td>4</td><td><b>Volume ↔ revenue bridge (price/mix)</b></td><td>Explain −8.85% volume vs +29.3% revenue target</td><td>Sales/Finance</td><td>Flag only</td></tr>'+
+  '<tr><td>5</td><td><b>Validated market size / category CAGR</b></td><td>Share trajectory uses assumed 6% market growth</td><td>Industry report / syndicated</td><td>Yes (assumption labelled)</td></tr>'+
+  '<tr><td>6</td><td><b>Social follower counts / engagement rates</b></td><td>Exact digital SOV &amp; engagement scoring</td><td>Social-listening tool (e.g. Brandwatch)</td><td>Yes (web presence benchmark)</td></tr>'+
+  '</table></div></div>'+
+  '<div class="sec"><div class="sec-h"><h2>Monitoring maturity (Brand Maturity Audit)</h2><div class="rule"></div><span class="cap">score '+b.maturityScore+' · '+b.maturityLevel+'</span></div>'+
+  '<div class="card"><table class="tbl"><tr class="trh"><th>Capability dimension</th><th class="num">Score (1–5)</th><th>Progress</th></tr>'+
+  Object.keys(b.maturityDims).map(function(k){var d=b.maturityDims[k];var names={strategy:'Strategy & Positioning',identity:'Identity & Portfolio',governance:'Governance & Organisation',cx:'Communication & CX',digital:'Digital & Data',measurement:'Measurement & Equity'};return '<tr><td>'+names[k]+'</td><td class="num"><b>'+d+'</b></td><td><div class="mbar"><span style="width:'+(d/5*100)+'%"></span></div></td></tr>';}).join('')+
+  '</table><p class="note"><b>How to read the score:</b> 1.56 = Level 1 fully met + 56% of Level 2. 5 levels (40 criteria, 8 each) — <b>L1 Initial</b> (logo &amp; product, ad hoc) → <b>L2 Developing</b> (identity/guidelines, inconsistent) → <b>L3 Defined</b> (clear positioning &amp; standards) → <b>L4 Managed</b> (KPIs govern the brand) → <b>L5 Leading</b> (brand drives strategy). Weakest: <b>Digital &amp; Data</b> (2.33). Brand KPIs not defined (L2.2=No), no brand dashboard (L3.7=No), no competitor monitoring (L2.4=No) — the exact gaps this framework closes.</p></div></div>';
+}
+
+function method(b){
+  return '<div class="banner"><h1>Methodology &amp; Data Governance</h1><div class="sub">CBDO framework applied exactly: 7 dimensions, the proposed weightage, BEI/BHI/BPI indices, SBU-specific KPI emphasis. No fabricated numbers — every value is sourced and confidence-labelled.</div></div>'+
+  '<div class="grid2">'+
+  '<div class="card"><h3>7 dimensions &amp; group weightage</h3><table class="tbl"><tr class="trh"><th>Dimension</th><th class="num">Weight</th></tr>'+DIMS.map(function(d){return '<tr><td>'+d.n+'</td><td class="num"><b>'+d.w+'%</b></td></tr>';}).join('')+'<tr><td><b>Total</b></td><td class="num"><b>100%</b></td></tr></table><p class="note">Cement re-weights to Equity 28 / Health 13 / Position 9 / Market 20 / Finance 15 / Digital 4 / Execution 11.</p></div>'+
+  '<div class="card"><h3>Three indices</h3><table class="kv"><tr><td>BEI</td><td>Brand Equity Index — intangible strength (awareness, associations, quality, loyalty, proprietary assets).</td></tr><tr><td>BHI</td><td>Brand Health Index — current perception &amp; competitive health (consideration, NPS, sentiment, SOV, digital).</td></tr><tr><td>BPI</td><td>Brand Performance Index — overall performance incl. commercial &amp; marketing effectiveness (master score).</td></tr></table></div>'+
+  '</div>'+
+  '<div class="sec"><div class="sec-h"><h2>Data confidence labels</h2><div class="rule"></div></div>'+
+  '<div class="card"><table class="kv">'+
+  '<tr><td><span class="badge High">High</span></td><td>Approved 5-year strategy / ERP actual / audited.</td></tr>'+
+  '<tr><td><span class="badge Med">Medium</span></td><td>Derived from strategy + credible source (share trajectory, volume proxy, budget).</td></tr>'+
+  '<tr><td><span class="badge Low">Low</span></td><td>Benchmark-derived starting point (category norm for a #7 player) — to be validated by the Quantum baseline study.</td></tr>'+
+  '<tr><td><span class="badge Web">Web</span></td><td>Web-fetched competitive benchmark (website + social presence).</td></tr></table>'+
+  '<p class="note">Sources: 5-year strategy (SBU Strategic Gap Analysis CSV) · Brand Marketing Pack (pages.dev) · Brand Maturity Audit (pages.dev) · AR Marketing Budget Plan 26-27 · brand websites (web-fetched 25/11/2026) · ERP via MCP (revenue link under repair for Cement).</p></div></div>';
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('dark');
+  var dark = document.body.classList.contains('dark');
+  try{ localStorage.setItem('theme', dark ? 'dark' : 'light'); }catch(e){}
+  updateThemeBtn();
+}
+function updateThemeBtn(){
+  var dark = document.body.classList.contains('dark');
+  var btn = document.getElementById('themeToggle');
+  if(btn) btn.textContent = dark ? '☀️ Light' : '🌙 Dark';
+}
+(function(){ var t=null; try{ t=localStorage.getItem('theme'); }catch(e){} if(t==='dark') document.body.classList.add('dark'); })();
+
+buildTabs();
+switchTab('overview');
+updateThemeBtn();
+</script>
+</body>
+</html>
