@@ -39,7 +39,7 @@ footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top
 <style>.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}</style>
 </head>
 <body>
-<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./strategy-analytics.html">Strategy &amp; Analytics</a><a href="./enovar-icp.html">ENOVAR ICP</a><a href="./positioning-4p.html">4P Positioning</a><a href="./gap-mitigation.html">Gap Mitigation</a><a href="./spec.md">Spec</a></div>
+<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./strategy-analytics.html">Strategy &amp; Analytics</a><a href="./enovar-icp.html">ENOVAR ICP</a><a href="./enovar-differentiation.html">ICP Differentiation</a><a href="./positioning-4p.html">4P Positioning</a><a href="./gap-mitigation.html">Gap Mitigation</a><a href="./spec.md">Spec</a></div>
 <div class="topbar">
   <span class="brand">AKIJ <b>Resource</b> · MMS</span>
   <span class="pill">COMPETITOR INTELLIGENCE REPOSITORY</span>
@@ -95,18 +95,24 @@ footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top
 <script>
 const SBUS=[['cement','Akij Cement (ACCL)'],['ispot','Akij Ispat'],['readymix','AKIJ Readymix'],['essential','AKIJ Essential'],['feed','Akij Feed'],['enovar','Enovar'],['benzol','Benzol Lubricants'],['tyres','Tyres (AAIL)'],['orca','ORCA'],['air','AKIJ AIR'],['nextjobz','Nextjobz'],['pharmacy','AKIJ Pharmacy'],['mediplex','Akij Mediplex']];
 const KEY='akij_mms_competitors_v1';
-const OWN={cement:4.51,ispot:2.9,readymix:4.5,enovar:0.1,benzol:2,orca:1,air:0.8,nextjobz:2,tyres:0.3,essential:5,feed:2,pharmacy:2,mediplex:1};
+const OWN={cement:4.51,ispot:2.9,readymix:4.5,enovar:3.9,benzol:2,orca:1,air:0.8,nextjobz:2,tyres:0.3,essential:5,feed:2,pharmacy:2,mediplex:1};
 function seedCement(){return {competitors:[
  {id:'shah',name:'Shah Cement',share:17.25,sov:20,shareOfSearch:9,priceIndex:98,digital:3.0,threat:'high',positioning:'Market leader / scale'},
  {id:'fresh',name:'Fresh',share:11.95,sov:14,shareOfSearch:7,priceIndex:101,digital:3.0,threat:'med',positioning:'Technical assurance'},
  {id:'crown',name:'Crown',share:11.51,sov:13,shareOfSearch:6,priceIndex:99,digital:3.5,threat:'med',positioning:'Price-led / discounts'},
  {id:'seven',name:'Seven Rings',share:11.51,sov:12,shareOfSearch:6,priceIndex:102,digital:4.0,threat:'high',positioning:'Mid-price challenger'}
 ]};}
-function load(){try{var s=localStorage.getItem(KEY);if(s)return JSON.parse(s);}catch(e){}var o={cement:seedCement()};return o;}
+function seedEnovar(){return {competitors:[
+ {id:'ssg',name:'SSG',share:21.4,sov:24,shareOfSearch:12,priceIndex:98,digital:4.0,threat:'high',positioning:'Scale + multi-brand / multi-channel'},
+ {id:'walton',name:'Walton',share:11.9,sov:14,shareOfSearch:8,priceIndex:96,digital:3.5,threat:'high',positioning:'Scale + value + local manufacture'},
+ {id:'rfl',name:'RFL',share:5.4,sov:7,shareOfSearch:5,priceIndex:92,digital:3.0,threat:'med',positioning:'Value + distribution'},
+ {id:'mep',name:'MEP',share:3.0,sov:4,shareOfSearch:3,priceIndex:95,digital:3.0,threat:'med',positioning:'Rising volume challenger'}
+],activities:[]};}
+function load(){try{var s=localStorage.getItem(KEY);if(s){var o=JSON.parse(s);if(!o.cement)o.cement=seedCement();if(!o.enovar||!o.enovar.competitors||!o.enovar.competitors.length)o.enovar=seedEnovar();return o;}}catch(e){}return {cement:seedCement(),enovar:seedEnovar()};}
 let STORE=load();
 function ensure(k){if(!STORE[k])STORE[k]={competitors:[],activities:[]};if(!STORE[k].activities)STORE[k].activities=[];return STORE[k];}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(STORE));}catch(e){}}
-let cur=localStorage.getItem('akij_mms_sbu')||localStorage.getItem('akij_mms_comp_sbu')||'cement';ensure(cur);
+let cur=localStorage.getItem('akij_mms_sbu')||localStorage.getItem('akij_mms_comp_sbu')||'enovar';ensure(cur);
 function switchSbu(k){cur=k;ensure(k);localStorage.setItem('akij_mms_sbu',k);localStorage.setItem('akij_mms_comp_sbu',k);render();}
 function measurement(k){try{var s=localStorage.getItem('akij_mms_measure_v2')||localStorage.getItem('akij_mms_measure_v1');var o=JSON.parse(s||'{}');var m=o[k];return m&&m.actuals?m.actuals:null;}catch(e){return null;}}
 function ownShare(k){var m=measurement(k);if(m&&m.msh!=null)return Number(m.msh);return OWN[k]!=null?OWN[k]:null;}

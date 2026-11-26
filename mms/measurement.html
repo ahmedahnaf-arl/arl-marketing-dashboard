@@ -54,7 +54,7 @@ footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top
 <style>.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}</style>
 </head>
 <body>
-<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./strategy-analytics.html">Strategy &amp; Analytics</a><a href="./enovar-icp.html">ENOVAR ICP</a><a href="./positioning-4p.html">4P Positioning</a><a href="./gap-mitigation.html">Gap Mitigation</a><a href="./spec.md">Spec</a></div>
+<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./strategy-analytics.html">Strategy &amp; Analytics</a><a href="./enovar-icp.html">ENOVAR ICP</a><a href="./enovar-differentiation.html">ICP Differentiation</a><a href="./positioning-4p.html">4P Positioning</a><a href="./gap-mitigation.html">Gap Mitigation</a><a href="./spec.md">Spec</a></div>
 <div class="topbar">
   <span class="brand">AKIJ <b>Resource</b> · MMS</span>
   <span class="pill">PROTOTYPE · MEASUREMENT</span>
@@ -114,14 +114,17 @@ const KPI=[
  ['camp','D7','Campaign Effectiveness','%','h',4,70,75,'Brand'],
  ['budg','D7','Budget Efficiency','%','h',3,85,90,'Finance']
 ].map(function(r){return {id:r[0],dim:r[1],name:r[2],unit:r[3],dir:r[4],w:r[5],base:r[6],tgt:r[7],owner:r[8]};});
-function seedActuals(){return {aided:56.3,toma:18.5,pq:60,pref:40.6,dloy:56.3,cont:43.6,trust:71.8,cons:46,nps:23,sov:2.9,sos:7.2,msh:5.5,vol:-8.8,dist:39.5,rev:1923,npm:1.7,romi:1.9,eng:1.8,guide:68,camp:63,budg:75};}
+function seedActuals(sbu){
+  if(sbu==='enovar') return {aided:30,toma:8,pq:55,pref:30,dloy:52,cont:40,trust:60,cons:32,nps:20,sov:4,sos:5,msh:3.9,vol:60,dist:12,rev:402,npm:2.5,romi:1.5,eng:1.5,guide:70,camp:62,budg:80};
+  return {aided:56.3,toma:18.5,pq:60,pref:40.6,dloy:56.3,cont:43.6,trust:71.8,cons:46,nps:23,sov:2.9,sos:7.2,msh:5.5,vol:-8.8,dist:39.5,rev:1923,npm:1.7,romi:1.9,eng:1.8,guide:68,camp:63,budg:75};
+}
 
 const KEY='akij_mms_measure_v2';
 function loadAll(){try{var s=localStorage.getItem(KEY);if(s)return JSON.parse(s);}catch(e){}return {};}
 let STORE=loadAll();
-function ensure(sbu){if(!STORE[sbu]){STORE[sbu]={actuals:seedActuals(),waves:[],actions:[]};persist();}return STORE[sbu];}
+function ensure(sbu){if(!STORE[sbu]){STORE[sbu]={actuals:seedActuals(sbu),waves:[],actions:[]};persist();}return STORE[sbu];}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(STORE));}catch(e){}}
-let curSbu=localStorage.getItem('akij_mms_sbu')||localStorage.getItem('akij_mms_measure_sbu')||'cement';ensure(curSbu);
+let curSbu=localStorage.getItem('akij_mms_sbu')||localStorage.getItem('akij_mms_measure_sbu')||'enovar';ensure(curSbu);
 let WORK=Object.assign({},STORE[curSbu].actuals);
 let editWave=false;
 
