@@ -114,6 +114,9 @@ const KPI=[
  ['camp','D7','Campaign Effectiveness','%','h',4,70,75,'Brand'],
  ['budg','D7','Budget Efficiency','%','h',3,85,90,'Finance']
 ].map(function(r){return {id:r[0],dim:r[1],name:r[2],unit:r[3],dir:r[4],w:r[5],base:r[6],tgt:r[7],owner:r[8]};});
+var KPI_ACCL=KPI.map(function(k){return {id:k.id,base:k.base,tgt:k.tgt};});
+var ALEL_TGT={aided:[30,35],toma:[8,12],pq:[55,60],pref:[30,35],dloy:[52,58],cont:[40,46],trust:[60,65],cons:[32,38],nps:[20,26],sov:[4,5],sos:[5,6],msh:[3.9,4.5],vol:[30,40],dist:[12,15],rev:[402.14,402.14],npm:[2.5,3.5],romi:[1.5,2.0],eng:[1.5,2.0],guide:[70,80],camp:[62,68],budg:[80,85]};
+function applyTargets(){KPI.forEach(function(k){var d=null;for(var i=0;i<KPI_ACCL.length;i++){if(KPI_ACCL[i].id===k.id){d=KPI_ACCL[i];break;}}if(curSbu==='enovar'&&ALEL_TGT[k.id]){k.base=ALEL_TGT[k.id][0];k.tgt=ALEL_TGT[k.id][1];}else if(d){k.base=d.base;k.tgt=d.tgt;}});}
 function seedActuals(sbu){
   if(sbu==='enovar') return {aided:30,toma:8,pq:55,pref:30,dloy:52,cont:40,trust:60,cons:32,nps:20,sov:4,sos:5,msh:3.9,vol:60,dist:12,rev:402,npm:2.5,romi:1.5,eng:1.5,guide:70,camp:62,budg:80};
   return {aided:56.3,toma:18.5,pq:60,pref:40.6,dloy:56.3,cont:43.6,trust:71.8,cons:46,nps:23,sov:2.9,sos:7.2,msh:5.5,vol:-8.8,dist:39.5,rev:1923,npm:1.7,romi:1.9,eng:1.8,guide:68,camp:63,budg:75};
@@ -149,6 +152,7 @@ function indices(){var ds={};Object.keys(DIMS).forEach(function(d){ds[d]=dimScor
 function fmtVal(k,v){if(v===''||v==null)return '—';return v;}
 
 function render(){
+ applyTargets();
  document.getElementById('sbu').innerHTML=SBUS.map(function(s){return '<option value="'+s[0]+'"'+(s[0]===curSbu?' selected':'')+'>'+s[1]+'</option>';}).join('');
  var ix=indices();
  var st=STORE[curSbu];var last=st.waves[st.waves.length-1];
