@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKIJ MMS — Strategy &amp; Analytics</title>
+<style>
+:root{--navy:#0B1B33;--navy2:#0F2A47;--blue:#1F4E79;--gold:#C9A227;--gold2:#B08A1B;--bg:#F4F6FA;--card:#fff;--ink:#15202B;--mut:#5A6B7C;--line:#E6EBF2;--green:#1E6B3C;--amber:#C87E1A;--red:#A61C1C;--teal:#2E7D6B}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+.topbar{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,var(--navy),var(--navy2));color:#fff;padding:12px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.topbar .brand{font-weight:800;font-size:15px}.topbar .brand b{color:var(--gold)}
+.topbar .pill{font-size:10px;font-weight:800;background:var(--gold);color:var(--navy);padding:3px 9px;border-radius:20px;letter-spacing:.4px}
+.topbar .spacer{flex:1}.topbar label{font-size:10px;color:#9FB2C8;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+select{border:1px solid #2a4466;border-radius:8px;padding:7px 10px;font-size:12.5px;font-weight:700;background:#fff;color:var(--navy)}
+.btn{background:#fff;border:1px solid var(--line);color:var(--navy);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}
+.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}
+.wrap{max-width:1360px;margin:0 auto;padding:20px 24px 80px}
+.banner{background:linear-gradient(120deg,var(--navy),var(--blue));border-radius:14px;color:#fff;padding:18px 22px;margin-bottom:14px}
+.banner h1{font-size:19px;font-weight:800}.banner .sub{font-size:12px;color:#C7D6E8;margin-top:5px;line-height:1.55}
+.srcnote{background:#FFF8E6;border:1px solid #EBD9A6;border-left:4px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:11.5px;color:#5A4A14;margin-bottom:14px}
+.stabbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.stab{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 11px;font-size:12px;font-weight:700;cursor:pointer;color:var(--navy)}
+.stab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px;box-shadow:0 1px 3px rgba(16,42,67,.08),0 8px 24px rgba(16,42,67,.06);margin-bottom:14px}
+.card h2{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:8px}
+.card p{font-size:12.5px;color:var(--ink);line-height:1.6;margin:6px 0}
+.note{font-size:11.5px;color:var(--mut);line-height:1.5}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}.tbl th,.tbl td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.tbl th{background:var(--navy);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.4px}.tbl td.num,.tbl th.num{text-align:right}
+.badge{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:11px}.b-green{background:#E4F2EA;color:var(--green)}.b-amber{background:#FCF3E2;color:var(--amber)}.b-red{background:#FCEBEB;color:var(--red)}.b-gray{background:#EEF1F6;color:#5A6B7C}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}@media(max-width:900px){.kpis{grid-template-columns:1fr 1fr}}
+.kpi{border-left:4px solid var(--gold);background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.kpi .k{font-size:10.5px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.4px}.kpi .v{font-size:22px;font-weight:800;margin-top:4px}.kpi .s{font-size:11px;color:var(--mut)}
+footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top:1px solid var(--line);margin-top:24px}
+</style>
+</head>
+<body>
+<div class="topbar"><span class="brand">AKIJ <b>Resource</b> · MMS</span><span class="pill">STRATEGY &amp; ANALYTICS</span><span class="spacer"></span><label for="sbu">SBU</label><select id="sbu" onchange="setSbu(this.value)"><option value="ACCL" selected>Akij Cement (ACCL)</option></select><button class="btn" onclick="window.print()">Print / PDF</button></div>
+<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./strategy-analytics.html">Strategy &amp; Analytics</a><a href="./enovar-icp.html">ENOVAR ICP</a><a href="./positioning-4p.html">4P Positioning</a><a href="./spec.md">Spec</a></div>
+<div class="wrap">
+  <div class="banner"><h1>Strategy &amp; Analytics</h1><div class="sub">Pricing, value, CLV/CAC, 7P, demand vs sales, analyst roles, data sources, statistical validity, 4P position, thinking modes and incentives — for the selected SBU.</div></div>
+  <div class="srcnote"><b>Data note:</b> live DWH MCP is unreachable (connection timeout). Figures below are from the strategy/brand packs (FY25-26 base 1,750.59 Cr; FY26-27 target 2,263 Cr; YTD 480.8 Cr; budget 22.87 Cr; share 4.51%; NSP 472.24). Live MCP sync pending — will populate when the DWH is back.</div>
+  <div class="stabbar" id="tabs"></div>
+  <div id="view"></div>
+</div>
+<footer>AKIJ Resource · MMS Strategy &amp; Analytics (prototype) · Brand OS owns price/cost/stock/demand ops; this module analyses strategy &amp; brand/market data.</footer>
+<script>
+var CUR='ACCL';
+var D={rev2526:1750.59, revYtd:480.8, revTarget:2263, mktgBudget:22.87, shareNow:4.51, shareTarget:8.5, nsp:472.24, retail:519, floor:440, volTarget:2192952, volFy25:2196000};
+var TABS=[['ethics','Ethics'],['price','Price / Demand / Volume'],['clv','CLV'],['cac','CAC'],['value','Value > Price'],['pricing','Pricing Strategy'],['7p','7P'],['demand','Demand vs Sales'],['consumer','Consumer Analyst'],['market','Market Analyst'],['sources','Data Sources (1P/3P)'],['lln','Law of Large Numbers'],['4p','4P Position Control'],['creative','Creative Thinking'],['analytical','Analytical Thinking'],['reward','Reward or Punish']];
+var curTab='ethics';
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function setSbu(v){CUR=v;render();}
+function render(){
+  document.getElementById('tabs').innerHTML=TABS.map(function(t){return '<button class="stab'+(t[0]===curTab?' active':'')+'" onclick="go(\''+t[0]+'\')">'+t[1]+'</button>';}).join('');
+  var f=({ethics:cEthics,price:cPrice,clv:cClv,cac:cCac,value:cValue,pricing:cPricing,'7p':c7p,demand:cDemand,consumer:cConsumer,market:cMarket,sources:cSources,lln:cLLn,'4p':c4p,creative:cCreative,analytical:cAnalytical,reward:cReward}[curTab])||cEthics;
+  document.getElementById('view').innerHTML=f();
+}
+function go(t){curTab=t;render();}
+function h2(t){return '<div class="card"><h2>'+t+'</h2>';}
+function close(){return '</div>';}
+
+function cEthics(){
+ return h2('Ethics — trust &amp; compliance')+
+ '<p>Guardrails for everything the portal does and publishes.</p>'+
+ '<table class="tbl"><tr><th>Area</th><th>Rule</th><th>Status</th></tr>'+
+ '<tr><td>Ad claims</td><td>Only claims we can evidence (test reports, certifications). No unsupported superlatives.</td><td><span class="badge b-green">Apply</span></td></tr>'+
+ '<tr><td>Data privacy</td><td>Customer/CRM data used only with consent; no personal data in open dashboards.</td><td><span class="badge b-green">Apply</span></td></tr>'+
+ '<tr><td>Competitor intel</td><td>Public/observable sources only; no misrepresentation; cite evidence link.</td><td><span class="badge b-green">Apply</span></td></tr>'+
+ '<tr><td>No fabricated data</td><td>Actual / Estimate / Data-gap labels mandatory; estimates excluded from official scores until approved.</td><td><span class="badge b-green">Enforced</span></td></tr>'+
+ '</table>'+close();
+}
+function cPrice(){
+ var rp = D.revTarget/D.volTarget*10; // Cr per million? just illustrative
+ return h2('Price · Demand · Volume control')+
+ '<div class="kpis">'+
+ '<div class="kpi"><div class="k">FY25-26 revenue</div><div class="v">'+D.rev2526+' Cr</div><div class="s">strategy base</div></div>'+
+ '<div class="kpi"><div class="k">FY26-27 target</div><div class="v">'+D.revTarget+' Cr</div><div class="s">corporate strategy</div></div>'+
+ '<div class="kpi"><div class="k">NSP / bag</div><div class="v">'+D.nsp+'</div><div class="s">retail net '+D.retail+' · floor '+D.floor+'</div></div>'+
+ '<div class="kpi"><div class="k">Volume target</div><div class="v">'+(D.volTarget/1e6).toFixed(2)+' mn MT</div><div class="s">FY27</div></div>'+
+ '</div>'+
+ '<p><b>Boundary:</b> price setting, demand planning and production/volume control are owned by the <b>Brand OS</b>. This module analyses the outcome (realised price = revenue ÷ volume, price premium vs category, demand vs sales).</p>'+
+ '<p class="note">Realised price ≈ BDT '+(Math.round(D.revTarget*1e7/D.volTarget))+'/MT (target basis). Live MCP will replace this with actuals.</p>'+close();
+}
+function cClv(){
+ return h2('CLV — Customer Lifetime Value')+
+ '<p><b>Formula:</b> CLV = (Avg order value × Purchase frequency × Gross margin %) × Customer lifespan − Acquisition cost.</p>'+
+ '<table class="tbl"><tr><th>Input</th><th>Source</th><th>Status</th></tr>'+
+ '<tr><td>Avg order value, frequency, retention</td><td>CRM / delivery history</td><td><span class="badge b-amber">Data gap</span></td></tr>'+
+ '<tr><td>Gross margin</td><td>Finance GL</td><td><span class="badge b-green">Available</span></td></tr>'+
+ '<tr><td>CAC</td><td>Marketing spend ÷ new customers</td><td><span class="badge b-amber">Partial</span></td></tr>'+
+ '</table>'+
+ '<p class="note">For Cement/B2B2C, CLV is best computed at dealer/contractor level (repeat account value), not consumer level. Pending CRM data.</p>'+close();
+}
+function cCac(){
+ return h2('CAC — Customer Acquisition Cost')+
+ '<div class="kpis">'+
+ '<div class="kpi"><div class="k">Marketing budget FY27</div><div class="v">'+D.mktgBudget+' Cr</div><div class="s">brand pack</div></div>'+
+ '<div class="kpi"><div class="k">CAC</div><div class="v">—</div><div class="s">= budget ÷ new customers (CRM gap)</div></div>'+
+ '</div>'+
+ '<p><b>Formula:</b> CAC = total acquisition spend ÷ number of new customers acquired in the period.</p>'+
+ '<p class="note">Spend available (budget + GL 4210001 when DWH is up). New-customer count is a data gap; add from CRM/delivery first-purchase flag.</p>'+close();
+}
+function cValue(){
+ return h2('Value &gt; Price')+
+ '<p>Win on <b>perceived value</b> (quality + proof + availability + service) rather than discounting. Price is only one lever.</p>'+
+ '<table class="tbl"><tr><th>Value driver</th><th>Our position (ACCL)</th><th>KPI</th></tr>'+
+ '<tr><td>Quality proof</td><td>Iron-slag, BUET-style tests, mobile lab</td><td>Relative perceived quality</td></tr>'+
+ '<tr><td>Price-value</td><td>Highest NSP but best retail net — communicate value</td><td>Perceived value / price premium</td></tr>'+
+ '<tr><td>Availability</td><td>Dealer/retail + B2B</td><td>Numeric &amp; weighted distribution</td></tr>'+
+ '</table>'+close();
+}
+function cPricing(){
+ return h2('Pricing Strategy')+
+ '<table class="tbl"><tr><th>Strategy</th><th>When</th><th>ACCL fit</th></tr>'+
+ '<tr><td>Premium</td><td>Strong quality proof + brand preference</td><td><span class="badge b-green">Primary</span> — hold premium, prove quality</td></tr>'+
+ '<tr><td>Parity</td><td>Commoditised, price-led segments</td><td><span class="badge b-amber">Selective</span> — only where value is proven</td></tr>'+
+ '<tr><td>Value / economy</td><td>Entry segments, price-sensitive buyers</td><td><span class="badge b-red">Avoid</span> — erodes premium</td></tr>'+
+ '</table>'+
+ '<p>Rule: convert the shelf-price advantage into a <b>value</b> message, not a discount war. Pricing execution lives in the Brand OS; MMS tracks price premium and competitor price index.</p>'+close();
+}
+function c7p(){
+ return h2('7P — extended marketing mix')+
+ '<table class="tbl"><tr><th>P</th><th>For ACCL</th><th>KPI</th></tr>'+
+ '<tr><td>Product</td><td>CEM-II/AM; iron-slag; quality proof</td><td>Relative perceived quality</td></tr>'+
+ '<tr><td>Price</td><td>Premium NSP, best retail net</td><td>Price premium index</td></tr>'+
+ '<tr><td>Place</td><td>Dealers, retail, B2B</td><td>Numeric/weighted distribution</td></tr>'+
+ '<tr><td>Promotion</td><td>ATL + BTL + digital; mason/contractor</td><td>SOV/SOM, campaign effectiveness</td></tr>'+
+ '<tr><td>People</td><td>Sales, technical service, engineers</td><td>Service quality / complaints</td></tr>'+
+ '<tr><td>Process</td><td>Order → delivery → after-sales</td><td>OTIF / resolution time</td></tr>'+
+ '<tr><td>Physical evidence</td><td>Plant, labs, site proof, packaging</td><td>Perceived quality</td></tr>'+
+ '</table>'+close();
+}
+function cDemand(){
+ return h2('Demand Plan vs Sales Plan')+
+ '<div class="kpis">'+
+ '<div class="kpi"><div class="k">Sales plan FY27</div><div class="v">'+D.revTarget+' Cr</div><div class="s">corporate strategy</div></div>'+
+ '<div class="kpi"><div class="k">YTD actual</div><div class="v">'+D.revYtd+' Cr</div><div class="s">Jul–Sep (brand pack)</div></div>'+
+ '<div class="kpi"><div class="k">Gap to annual plan</div><div class="v">'+(D.revTarget-D.revYtd).toFixed(1)+' Cr</div><div class="s">remaining to deliver</div></div>'+
+ '</div>'+
+ '<p><b>Demand plan</b> (movement forecast) and <b>sales plan</b> (target) are owned by the Brand OS; this module tracks <b>plan vs actual</b> and flags divergence. Live demand data pending DWH.</p>'+close();
+}
+function cConsumer(){
+ return h2('Consumer Analyst')+
+ '<p><b>Role:</b> owns consumer truth — awareness, consideration, preference, NPS, sentiment, usage &amp; attitudes.</p>'+
+ '<table class="tbl"><tr><th>Question</th><th>Data</th></tr>'+
+ '<tr><td>Who buys and why?</td><td>Tracker (awareness funnel), surveys</td></tr>'+
+ '<tr><td>Are we preferred?</td><td>Preference, relative perceived quality</td></tr>'+
+ '<tr><td>Are they satisfied/advocating?</td><td>NPS, CSAT, sentiment</td></tr>'+
+ '</table>'+
+ '<p class="note">Output feeds BEI/BHI and the Measurement tab.</p>'+close();
+}
+function cMarket(){
+ return h2('Market Analyst')+
+ '<p><b>Role:</b> owns market &amp; competitor truth — size, growth, share, SOV, share of search, competitor activity.</p>'+
+ '<table class="tbl"><tr><th>Question</th><th>Data</th></tr>'+
+ '<tr><td>How big and fast-growing is the market?</td><td>Market size/growth (1P/3P)</td></tr>'+
+ '<tr><td>Where do we stand?</td><td>Share, rank, SOV/SOM</td></tr>'+
+ '<tr><td>What are competitors doing?</td><td>Competitor Repository activities (custodian input)</td></tr>'+
+ '</table>'+
+ '<p class="note">Feeds the Competition Intelligence view and the Market tab.</p>'+close();
+}
+function cSources(){
+ return h2('Data Sources — 1P vs 3P')+
+ '<table class="tbl"><tr><th>Data</th><th>Type</th><th>Source</th><th>Status</th></tr>'+
+ '<tr><td>Revenue, volume, marketing spend</td><td>1P</td><td>ERP/DWH (GL)</td><td><span class="badge b-amber">MCP down</span></td></tr>'+
+ '<tr><td>KPI actuals (awareness, NPS…)</td><td>1P</td><td>Tracker / CRM</td><td><span class="badge b-amber">Partial</span></td></tr>'+
+ '<tr><td>Competitor activity</td><td>1P + 3P</td><td>Field observation, public web</td><td><span class="badge b-green">Custodian input</span></td></tr>'+
+ '<tr><td>Market size &amp; competitor shares</td><td>3P</td><td>Industry reports (Nielsen/BBS)</td><td><span class="badge b-red">Gap</span></td></tr>'+
+ '</table>'+close();
+}
+function cLLn(){
+ return h2('Law of Large Numbers — statistical validity')+
+ '<p>A brand score is only valid if the survey sample is large enough. Below a minimum <b>n</b>, differences are noise.</p>'+
+ '<p>Margin of error (95%) = 1.96 × √(p(1−p)/n).</p>'+
+ '<div class="grid2"><div><label style="font-size:11px;color:var(--mut);font-weight:700">Sample size (n)</label><input id="ln-n" type="number" value="400" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:8px"></div>'+
+ '<div><label style="font-size:11px;color:var(--mut);font-weight:700">Proportion (p, e.g. 0.5)</label><input id="ln-p" type="number" step="0.01" value="0.5" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:8px"></div></div>'+
+ '<p style="margin-top:8px"><button class="btn" onclick="calcLLN()">Calculate</button> <span id="ln-out" class="note"></span></p>'+
+ '<p class="note">Recommended minimum: n ≥ 400 per SBU/segment for ±5% at 95% confidence. Mark tracker KPIs "official" only when n meets the threshold.</p>'+close();
+}
+function c4p(){
+ return h2('4P Position Control')+
+ '<table class="tbl"><tr><th>P</th><th>Us (ACCL)</th><th>Competitors</th><th>Gap / action</th></tr>'+
+ '<tr><td>Product</td><td>Quality proof strong</td><td>Shah/Fresh claim durability</td><td>Own proof; lift relative PQ</td></tr>'+
+ '<tr><td>Price</td><td>Premium NSP, best retail net</td><td>Crown discounting; Bashundhara floor</td><td>Value message, not discount</td></tr>'+
+ '<tr><td>Place</td><td>Dealer/retail/B2B</td><td>Wider leader reach</td><td>Deepen numeric distribution</td></tr>'+
+ '<tr><td>Promotion</td><td>ATL-heavy</td><td>SOV pressure</td><td>SOV/SOM → 1.3; shift to BTL/digital</td></tr>'+
+ '</table>'+close();
+}
+function cCreative(){
+ return h2('Creative Thinking (generative)')+
+ '<p>Generate options before judging: <b>diverge → cluster → prototype → test</b>.</p>'+
+ '<table class="tbl"><tr><th>Stage</th><th>Practice</th><th>Output</th></tr>'+
+ '<tr><td>Diverge</td><td>Prompts: "How would we win without cutting price?" · "What would make a mason recommend us?"</td><td>10–20 ideas</td></tr>'+
+ '<tr><td>Converge</td><td>Score on value, feasibility, brand fit</td><td>Shortlist 3</td></tr>'+
+ '<tr><td>Prototype</td><td>Creative concept / pilot asset</td><td>Test asset</td></tr>'+
+ '<tr><td>Test</td><td>Brand-guideline + concept test</td><td>Decision</td></tr>'+
+ '</table>'+close();
+}
+function cAnalytical(){
+ return h2('Analytical Thinking (deductive)')+
+ '<p>Diagnose logically: <b>observation → hypothesis → evidence → decision → action</b>.</p>'+
+ '<table class="tbl"><tr><th>Observation</th><th>Hypothesis</th><th>Test</th><th>Decision</th></tr>'+
+ '<tr><td>Share falling (−8.85% volume)</td><td>Preference gap, not price</td><td>Tracker: preference vs price perception</td><td>Shift to value/BTL if confirmed</td></tr>'+
+ '<tr><td>Spend +49.9%, share down</td><td>Poor targeting/measurement</td><td>Campaign ROMI by channel</td><td>Gate ATL on ROMI</td></tr>'+
+ '</table>'+
+ '<p class="note">Feeds the CBDO Decision Engine (L0–L4).</p>'+close();
+}
+function cReward(){
+ return h2('Reward or Punish — incentives &amp; SLA')+
+ '<p>Tie custodian incentives to measurement quality and KPI movement — not just spend.</p>'+
+ '<table class="tbl"><tr><th>Signal</th><th>Reward</th><th>Punish / flag</th></tr>'+
+ '<tr><td>KPI attainment ≥100%</td><td><span class="badge b-green">Bonus / recognition</span></td><td>—</td></tr>'+
+ '<tr><td>90–99%</td><td><span class="badge b-amber">Partial</span></td><td>Improvement plan</td></tr>'+
+ '<tr><td>&lt;90% or declining Δ</td><td>—</td><td><span class="badge b-red">Flag; review with CBDO</span></td></tr>'+
+ '<tr><td>Baselines entered on time</td><td>Data-completeness credit</td><td>—</td></tr>'+
+ '<tr><td>Missing/deferred inputs</td><td>—</td><td>Data-gap flag on scorecard</td></tr>'+
+ '</table>'+
+ '<p class="note">Aligned with the "Alert custodian — performance shortfall" action on the KPI Scorecard.</p>'+close();
+}
+function calcLLN(){var n=parseFloat((document.getElementById('ln-n')||{}).value)||0;var p=parseFloat((document.getElementById('ln-p')||{}).value)||0.5;if(!n||n<=0){document.getElementById('ln-out').textContent='Enter a sample size.';return;}var m=1.96*Math.sqrt(p*(1-p)/n)*100;document.getElementById('ln-out').textContent='Margin of error at 95%: ±'+m.toFixed(1)+'%  ·  n='+n+' · p='+p+'  ·  '+(n>=400?'meets the n≥400 threshold':'below the n≥400 threshold');}
+render();
+</script>
+</body>
+</html>

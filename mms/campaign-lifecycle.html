@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AKIJ MMS â€” Campaign Lifecycle (Prototype)</title>
+<title>AKIJ MMS — Campaign Lifecycle (Prototype)</title>
 <style>
 :root{--navy:#0B1B33;--navy2:#0F2A47;--blue:#1F4E79;--gold:#C9A227;--gold2:#B08A1B;--bg:#F4F6FA;--card:#fff;--ink:#15202B;--mut:#5A6B7C;--line:#E6EBF2;--green:#1E6B3C;--amber:#C87E1A;--red:#A61C1C;--teal:#2E7D6B;--shadow:0 1px 3px rgba(16,42,67,.08),0 8px 24px rgba(16,42,67,.06)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -58,13 +58,13 @@ textarea{min-height:60px;resize:vertical}
 footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top:1px solid var(--line);margin-top:24px}
 @media print{.topbar{position:static}.actions,.sidebar-new{display:none!important}}
 </style>
+<style>.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}</style>
 </head>
 <body>
-<style>.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}</style>
-<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./spec.md">Spec</a></div>
+<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./strategy-analytics.html">Strategy &amp; Analytics</a><a href="./enovar-icp.html">ENOVAR ICP</a><a href="./positioning-4p.html">4P Positioning</a><a href="./spec.md">Spec</a></div>
 <div class="topbar">
-  <span class="brand">AKIJ <b>Resource</b> Â· MMS</span>
-  <span class="pill">PROTOTYPE Â· CAMPAIGN LIFECYCLE</span>
+  <span class="brand">AKIJ <b>Resource</b> · MMS</span>
+  <span class="pill">PROTOTYPE · CAMPAIGN LIFECYCLE</span>
   <span class="spacer"></span>
   <label for="sbu">Select SBU</label>
   <select id="sbu" onchange="switchSbu(this.value)"></select>
@@ -72,10 +72,10 @@ footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top
 </div>
 <div class="wrap">
   <div class="banner">
-    <h1>Campaign Lifecycle â€” Brand-aligned execution</h1>
-    <div class="sub">Brief â†’ Brand-guideline compliance â†’ Budget availability â†’ Approval (DoA) â†’ PO/GRN â†’ Execution â†’ Post-campaign review. This is the <b>marketing execution layer</b> only.</div>
+    <h1>Campaign Lifecycle — Brand-aligned execution</h1>
+    <div class="sub">Brief → Brand-guideline compliance → Budget availability → Approval (DoA) → PO/GRN → Execution → Post-campaign review. This is the <b>marketing execution layer</b> only.</div>
   </div>
-  <div class="boundary"><b>Boundary with the Brand OS:</b> the marketing budget envelope, price/margin, stock, COGS/P&amp;L, production and SKU mix are owned by the Brand OS and shown here <b>read-only</b>. The MMS does not set, size or edit any of them â€” it only runs and governs campaigns against the approved envelope.</div>
+  <div class="boundary"><b>Boundary with the Brand OS:</b> the marketing budget envelope, price/margin, stock, COGS/P&amp;L, production and SKU mix are owned by the Brand OS and shown here <b>read-only</b>. The MMS does not set, size or edit any of them — it only runs and governs campaigns against the approved envelope.</div>
 
   <div class="layout">
     <!-- sidebar -->
@@ -87,7 +87,7 @@ footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top
     <div id="detail"></div>
   </div>
 </div>
-<footer>AKIJ Resource Â· Marketing Management System (prototype) Â· Data persists in your browser (localStorage) â€” no backend. Brand OS boundary enforced.</footer>
+<footer>AKIJ Resource · Marketing Management System (prototype) · Data persists in your browser (localStorage) — no backend. Brand OS boundary enforced.</footer>
 
 <script>
 const SBUS=[['cement','Akij Cement (ACCL)'],['ispot','Akij Ispat'],['readymix','AKIJ Readymix'],['essential','AKIJ Essential'],['feed','Akij Feed'],['enovar','Enovar'],['benzol','Benzol Lubricants'],['tyres','Tyres (AAIL)'],['orca','ORCA'],['air','AKIJ AIR'],['nextjobz','Nextjobz'],['pharmacy','AKIJ Pharmacy'],['mediplex','Akij Mediplex']];
@@ -102,14 +102,14 @@ function save(){try{localStorage.setItem('akij_mms_camps_v1',JSON.stringify(CAMP
 function uid(){return 'C'+(Math.floor(Math.random()*9000)+1000);}
 
 function seed(){return [
- {id:'C1042',sbu:'cement',name:'Safe Build â€” contractor & mason activation',objective:'Win contractor/dealer preference; lift brand preference +6 pts',kpis:['Brand preference','Contractor recommendation','Dealer loyalty'],mix:{ATL:30,Digital:20,Trade:25,BTL:25,PR:0},spend:4.2,start:'2026-11-01',end:'2027-03-31',stage:'approval',
-  assets:[{name:'TVC 30s â€” stronger/safer',guide:'V5',score:88},{name:'OOH creative set (12)',guide:'V5',score:72}],
+ {id:'C1042',sbu:'cement',name:'Safe Build — contractor & mason activation',objective:'Win contractor/dealer preference; lift brand preference +6 pts',kpis:['Brand preference','Contractor recommendation','Dealer loyalty'],mix:{ATL:30,Digital:20,Trade:25,BTL:25,PR:0},spend:4.2,start:'2026-11-01',end:'2027-03-31',stage:'approval',
+  assets:[{name:'TVC 30s — stronger/safer',guide:'V5',score:88},{name:'OOH creative set (12)',guide:'V5',score:72}],
   approvals:{head:'approved',cbdo:'na'},po:'',grn:'',review:null},
  {id:'C1043',sbu:'cement',name:'Shelf-price value OOH wave',objective:'Convert price advantage into demand; defend share',kpis:['Brand preference','Market share'],mix:{ATL:60,Digital:15,Trade:15,BTL:10,PR:0},spend:3.0,start:'2026-12-01',end:'2027-02-28',stage:'compliance',
   assets:[{name:'OOH set (8)',guide:'V4',score:64}],approvals:{head:'pending',cbdo:'na'},po:'',grn:'',review:null},
- {id:'C1044',sbu:'cement',name:'Digital leads sprint â€” Q3',objective:'Grow qualified dealer/contractor leads',kpis:['Digital engagement','Search conversion'],mix:{ATL:0,Digital:80,Trade:10,BTL:10,PR:0},spend:1.5,start:'2027-01-10',end:'2027-03-25',stage:'live',
+ {id:'C1044',sbu:'cement',name:'Digital leads sprint — Q3',objective:'Grow qualified dealer/contractor leads',kpis:['Digital engagement','Search conversion'],mix:{ATL:0,Digital:80,Trade:10,BTL:10,PR:0},spend:1.5,start:'2027-01-10',end:'2027-03-25',stage:'live',
   assets:[{name:'Performance ads + landing page',guide:'V5',score:91}],approvals:{head:'approved',cbdo:'na'},po:'PO-2026-0142',grn:'partial',review:null},
- {id:'C1050',sbu:'ispot',name:'Seismic proof TVC â€” repositioning',objective:'Build engineer/contractor preference on BUET-proof safety',kpis:['Perceived quality','Consideration','Engineer preference'],mix:{ATL:45,Digital:15,Trade:20,BTL:20,PR:0},spend:6.4,start:'2026-12-15',end:'2027-04-30',stage:'brief',
+ {id:'C1050',sbu:'ispot',name:'Seismic proof TVC — repositioning',objective:'Build engineer/contractor preference on BUET-proof safety',kpis:['Perceived quality','Consideration','Engineer preference'],mix:{ATL:45,Digital:15,Trade:20,BTL:20,PR:0},spend:6.4,start:'2026-12-15',end:'2027-04-30',stage:'brief',
   assets:[],approvals:{head:'pending',cbdo:'pending'},po:'',grn:'',review:null}
 ];}
 
@@ -128,7 +128,7 @@ function badge(st){const m={brief:['s-brief','Draft'],compliance:['s-compliance'
 function render(){
  document.getElementById('sbu').innerHTML=SBUS.map(function(s){return '<option value="'+s[0]+'"'+(s[0]===curSbu?' selected':'')+'>'+s[1]+'</option>';}).join('');
  const l=campsFor(curSbu);
- document.getElementById('campList').innerHTML=l.length?l.map(function(c){return '<div class="camp'+(c.id===curId?' on':'')+'" onclick="selectCamp(\''+c.id+'\')"><b>'+esc(c.name)+'</b><div class="m">'+badge(c.stage)+' &nbsp; '+c.spend+' Cr Â· '+esc(c.objective).slice(0,48)+'â€¦</div></div>';}).join(''):'<div class="panel"><p class="note">No campaigns for this SBU yet. Click + New.</p></div>';
+ document.getElementById('campList').innerHTML=l.length?l.map(function(c){return '<div class="camp'+(c.id===curId?' on':'')+'" onclick="selectCamp(\''+c.id+'\')"><b>'+esc(c.name)+'</b><div class="m">'+badge(c.stage)+' &nbsp; '+c.spend+' Cr · '+esc(c.objective).slice(0,48)+'…</div></div>';}).join(''):'<div class="panel"><p class="note">No campaigns for this SBU yet. Click + New.</p></div>';
  const c=CAMPS.filter(function(x){return x.id===curId;})[0];
  document.getElementById('detail').innerHTML=c?detail(c):'<div class="card panel"><p class="note">Select a campaign, or create a new one.</p></div>';
 }
@@ -151,42 +151,42 @@ function detail(c){
  h+='</div>';
 
  // Brief
- h+=sec('1 Â· Brief & objective');
- h+='<div class="panel"><div class="row"><div class="field"><label>Campaign name</label><input type="text" value="'+esc(c.name)+'" onchange="upd(\''+c.id+'\',\'name\',this.value)"></div><div class="field"><label>Planned spend (Cr) â€” must fit Brand-OS envelope</label><input type="number" step="0.01" value="'+c.spend+'" onchange="upd(\''+c.id+'\',\'spend\',this.value)"></div></div>';
+ h+=sec('1 · Brief & objective');
+ h+='<div class="panel"><div class="row"><div class="field"><label>Campaign name</label><input type="text" value="'+esc(c.name)+'" onchange="upd(\''+c.id+'\',\'name\',this.value)"></div><div class="field"><label>Planned spend (Cr) — must fit Brand-OS envelope</label><input type="number" step="0.01" value="'+c.spend+'" onchange="upd(\''+c.id+'\',\'spend\',this.value)"></div></div>';
  h+='<div class="field"><label>Objective</label><textarea onchange="upd(\''+c.id+'\',\'objective\',this.value)">'+esc(c.objective)+'</textarea></div>';
  h+='<div class="field"><label>Target KPIs (brand-side)</label><select multiple size="6" style="height:auto" onchange="updMulti(\''+c.id+'\',this)">'+KPIS.map(function(k){return '<option'+(c.kpis.indexOf(k)>=0?' selected':'')+'>'+esc(k)+'</option>';}).join('')+'</select><div class="note">Ctrl/Cmd-click to multi-select. These are the brand KPIs this campaign must move.</div></div>';
  h+='</div>';
 
  // Compliance
- h+=sec('2 Â· Brand-guideline compliance');
- h+='<div class="panel"><table class="tbl"><tr><th>Asset</th><th>Style guide</th><th class="num">Score /100</th><th>Status</th></tr>'+(c.assets.length?c.assets.map(function(a,i){return '<tr><td>'+esc(a.name)+'</td><td>'+esc(a.guide)+'</td><td class="num"><b>'+a.score+'</b></td><td>'+(a.score>=70?'<span class="badge b-green">Pass</span>':'<span class="badge b-red">Below 70 â€” fix</span>')+'</td></tr>';}).join(''):'<tr><td colspan="4" class="note">No assets attached.</td></tr>')+'</table>';
- h+='<div class="note">Gate: every asset must score â‰¥ 70 against the style guide to advance.</div>';
+ h+=sec('2 · Brand-guideline compliance');
+ h+='<div class="panel"><table class="tbl"><tr><th>Asset</th><th>Style guide</th><th class="num">Score /100</th><th>Status</th></tr>'+(c.assets.length?c.assets.map(function(a,i){return '<tr><td>'+esc(a.name)+'</td><td>'+esc(a.guide)+'</td><td class="num"><b>'+a.score+'</b></td><td>'+(a.score>=70?'<span class="badge b-green">Pass</span>':'<span class="badge b-red">Below 70 — fix</span>')+'</td></tr>';}).join(''):'<tr><td colspan="4" class="note">No assets attached.</td></tr>')+'</table>';
+ h+='<div class="note">Gate: every asset must score ≥ 70 against the style guide to advance.</div>';
  h+='<div class="actions"><button class="btn" onclick="addAsset(\''+c.id+'\')">+ Add asset</button></div>';
  h+=(complianceOk(c)?'<div class="okbox">Compliance passed (min score '+minScore(c)+').</div>':'<div class="gate">Blocked: '+(c.assets.length?'min asset score '+minScore(c)+' is below 70.':'no assets attached.')+'</div>');
  h+='</div>';
 
  // Budget
- h+=sec('3 Â· Budget availability (Brand OS â†’ read-only)');
- h+='<div class="panel"><div class="envbox"><b>'+e.fy+' envelope ('+e.src+', read-only): '+e.total.toFixed(2)+' Cr</b><div class="mbar" style="margin:8px 0"><span style="width:'+Math.min(100,(committed(curSbu,c.id)/e.total*100))+'%"></span></div>Committed by other campaigns: '+committed(curSbu,c.id).toFixed(2)+' Cr Â· Available before this campaign: <b>'+avail.toFixed(2)+' Cr</b> Â· This campaign: <b>'+Number(c.spend).toFixed(2)+' Cr</b></div>';
- h+=(budgetOk(c)?'<div class="okbox">Fits within the approved envelope.</div>':'<div class="gate">Exceeds the available envelope (short by '+(Number(c.spend)-avail).toFixed(2)+' Cr). MMS cannot re-size the envelope â€” request a reallocation in the Brand OS.</div>');
+ h+=sec('3 · Budget availability (Brand OS → read-only)');
+ h+='<div class="panel"><div class="envbox"><b>'+e.fy+' envelope ('+e.src+', read-only): '+e.total.toFixed(2)+' Cr</b><div class="mbar" style="margin:8px 0"><span style="width:'+Math.min(100,(committed(curSbu,c.id)/e.total*100))+'%"></span></div>Committed by other campaigns: '+committed(curSbu,c.id).toFixed(2)+' Cr · Available before this campaign: <b>'+avail.toFixed(2)+' Cr</b> · This campaign: <b>'+Number(c.spend).toFixed(2)+' Cr</b></div>';
+ h+=(budgetOk(c)?'<div class="okbox">Fits within the approved envelope.</div>':'<div class="gate">Exceeds the available envelope (short by '+(Number(c.spend)-avail).toFixed(2)+' Cr). MMS cannot re-size the envelope — request a reallocation in the Brand OS.</div>');
  h+='<div class="note">The MMS does not size budgets; it only checks availability against what the Brand OS approved.</div></div>';
 
  // Approval
- h+=sec('4 Â· Approval (Delegation of Authority)');
- var steps=[['Brand Custodian','submitted'],['SBU Head',c.approvals.head],['CBDO',needCbdo(c)?c.approvals.cbdo:'na (â‰¤ '+DOA_CBDO+' Cr)']];
+ h+=sec('4 · Approval (Delegation of Authority)');
+ var steps=[['Brand Custodian','submitted'],['SBU Head',c.approvals.head],['CBDO',needCbdo(c)?c.approvals.cbdo:'na (≤ '+DOA_CBDO+' Cr)']];
  h+='<div class="panel"><table class="tbl"><tr><th>Step</th><th>Approver</th><th>Status</th></tr>'+steps.map(function(s,i){return '<tr><td>'+(i+1)+'</td><td>'+s[0]+'</td><td>'+(s[1]==='approved'?'<span class="badge b-green">Approved</span>':s[1]==='pending'?'<span class="badge b-amber">Pending</span>':'<span class="badge b-gray">'+s[1]+'</span>')+'</td></tr>';}).join('')+'</table>';
  if(c.approvals.head!=='approved'||(needCbdo(c)&&c.approvals.cbdo!=='approved')){
-   h+='<div class="actions">'+(c.approvals.head!=='approved'?'<button class="btn gold" onclick="approve(\''+c.id+'\',\'head\')">Approve â€” SBU Head</button>':'')+(needCbdo(c)&&c.approvals.cbdo!=='approved'?'<button class="btn gold" onclick="approve(\''+c.id+'\',\'cbdo\')">Approve â€” CBDO</button>':'')+'</div>';
+   h+='<div class="actions">'+(c.approvals.head!=='approved'?'<button class="btn gold" onclick="approve(\''+c.id+'\',\'head\')">Approve — SBU Head</button>':'')+(needCbdo(c)&&c.approvals.cbdo!=='approved'?'<button class="btn gold" onclick="approve(\''+c.id+'\',\'cbdo\')">Approve — CBDO</button>':'')+'</div>';
  }
  h+='<div class="note">CBDO approval required above '+DOA_CBDO+' Cr.</div></div>';
 
  // Live
- h+=sec('5 Â· Execution â€” PO / GRN');
- h+='<div class="panel"><div class="row"><div class="field"><label>PO number (ERP)</label><input type="text" value="'+esc(c.po||'')+'" onchange="upd(\''+c.id+'\',\'po\',this.value)"></div><div class="field"><label>GRN status</label><select onchange="upd(\''+c.id+'\',\'grn\',this.value)"><option value=""'+(c.grn===''?' selected':'')+'>â€”</option><option'+(c.grn==='partial'?' selected':'')+'>partial</option><option'+(c.grn==='complete'?' selected':'')+'>complete</option></select></div></div><div class="note">PO/GRN are read from ERP; the MMS links them to the campaign for commitment tracking.</div></div>';
+ h+=sec('5 · Execution — PO / GRN');
+ h+='<div class="panel"><div class="row"><div class="field"><label>PO number (ERP)</label><input type="text" value="'+esc(c.po||'')+'" onchange="upd(\''+c.id+'\',\'po\',this.value)"></div><div class="field"><label>GRN status</label><select onchange="upd(\''+c.id+'\',\'grn\',this.value)"><option value=""'+(c.grn===''?' selected':'')+'>—</option><option'+(c.grn==='partial'?' selected':'')+'>partial</option><option'+(c.grn==='complete'?' selected':'')+'>complete</option></select></div></div><div class="note">PO/GRN are read from ERP; the MMS links them to the campaign for commitment tracking.</div></div>';
 
  // Review
- h+=sec('6 Â· Post-campaign review');
- if(c.review){h+='<div class="panel"><table class="kv"><tr><td>Result</td><td><b>'+esc(c.review.result)+'</b></td></tr><tr><td>KPI delta</td><td>'+esc(c.review.delta||'â€”')+'</td></tr><tr><td>Learning</td><td>'+esc(c.review.learning||'â€”')+'</td></tr></table></div>';}
+ h+=sec('6 · Post-campaign review');
+ if(c.review){h+='<div class="panel"><table class="kv"><tr><td>Result</td><td><b>'+esc(c.review.result)+'</b></td></tr><tr><td>KPI delta</td><td>'+esc(c.review.delta||'—')+'</td></tr><tr><td>Learning</td><td>'+esc(c.review.learning||'—')+'</td></tr></table></div>';}
  else{h+='<div class="panel"><div class="field"><label>Result</label><select id="rv-result"><option>Hit</option><option>Partial</option><option>Missed</option></select></div><div class="field"><label>KPI delta (actual vs target)</label><input type="text" id="rv-delta" placeholder="e.g. Brand preference +4.2 pts vs +4.0 target"></div><div class="field"><label>Learning</label><textarea id="rv-learn" placeholder="What worked, what to change"></textarea></div><div class="actions"><button class="btn gold" onclick="closeReview(\''+c.id+'\')">Save review</button></div></div>';}
 
  // advance actions
@@ -196,10 +196,10 @@ function detail(c){
 }
 function sec(t){return '<div class="sec"><div class="sec-h"><span>'+t+'</span><div class="rule"></div></div></div>';}
 function nextBtn(c){
- if(c.stage==='brief')return '<button class="btn gold" onclick="advance(\''+c.id+'\')">Submit for compliance â†’</button>';
- if(c.stage==='compliance')return '<button class="btn gold" '+(complianceOk(c)?'':'disabled')+' onclick="advance(\''+c.id+'\')">Send for approval â†’</button>';
- if(c.stage==='approval')return '<button class="btn gold" '+((complianceOk(c)&&budgetOk(c)&&approvalsOk(c))?'':'disabled')+' onclick="advance(\''+c.id+'\')">Approve &amp; go live â†’</button>';
- if(c.stage==='live')return '<button class="btn gold" '+(c.po?'':'disabled')+' onclick="advance(\''+c.id+'\')">Mark executed â†’ review</button>';
+ if(c.stage==='brief')return '<button class="btn gold" onclick="advance(\''+c.id+'\')">Submit for compliance →</button>';
+ if(c.stage==='compliance')return '<button class="btn gold" '+(complianceOk(c)?'':'disabled')+' onclick="advance(\''+c.id+'\')">Send for approval →</button>';
+ if(c.stage==='approval')return '<button class="btn gold" '+((complianceOk(c)&&budgetOk(c)&&approvalsOk(c))?'':'disabled')+' onclick="advance(\''+c.id+'\')">Approve &amp; go live →</button>';
+ if(c.stage==='live')return '<button class="btn gold" '+(c.po?'':'disabled')+' onclick="advance(\''+c.id+'\')">Mark executed → review</button>';
  if(c.stage==='review')return '<button class="btn gold" '+(c.review?'':'disabled')+' onclick="advance(\''+c.id+'\')">Close campaign</button>';
  return '<span class="badge b-gray">Closed</span>';
 }
@@ -226,4 +226,3 @@ render();
 </script>
 </body>
 </html>
-

@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AKIJ MMS â€” Competitor Intelligence Repository</title>
+<title>AKIJ MMS — Competitor Intelligence Repository</title>
 <style>
 :root{--navy:#0B1B33;--navy2:#0F2A47;--blue:#1F4E79;--gold:#C9A227;--gold2:#B08A1B;--bg:#F4F6FA;--card:#fff;--ink:#15202B;--mut:#5A6B7C;--line:#E6EBF2;--green:#1E6B3C;--amber:#C87E1A;--red:#A61C1C;--teal:#2E7D6B;--shadow:0 1px 3px rgba(16,42,67,.08),0 8px 24px rgba(16,42,67,.06)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -36,12 +36,12 @@ select,input[type=text],input[type=number]{border:1px solid var(--line);border-r
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:900px){.grid2{grid-template-columns:1fr}}
 footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top:1px solid var(--line);margin-top:24px}
 </style>
+<style>.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}</style>
 </head>
 <body>
-<style>.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}</style>
-<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./spec.md">Spec</a></div>
+<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./strategy-analytics.html">Strategy &amp; Analytics</a><a href="./enovar-icp.html">ENOVAR ICP</a><a href="./positioning-4p.html">4P Positioning</a><a href="./spec.md">Spec</a></div>
 <div class="topbar">
-  <span class="brand">AKIJ <b>Resource</b> Â· MMS</span>
+  <span class="brand">AKIJ <b>Resource</b> · MMS</span>
   <span class="pill">COMPETITOR INTELLIGENCE REPOSITORY</span>
   <span class="spacer"></span>
   <label for="sbu">Select SBU</label>
@@ -50,14 +50,14 @@ footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top
 </div>
 <div class="wrap">
   <div class="banner"><h1>Competitor Intelligence Repository</h1>
-    <div class="sub">Custodian-entered competitor registry and metrics â€” share, SOV, share of search, price index, digital presence and threat. The same data feeds the Competitor Intelligence view and the dashboard.</div></div>
+    <div class="sub">Custodian-entered competitor registry and metrics — share, SOV, share of search, price index, digital presence and threat. The same data feeds the Competitor Intelligence view and the dashboard.</div></div>
   <div class="boundary"><b>Boundary with the Brand OS:</b> this is market/brand intelligence (competitor shares, SOV, price index, digital). Operational price/cost/stock/COGS stay in the Brand OS.</div>
 
   <div id="sum" class="kpis"></div>
 
   <div class="sec"><div class="sec-h"><span>Competitor registry &amp; metrics</span><div class="rule"></div><span class="cap" id="cap"></span></div></div>
   <div class="card" style="overflow:auto"><table class="tbl" id="reg"></table></div>
-  <p class="note">Edit any cell and it saves automatically to this browser (same origin as the Measurement portal and dashboard). Share and SOV are %; price index 100 = category average; digital is 0â€“5.</p>
+  <p class="note">Edit any cell and it saves automatically to this browser (same origin as the Measurement portal and dashboard). Share and SOV are %; price index 100 = category average; digital is 0–5.</p>
 
   <div class="sec"><div class="sec-h"><span>Add competitor</span><div class="rule"></div></div></div>
   <div class="card" style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
@@ -73,7 +73,7 @@ footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top
     <div><label style="display:block;font-size:10.5px;color:var(--mut);font-weight:800;text-transform:uppercase;margin-bottom:4px">Campaign name</label><input type="text" id="aName" placeholder="e.g. Eid dealer scheme" style="width:100%"></div>
     <div><label style="display:block;font-size:10.5px;color:var(--mut);font-weight:800;text-transform:uppercase;margin-bottom:4px">Campaign type</label><select id="aType" style="width:100%"><option value="price_cut">Price cut</option><option value="promotion">Consumer promotion</option><option value="tvc">TV / mass media</option><option value="digital">Digital / social</option><option value="dealer_scheme">Dealer / trade scheme</option><option value="new_product">New product / SKU</option><option value="other">Other</option></select></div>
     <div><label style="display:block;font-size:10.5px;color:var(--mut);font-weight:800;text-transform:uppercase;margin-bottom:4px">Location</label><input type="text" id="aLoc" placeholder="e.g. Dhaka, Chattogram" style="width:100%"></div>
-    <div><label style="display:block;font-size:10.5px;color:var(--mut);font-weight:800;text-transform:uppercase;margin-bottom:4px">Campaign evidence (link / image URL)</label><input type="text" id="aEvid" placeholder="https://â€¦" style="width:100%"></div>
+    <div><label style="display:block;font-size:10.5px;color:var(--mut);font-weight:800;text-transform:uppercase;margin-bottom:4px">Campaign evidence (link / image URL)</label><input type="text" id="aEvid" placeholder="https://…" style="width:100%"></div>
     <div><label style="display:block;font-size:10.5px;color:var(--mut);font-weight:800;text-transform:uppercase;margin-bottom:4px">Estimated budget (BDT)</label><input type="number" id="aBud" step="1" placeholder="0" style="width:100%;text-align:right"></div>
     <div><label style="display:block;font-size:10.5px;color:var(--mut);font-weight:800;text-transform:uppercase;margin-bottom:4px">Estimated reach</label><input type="number" id="aReach" step="1" placeholder="0" style="width:100%;text-align:right"></div>
     <div style="grid-column:1/-1"><label style="display:block;font-size:10.5px;color:var(--mut);font-weight:800;text-transform:uppercase;margin-bottom:4px">Custodian remarks</label><input type="text" id="aRem" placeholder="What they did / why it matters" style="width:100%"></div>
@@ -83,7 +83,7 @@ footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top
   <div class="sec"><div class="sec-h"><span>Competitor campaign activities</span><div class="rule"></div><span class="cap" id="actcap"></span></div></div>
   <div class="kpis" id="actsum" style="grid-template-columns:repeat(4,1fr)"></div>
   <div class="card" style="overflow:auto;margin-top:12px"><table class="tbl" id="acts"></table></div>
-  <div class="card" style="margin-top:12px"><div class="sec-h" style="margin-bottom:6px"><span>Combative actions â€” how to respond</span></div><div id="combat" class="note" style="font-size:12.5px;line-height:1.7"></div></div>
+  <div class="card" style="margin-top:12px"><div class="sec-h" style="margin-bottom:6px"><span>Combative actions — how to respond</span></div><div id="combat" class="note" style="font-size:12.5px;line-height:1.7"></div></div>
 
   <div class="sec"><div class="sec-h"><span>Intelligence read</span><div class="rule"></div><span class="cap">auto-computed</span></div></div>
   <div class="grid2">
@@ -91,7 +91,7 @@ footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top
     <div class="card"><div class="sec-h" style="margin-bottom:6px"><span>Threat ranking</span></div><div id="ins2" class="note" style="font-size:12.5px;line-height:1.7"></div></div>
   </div>
 </div>
-<footer>AKIJ Resource Â· MMS Competitor Intelligence Repository (prototype) Â· Data persists in your browser (localStorage, same origin as Measurement & Dashboard).</footer>
+<footer>AKIJ Resource · MMS Competitor Intelligence Repository (prototype) · Data persists in your browser (localStorage, same origin as Measurement & Dashboard).</footer>
 <script>
 const SBUS=[['cement','Akij Cement (ACCL)'],['ispot','Akij Ispat'],['readymix','AKIJ Readymix'],['essential','AKIJ Essential'],['feed','Akij Feed'],['enovar','Enovar'],['benzol','Benzol Lubricants'],['tyres','Tyres (AAIL)'],['orca','ORCA'],['air','AKIJ AIR'],['nextjobz','Nextjobz'],['pharmacy','AKIJ Pharmacy'],['mediplex','Akij Mediplex']];
 const KEY='akij_mms_competitors_v1';
@@ -119,12 +119,12 @@ function render(){renderActivities();
   var high=comps.filter(function(c){return c.threat==='high';}).length;
   var top=comps.slice().sort(function(a,b){return (b.share||0)-(a.share||0);})[0];
   document.getElementById('sum').innerHTML=
-    card(own!=null?own.toFixed(2)+'%':'â€”','Our share','from Measurement / estimate','#C9A227')+
+    card(own!=null?own.toFixed(2)+'%':'—','Our share','from Measurement / estimate','#C9A227')+
     card(comps.length,'Competitors','tracked in repository','#1F4E79')+
-    card(hhi(cur),'Concentration (HHI)','own + listed shares Â· 0â€“10,000','#2E7D6B')+
+    card(hhi(cur),'Concentration (HHI)','own + listed shares · 0–10,000','#2E7D6B')+
     card(high,'High-threat','need active response','#A61C1C')+
-    card(top?top.name:'â€”','Largest listed','share '+(top?(Number(top.share)||0).toFixed(1)+'%':'â€”'),'#7C5CBF');
-  document.getElementById('cap').textContent=comps.length+' competitors Â· edits auto-save';
+    card(top?top.name:'—','Largest listed','share '+(top?(Number(top.share)||0).toFixed(1)+'%':'—'),'#7C5CBF');
+  document.getElementById('cap').textContent=comps.length+' competitors · edits auto-save';
   var h='<tr><th>Competitor</th><th class="num">Share %</th><th class="num">SOV %</th><th class="num">Share of search %</th><th class="num">Price index</th><th class="num">Digital /5</th><th>Threat</th><th>Positioning</th><th></th></tr>';
   comps.forEach(function(c){
     h+='<tr>'+
@@ -136,25 +136,25 @@ function render(){renderActivities();
       '<td class="num"><input type="number" step="0.1" value="'+(c.digital!=null?c.digital:'')+'" onchange="upd(\''+c.id+'\',\'digital\',this.value)"></td>'+
       '<td><select onchange="upd(\''+c.id+'\',\'threat\',this.value)"><option value="low"'+(c.threat==='low'?' selected':'')+'>low</option><option value="med"'+(c.threat==='med'?' selected':'')+'>med</option><option value="high"'+(c.threat==='high'?' selected':'')+'>high</option></select></td>'+
       '<td><input type="text" value="'+esc(c.positioning||'')+'" onchange="upd(\''+c.id+'\',\'positioning\',this.value)"></td>'+
-      '<td><button class="btn danger" onclick="removeC(\''+c.id+'\')">âœ•</button></td></tr>';
+      '<td><button class="btn danger" onclick="removeC(\''+c.id+'\')">✕</button></td></tr>';
   });
   document.getElementById('reg').innerHTML=h;
   // insights
   var sovSom = (osov!=null&&own!=null)? (osov-own):null;
   var aggression = comps.slice().sort(function(a,b){return ((Number(b.sov)||0)/(Number(b.share)||1))-((Number(a.sov)||0)/(Number(a.share)||1));})[0];
   document.getElementById('ins1').innerHTML=
-    'Own SOVâˆ’SOM: <b style="color:'+(sovSom!=null&&sovSom<0?'#A61C1C':'#1E6B3C')+'">'+(sovSom!=null?(sovSom>0?'+':'')+sovSom.toFixed(1)+'pp':'â€” (enter SOV in Measurement)')+'</b><br>'+
-    (sovSom!=null&&sovSom<0?'Spending below share â€” raise SOV / shift to measurable channels.':'SOV at/above share â€” defend efficiency.')+'<br>'+
+    'Own SOV−SOM: <b style="color:'+(sovSom!=null&&sovSom<0?'#A61C1C':'#1E6B3C')+'">'+(sovSom!=null?(sovSom>0?'+':'')+sovSom.toFixed(1)+'pp':'— (enter SOV in Measurement)')+'</b><br>'+
+    (sovSom!=null&&sovSom<0?'Spending below share — raise SOV / shift to measurable channels.':'SOV at/above share — defend efficiency.')+'<br>'+
     'Listed HHI '+hhi(cur)+' (own + listed competitors).';
-  document.getElementById('ins2').innerHTML= comps.length? comps.slice().sort(function(a,b){return ({high:3,med:2,low:1}[b.threat]||0)-({high:3,med:2,low:1}[a.threat]||0)||(b.share||0)-(a.share||0);}).map(function(c){var cls=c.threat==='high'?'b-red':c.threat==='med'?'b-amber':'b-green';return '<div style="margin:3px 0"><span class="badge '+cls+'">'+c.threat+'</span> <b>'+esc(c.name)+'</b> â€” share '+(Number(c.share)||0).toFixed(1)+'%, SOV '+(Number(c.sov)||0).toFixed(1)+'%</div>';}).join('') : 'No competitors yet.';
-  if(aggression){var ratio=(Number(aggression.sov)||0)/(Number(aggression.share)||1);document.getElementById('ins1').innerHTML+='<br>Most aggressive (SOVÃ·share): <b>'+esc(aggression.name)+'</b> Ã—'+ratio.toFixed(2);}
+  document.getElementById('ins2').innerHTML= comps.length? comps.slice().sort(function(a,b){return ({high:3,med:2,low:1}[b.threat]||0)-({high:3,med:2,low:1}[a.threat]||0)||(b.share||0)-(a.share||0);}).map(function(c){var cls=c.threat==='high'?'b-red':c.threat==='med'?'b-amber':'b-green';return '<div style="margin:3px 0"><span class="badge '+cls+'">'+c.threat+'</span> <b>'+esc(c.name)+'</b> — share '+(Number(c.share)||0).toFixed(1)+'%, SOV '+(Number(c.sov)||0).toFixed(1)+'%</div>';}).join('') : 'No competitors yet.';
+  if(aggression){var ratio=(Number(aggression.sov)||0)/(Number(aggression.share)||1);document.getElementById('ins1').innerHTML+='<br>Most aggressive (SOV÷share): <b>'+esc(aggression.name)+'</b> ×'+ratio.toFixed(2);}
 }
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
 function upd(id,field,val){var c=ensure(cur).competitors.filter(function(x){return x.id===id;})[0];if(!c)return;c[field]=(field==='name'||field==='positioning'||field==='threat')?val:Number(val);persist();render();}
 function addCompetitor(){var n=document.getElementById('newName').value.trim();if(!n)return;var sh=Number(document.getElementById('newShare').value)||0;var th=document.getElementById('newThreat').value;ensure(cur).competitors.push({id:'c'+Date.now(),name:n,share:sh,sov:null,shareOfSearch:null,priceIndex:null,digital:null,threat:th,positioning:''});document.getElementById('newName').value='';document.getElementById('newShare').value='';persist();render();}
 function removeC(id){ensure(cur).competitors=ensure(cur).competitors.filter(function(x){return x.id!==id;});persist();render();}
 function typeLabel(t){return {price_cut:'Price cut',promotion:'Consumer promotion',tvc:'TV / mass media',digital:'Digital / social',dealer_scheme:'Dealer / trade scheme',new_product:'New product / SKU',other:'Other'}[t]||t;}
-function combatFor(t){return {price_cut:'Do not match price â€” defend on value/quality proof and dealer loyalty.',promotion:'Counter with value + availability, not a discount war; protect repeat.',tvc:'Protect SOV in core segments; pair ATL with trade to convert.',digital:'Raise search/performance and defend conversion.',dealer_scheme:'Protect dealer loyalty (terms/service/availability); target contested territories.',new_product:'Assess overlap; respond with a targeted NPD or a differentiated claim.',other:'Monitor; validate with next tracker wave.'}[t]||'Monitor.';}
+function combatFor(t){return {price_cut:'Do not match price — defend on value/quality proof and dealer loyalty.',promotion:'Counter with value + availability, not a discount war; protect repeat.',tvc:'Protect SOV in core segments; pair ATL with trade to convert.',digital:'Raise search/performance and defend conversion.',dealer_scheme:'Protect dealer loyalty (terms/service/availability); target contested territories.',new_product:'Assess overlap; respond with a targeted NPD or a differentiated claim.',other:'Monitor; validate with next tracker wave.'}[t]||'Monitor.';}
 function renderActivities(){
   var comps=ensure(cur).competitors||[]; var acts=ensure(cur).activities||[];
   var dl=document.getElementById('compList'); if(dl){dl.innerHTML=comps.map(function(c){return '<option value="'+esc(c.name)+'">';}).join('');}
@@ -170,16 +170,16 @@ function renderActivities(){
     card(acts.length,'Activities','logged by custodians','#1F4E79')+
     card('BDT '+totBud.toLocaleString('en-IN'),'Est. budget','sum of logged','#C9A227')+
     card(totReach.toLocaleString('en-IN'),'Est. reach','sum of logged','#2E7D6B')+
-    card(topType?typeLabel(topType):'â€”','Most common type',topComp?('most active: '+topComp):'â€”','#A61C1C');
+    card(topType?typeLabel(topType):'—','Most common type',topComp?('most active: '+topComp):'—','#A61C1C');
   var h='<tr><th>Competitor</th><th>Campaign</th><th>Type</th><th>Location</th><th class="num">Est. budget</th><th class="num">Est. reach</th><th>Evidence</th><th>Remarks</th><th></th></tr>';
-  if(!acts.length) h+='<tr><td colspan="9" class="note">No competitor activities logged yet â€” use the form above.</td></tr>';
+  if(!acts.length) h+='<tr><td colspan="9" class="note">No competitor activities logged yet — use the form above.</td></tr>';
   acts.slice().reverse().forEach(function(x){
-    var ev=(x.evidence&&/^https?:\/\//i.test(x.evidence))?'<a href="'+esc(x.evidence)+'" target="_blank" rel="noopener">view</a>':(x.evidence?esc(x.evidence):'â€”');
-    h+='<tr><td><b>'+esc(x.competitor)+'</b></td><td>'+esc(x.campaign)+'</td><td>'+typeLabel(x.type)+'</td><td>'+esc(x.location||'â€”')+'</td><td class="num">'+(x.budget?Number(x.budget).toLocaleString('en-IN'):'â€”')+'</td><td class="num">'+(x.reach?Number(x.reach).toLocaleString('en-IN'):'â€”')+'</td><td>'+ev+'</td><td>'+esc(x.remarks||'â€”')+'</td><td><button class="btn danger" onclick="removeActivity(\''+x.id+'\')">âœ•</button></td></tr>';
+    var ev=(x.evidence&&/^https?:\/\//i.test(x.evidence))?'<a href="'+esc(x.evidence)+'" target="_blank" rel="noopener">view</a>':(x.evidence?esc(x.evidence):'—');
+    h+='<tr><td><b>'+esc(x.competitor)+'</b></td><td>'+esc(x.campaign)+'</td><td>'+typeLabel(x.type)+'</td><td>'+esc(x.location||'—')+'</td><td class="num">'+(x.budget?Number(x.budget).toLocaleString('en-IN'):'—')+'</td><td class="num">'+(x.reach?Number(x.reach).toLocaleString('en-IN'):'—')+'</td><td>'+ev+'</td><td>'+esc(x.remarks||'—')+'</td><td><button class="btn danger" onclick="removeActivity(\''+x.id+'\')">✕</button></td></tr>';
   });
   var at=document.getElementById('acts'); if(at) at.innerHTML=h;
   var types=Object.keys(byType);
-  var cb=document.getElementById('combat'); if(cb) cb.innerHTML=types.length?types.map(function(t){return '<div style="margin:3px 0"><b>'+typeLabel(t)+'</b> ('+byType[t]+') â€” '+combatFor(t)+'</div>';}).join(''):'No activity yet â€” combative actions will appear here as custodians log competitor campaigns.';
+  var cb=document.getElementById('combat'); if(cb) cb.innerHTML=types.length?types.map(function(t){return '<div style="margin:3px 0"><b>'+typeLabel(t)+'</b> ('+byType[t]+') — '+combatFor(t)+'</div>';}).join(''):'No activity yet — combative actions will appear here as custodians log competitor campaigns.';
 }
 function addActivity(){
   var comp=document.getElementById('aComp').value.trim(); var name=document.getElementById('aName').value.trim();
@@ -187,7 +187,7 @@ function addActivity(){
   var a={id:'a'+Date.now(),competitor:comp,campaign:name,type:document.getElementById('aType').value,location:document.getElementById('aLoc').value.trim(),evidence:document.getElementById('aEvid').value.trim(),remarks:document.getElementById('aRem').value.trim(),budget:Number(document.getElementById('aBud').value)||0,reach:Number(document.getElementById('aReach').value)||0,date:new Date().toISOString().slice(0,10)};
   ensure(cur).activities=ensure(cur).activities||[]; ensure(cur).activities.push(a); persist();
   ['aComp','aName','aLoc','aEvid','aRem','aBud','aReach'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
-  document.getElementById('aMsg').textContent='Submitted â€” absorbed into the repository.';
+  document.getElementById('aMsg').textContent='Submitted — absorbed into the repository.';
   render();
 }
 function removeActivity(id){ensure(cur).activities=(ensure(cur).activities||[]).filter(function(x){return x.id!==id;});persist();render();}
@@ -195,4 +195,3 @@ render();
 </script>
 </body>
 </html>
-

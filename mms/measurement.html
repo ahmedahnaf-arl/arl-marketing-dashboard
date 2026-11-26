@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AKIJ MMS â€” Measurement (Prototype)</title>
+<title>AKIJ MMS — Measurement (Prototype)</title>
 <style>
 :root{--navy:#0B1B33;--navy2:#0F2A47;--blue:#1F4E79;--gold:#C9A227;--gold2:#B08A1B;--bg:#F4F6FA;--card:#fff;--ink:#15202B;--mut:#5A6B7C;--line:#E6EBF2;--green:#1E6B3C;--amber:#C87E1A;--red:#A61C1C;--teal:#2E7D6B;--shadow:0 1px 3px rgba(16,42,67,.08),0 8px 24px rgba(16,42,67,.06)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -51,33 +51,33 @@ input.act{width:92px;text-align:right;border:1px solid var(--line);border-radius
 footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top:1px solid var(--line);margin-top:24px}
 @media print{.topbar{position:static}.actions{display:none!important}}
 </style>
+<style>.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}</style>
 </head>
 <body>
-<style>.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}</style>
-<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./spec.md">Spec</a></div>
+<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./strategy-analytics.html">Strategy &amp; Analytics</a><a href="./enovar-icp.html">ENOVAR ICP</a><a href="./positioning-4p.html">4P Positioning</a><a href="./spec.md">Spec</a></div>
 <div class="topbar">
-  <span class="brand">AKIJ <b>Resource</b> Â· MMS</span>
-  <span class="pill">PROTOTYPE Â· MEASUREMENT</span>
+  <span class="brand">AKIJ <b>Resource</b> · MMS</span>
+  <span class="pill">PROTOTYPE · MEASUREMENT</span>
   <span class="spacer"></span>
   <label for="sbu">Select SBU</label>
   <select id="sbu" onchange="switchSbu(this.value)"></select>
   <button class="btn" onclick="window.print()">Print / PDF</button>
 </div>
 <div class="wrap">
-  <div class="banner"><h1>Brand Measurement â€” waves â†’ BEI / BHI / BPI â†’ decisions</h1>
+  <div class="banner"><h1>Brand Measurement — waves → BEI / BHI / BPI → decisions</h1>
     <div class="sub">Enter each tracker wave's measured KPIs; the system computes dimension scores, the three indices and the composite, flags RAG, and auto-opens a decision for every Red KPI.</div></div>
-  <div class="boundary"><b>Boundary with the Brand OS:</b> the MMS measures <b>brand &amp; marketing</b> KPIs (awareness, quality, preference, loyalty, consideration, NPS, SOV, share, digital, execution). Price, stock, COGS/P&amp;L, production, budget sizing and SKU mix remain in the Brand OS â€” not edited here.</div>
+  <div class="boundary"><b>Boundary with the Brand OS:</b> the MMS measures <b>brand &amp; marketing</b> KPIs (awareness, quality, preference, loyalty, consideration, NPS, SOV, share, digital, execution). Price, stock, COGS/P&amp;L, production, budget sizing and SKU mix remain in the Brand OS — not edited here.</div>
 
   <div id="sum" class="kpis"></div>
 
-  <div class="card"><div class="panel h"><h2>KPI measurement â€” current wave</h2><span class="cap" id="wavecap"></span></div>
+  <div class="card"><div class="panel h"><h2>KPI measurement — current wave</h2><span class="cap" id="wavecap"></span></div>
     <div class="panel" style="padding-top:0"><div style="overflow:auto"><table class="tbl" id="ktab"></table></div>
       <div class="actions"><button class="btn gold" onclick="saveWave()">Save wave &amp; recompute</button><button class="btn" onclick="resetWave()">Reset to last saved</button><button class="btn" onclick="window.print()">Print / PDF</button></div>
-      <p class="note">Score = achievement vs FY27 target (capped at 1.2) Ã· 1.2 Ã— 100. RAG: Green â‰¥100% Â· Amber 90â€“99% Â· Red &lt;90% (inverted for lower-is-better). Estimates/actuals carry a source label.</p>
+      <p class="note">Score = achievement vs FY27 target (capped at 1.2) ÷ 1.2 × 100. RAG: Green ≥100% · Amber 90–99% · Red &lt;90% (inverted for lower-is-better). Estimates/actuals carry a source label.</p>
     </div>
   </div>
 
-  <div class="sec"><div class="sec-h"><span>Decision queue â€” auto-opened from Red KPIs</span><div class="rule"></div></div></div>
+  <div class="sec"><div class="sec-h"><span>Decision queue — auto-opened from Red KPIs</span><div class="rule"></div></div></div>
   <div class="card" id="decisions"></div>
 
   <div class="sec"><div class="sec-h"><span>Wave history</span><div class="rule"></div></div></div>
@@ -86,7 +86,7 @@ footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top
   <div class="sec"><div class="sec-h"><span>Data gaps (unmeasured)</span><div class="rule"></div></div></div>
   <div class="card" id="gaps"></div>
 </div>
-<footer>AKIJ Resource Â· MMS Measurement (prototype) Â· Data persists in your browser (localStorage). No backend.</footer>
+<footer>AKIJ Resource · MMS Measurement (prototype) · Data persists in your browser (localStorage). No backend.</footer>
 
 <script>
 const SBUS=[['cement','Akij Cement (ACCL)'],['ispot','Akij Ispat'],['readymix','AKIJ Readymix'],['essential','AKIJ Essential'],['feed','Akij Feed'],['enovar','Enovar'],['benzol','Benzol Lubricants'],['tyres','Tyres (AAIL)'],['orca','ORCA'],['air','AKIJ AIR'],['nextjobz','Nextjobz'],['pharmacy','AKIJ Pharmacy'],['mediplex','Akij Mediplex']];
@@ -132,7 +132,7 @@ function resetWave(){WORK=Object.assign({},STORE[curSbu].actuals);editWave=false
 function ach(k,a){if(a===''||a==null||isNaN(a))return null;var t=k.tgt;var r=k.dir==='l'?(a===0?1.2:t/a):(a/t);return Math.max(0,Math.min(1.2,r));}
 function scoreOf(k){var r=ach(k,WORK[k.id]);return r==null?null:r/1.2*100;}
 function ragOf(k){var r=ach(k,WORK[k.id]);if(r==null)return 'b-gray';return r>=1?'b-green':r>=0.9?'b-amber':'b-red';}
-function ragText(k){var c=ragOf(k);return c==='b-green'?'Green':c==='b-amber'?'Amber':c==='b-red'?'Red':'â€”';}
+function ragText(k){var c=ragOf(k);return c==='b-green'?'Green':c==='b-amber'?'Amber':c==='b-red'?'Red':'—';}
 
 function dimScore(d){var ws=0,ss=0;KPI.forEach(function(k){if(k.dim===d){var s=scoreOf(k);if(s!=null){ss+=s*k.w;ws+=k.w;}}});return ws?ss/ws:null;}
 function indices(){var ds={};Object.keys(DIMS).forEach(function(d){ds[d]=dimScore(d);});
@@ -143,45 +143,45 @@ function indices(){var ds={};Object.keys(DIMS).forEach(function(d){ds[d]=dimScor
  var comp=den?num/den:null;
  return {ds:ds,bei:bei,bhi:bhi,bpi:bpi,comp:comp};}
 
-function fmtVal(k,v){if(v===''||v==null)return 'â€”';return v;}
+function fmtVal(k,v){if(v===''||v==null)return '—';return v;}
 
 function render(){
  document.getElementById('sbu').innerHTML=SBUS.map(function(s){return '<option value="'+s[0]+'"'+(s[0]===curSbu?' selected':'')+'>'+s[1]+'</option>';}).join('');
  var ix=indices();
  var st=STORE[curSbu];var last=st.waves[st.waves.length-1];
- document.getElementById('wavecap').textContent=editWave?'Unsaved edits':(last?('Last saved: '+last.name+' Â· '+last.date):'No wave saved yet');
+ document.getElementById('wavecap').textContent=editWave?'Unsaved edits':(last?('Last saved: '+last.name+' · '+last.date):'No wave saved yet');
  var cards=[
-  ['BEI Â· Brand Equity',ix.bei,'D1 Â· 25%'],['BHI Â· Brand Health',ix.bhi,'D2+D3+D6 Â· 30%'],['BPI Â· Brand Performance',ix.bpi,'D4+D5+D7 Â· 45%'],['Composite',ix.comp,'of 100 Â· weighted']
+  ['BEI · Brand Equity',ix.bei,'D1 · 25%'],['BHI · Brand Health',ix.bhi,'D2+D3+D6 · 30%'],['BPI · Brand Performance',ix.bpi,'D4+D5+D7 · 45%'],['Composite',ix.comp,'of 100 · weighted']
  ];
- document.getElementById('sum').innerHTML=cards.map(function(c){var v=c[1]==null?'â€”':c[1].toFixed(1);var col=c[1]==null?'var(--mut)':c[1]>=80?'var(--green)':c[1]>=60?'var(--amber)':'var(--red)';return '<div class="kpi"><div class="k">'+c[0]+'</div><div class="v" style="color:'+col+'">'+v+'</div><div class="s">'+c[2]+'</div></div>';}).join('');
+ document.getElementById('sum').innerHTML=cards.map(function(c){var v=c[1]==null?'—':c[1].toFixed(1);var col=c[1]==null?'var(--mut)':c[1]>=80?'var(--green)':c[1]>=60?'var(--amber)':'var(--red)';return '<div class="kpi"><div class="k">'+c[0]+'</div><div class="v" style="color:'+col+'">'+v+'</div><div class="s">'+c[2]+'</div></div>';}).join('');
 
  // KPI table
  var h='<tr><th>KPI</th><th class="num">Wt</th><th class="num">Baseline</th><th class="num">FY27 target</th><th class="num">Actual (edit)</th><th class="num">Score /100</th><th>RAG</th><th>Owner</th></tr>';
  var lastDim='';
- KPI.forEach(function(k){if(k.dim!==lastDim){lastDim=k.dim;h+='<tr class="dimhead"><td colspan="8">'+k.dim+' Â· '+DIMS[k.dim].n+' ('+DIMS[k.dim].w+'% Â· '+DIMS[k.dim].idx+')</td></tr>';}
+ KPI.forEach(function(k){if(k.dim!==lastDim){lastDim=k.dim;h+='<tr class="dimhead"><td colspan="8">'+k.dim+' · '+DIMS[k.dim].n+' ('+DIMS[k.dim].w+'% · '+DIMS[k.dim].idx+')</td></tr>';}
   var sc=scoreOf(k);var rc=ragOf(k);
-  h+='<tr><td>'+k.name+' <span style="color:var(--mut)">('+k.unit+')</span></td><td class="num">'+k.w+'</td><td class="num">'+k.base+'</td><td class="num">'+k.tgt+'</td><td class="num"><input class="act" type="number" step="any" value="'+(WORK[k.id]===''?'':WORK[k.id])+'" onchange="setAct(\''+k.id+'\',this.value)"></td><td class="num"><b>'+(sc==null?'â€”':sc.toFixed(0))+'</b></td><td><span class="badge '+rc+'">'+ragText(k)+'</span></td><td>'+k.owner+'</td></tr>';
+  h+='<tr><td>'+k.name+' <span style="color:var(--mut)">('+k.unit+')</span></td><td class="num">'+k.w+'</td><td class="num">'+k.base+'</td><td class="num">'+k.tgt+'</td><td class="num"><input class="act" type="number" step="any" value="'+(WORK[k.id]===''?'':WORK[k.id])+'" onchange="setAct(\''+k.id+'\',this.value)"></td><td class="num"><b>'+(sc==null?'—':sc.toFixed(0))+'</b></td><td><span class="badge '+rc+'">'+ragText(k)+'</span></td><td>'+k.owner+'</td></tr>';
  });
  document.getElementById('ktab').innerHTML=h;
 
  // decisions (derived from reds)
  var reds=KPI.filter(function(k){return ragOf(k)==='b-red';});
  var dc=document.getElementById('decisions');
- if(!reds.length){dc.innerHTML='<div class="panel"><div class="okbox">No Red KPIs â€” no decisions auto-opened.</div></div>';}
- else{dc.innerHTML='<div class="panel"><p class="note">'+reds.length+' Red KPI(s). Auto-opened in the decision queue (owner + 14-day deadline). In production these push to the CBDO Decision Engine (L0â€“L4).</p>'+reds.map(function(k){var sc=scoreOf(k);var lvl=(k.dim==='D1'||k.dim==='D4')?'L2':'L1';return '<div class="dec"><div class="t"><b>'+k.name+'</b> is Red (score '+sc.toFixed(0)+' vs target '+k.tgt+k.unit+')<div class="note">Suggested: review driver, reallocate activity, re-measure next wave.</div></div><div><span class="badge b-red">'+lvl+'</span> '+k.owner+'</div><div style="text-align:right"><button class="btn" onclick="logAction(\''+k.id+'\')">Log action</button></div></div>';}).join('')+'</div>';}
+ if(!reds.length){dc.innerHTML='<div class="panel"><div class="okbox">No Red KPIs — no decisions auto-opened.</div></div>';}
+ else{dc.innerHTML='<div class="panel"><p class="note">'+reds.length+' Red KPI(s). Auto-opened in the decision queue (owner + 14-day deadline). In production these push to the CBDO Decision Engine (L0–L4).</p>'+reds.map(function(k){var sc=scoreOf(k);var lvl=(k.dim==='D1'||k.dim==='D4')?'L2':'L1';return '<div class="dec"><div class="t"><b>'+k.name+'</b> is Red (score '+sc.toFixed(0)+' vs target '+k.tgt+k.unit+')<div class="note">Suggested: review driver, reallocate activity, re-measure next wave.</div></div><div><span class="badge b-red">'+lvl+'</span> '+k.owner+'</div><div style="text-align:right"><button class="btn" onclick="logAction(\''+k.id+'\')">Log action</button></div></div>';}).join('')+'</div>';}
 
  // history
  var hist=st.waves.slice().reverse();
- document.getElementById('history').innerHTML=hist.length?'<div class="panel"><table class="tbl"><tr><th>Wave</th><th>Date</th><th class="num">BEI</th><th class="num">BHI</th><th class="num">BPI</th><th class="num">Composite</th></tr>'+hist.map(function(w){return '<tr><td><b>'+w.name+'</b></td><td>'+w.date+'</td><td class="num">'+(w.bei==null?'â€”':w.bei.toFixed(1))+'</td><td class="num">'+(w.bhi==null?'â€”':w.bhi.toFixed(1))+'</td><td class="num">'+(w.bpi==null?'â€”':w.bpi.toFixed(1))+'</td><td class="num"><b>'+(w.comp==null?'â€”':w.comp.toFixed(1))+'</b></td></tr>';}).join('')+'</table><div class="note">Composite trend: '+trend(st.waves)+'</div></div>':'<div class="panel"><p class="note">No waves saved yet. Edit actuals and click â€œSave wave &amp; recomputeâ€.</p></div>';
+ document.getElementById('history').innerHTML=hist.length?'<div class="panel"><table class="tbl"><tr><th>Wave</th><th>Date</th><th class="num">BEI</th><th class="num">BHI</th><th class="num">BPI</th><th class="num">Composite</th></tr>'+hist.map(function(w){return '<tr><td><b>'+w.name+'</b></td><td>'+w.date+'</td><td class="num">'+(w.bei==null?'—':w.bei.toFixed(1))+'</td><td class="num">'+(w.bhi==null?'—':w.bhi.toFixed(1))+'</td><td class="num">'+(w.bpi==null?'—':w.bpi.toFixed(1))+'</td><td class="num"><b>'+(w.comp==null?'—':w.comp.toFixed(1))+'</b></td></tr>';}).join('')+'</table><div class="note">Composite trend: '+trend(st.waves)+'</div></div>':'<div class="panel"><p class="note">No waves saved yet. Edit actuals and click “Save wave &amp; recompute”.</p></div>';
 
  // data gaps
  var gaps=KPI.filter(function(k){return WORK[k.id]===''||WORK[k.id]==null;});
- document.getElementById('gaps').innerHTML='<div class="panel">'+(gaps.length?gaps.map(function(k){return '<div class="gap"><b>'+k.name+'</b> â€” no measured value this wave ('+DIMS[k.dim].idx+'). Collect via '+(k.dim==='D2'?'CRM/service / tracker':(k.dim==='D4'?'DWH + retail audit':(k.dim==='D6'?'analytics':'brand tracker')))+'.</div>';}).join(''):'<div class="okbox">All KPIs measured this wave.</div>')+'</div>';
+ document.getElementById('gaps').innerHTML='<div class="panel">'+(gaps.length?gaps.map(function(k){return '<div class="gap"><b>'+k.name+'</b> — no measured value this wave ('+DIMS[k.dim].idx+'). Collect via '+(k.dim==='D2'?'CRM/service / tracker':(k.dim==='D4'?'DWH + retail audit':(k.dim==='D6'?'analytics':'brand tracker')))+'.</div>';}).join(''):'<div class="okbox">All KPIs measured this wave.</div>')+'</div>';
 
  // actions log
- if(st.actions&&st.actions.length){dc.innerHTML+='<div class="panel"><h2 style="font-size:12px;margin-bottom:8px">Action log</h2>'+st.actions.slice().reverse().slice(0,6).map(function(a){return '<div class="note">â€¢ '+a.ts+' â€” '+a.kpi+': '+a.text+'</div>';}).join('')+'</div>';}
+ if(st.actions&&st.actions.length){dc.innerHTML+='<div class="panel"><h2 style="font-size:12px;margin-bottom:8px">Action log</h2>'+st.actions.slice().reverse().slice(0,6).map(function(a){return '<div class="note">• '+a.ts+' — '+a.kpi+': '+a.text+'</div>';}).join('')+'</div>';}
 }
-function trend(waves){if(waves.length<2)return 'â€”';return waves.map(function(w){return w.comp==null?'â€”':w.comp.toFixed(0);}).join(' â†’ ');}
+function trend(waves){if(waves.length<2)return '—';return waves.map(function(w){return w.comp==null?'—':w.comp.toFixed(0);}).join(' → ');}
 
 function saveWave(){
  var ix=indices();
@@ -197,4 +197,3 @@ render();
 </script>
 </body>
 </html>
-

@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AKIJ Resource â€” Marketing Management System</title>
+<title>AKIJ Resource — Marketing Management System</title>
 <style>
-:root{--navy:#0B1B33;--navy2:#0F2A47;--blue:#1F4E79;--gold:#C9A227;--gold2:#B08A1B;--bg:#F4F6FA;--card:#fff;--ink:#15202B;--mut:#5A6B7C;--line:#E6EBF2}
+:root{--navy:#0B1B33;--navy2:#0F2A47;--blue:#1F4E79;--gold:#C9A227;--gold2:#B08A1B;--bg:#F4F6FA;--ink:#15202B;--mut:#5A6B7C;--line:#E6EBF2}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink)}
 .topbar{background:linear-gradient(90deg,var(--navy),var(--navy2));color:#fff;padding:14px 26px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .topbar .brand{font-weight:800;font-size:16px}.topbar .brand b{color:var(--gold)}
 .topbar .pill{font-size:10px;font-weight:800;background:var(--gold);color:var(--navy);padding:3px 9px;border-radius:20px;letter-spacing:.4px}
+.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}
 .wrap{max-width:1100px;margin:0 auto;padding:26px 24px 80px}
 .banner{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;border-radius:16px;padding:26px 28px;margin-bottom:18px;position:relative;overflow:hidden}
 .banner::after{content:'';position:absolute;right:-40px;top:-40px;width:210px;height:210px;border-radius:50%;background:rgba(201,162,39,.14)}
@@ -27,52 +28,29 @@ footer{color:var(--mut);font-size:11px;text-align:center;padding:18px;border-top
 </style>
 </head>
 <body>
-<style>.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}</style>
-<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./spec.md">Spec</a></div>
-<div class="topbar"><span class="brand">AKIJ <b>Resource</b> Â· MMS</span><span class="pill">MARKETING MANAGEMENT SYSTEM</span></div>
+<div class="topbar"><span class="brand">AKIJ <b>Resource</b> · MMS</span><span class="pill">MARKETING MANAGEMENT SYSTEM</span></div>
+<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./strategy-analytics.html">Strategy &amp; Analytics</a><a href="./enovar-icp.html">ENOVAR ICP</a><a href="./positioning-4p.html">4P Positioning</a><a href="./spec.md">Spec</a></div>
 <div class="wrap">
   <div class="banner">
     <h1>Marketing Management System</h1>
-    <div class="sub">Plan â†’ Execute â†’ Measure â†’ Govern. The marketing execution layer â€” mutually exclusive with the Brand OS (which owns price, stock, COGS/P&amp;L, production, budget sizing and SKU mix).</div>
-    <div class="pills"><span class="pill2">13 SBUs</span><span class="pill2">BEI / BHI / BPI</span><span class="pill2">Campaign lifecycle</span><span class="pill2">Brand compliance</span><span class="pill2">Decision queue</span></div>
+    <div class="sub">Plan → Execute → Measure → Govern. The marketing execution layer — mutually exclusive with the Brand OS (which owns price, stock, COGS/P&amp;L, production, budget sizing and SKU mix).</div>
+    <div class="pills"><span class="pill2">13 SBUs</span><span class="pill2">BEI / BHI / BPI</span><span class="pill2">Measurement</span><span class="pill2">Competition Intelligence</span><span class="pill2">ICP · 4P</span></div>
   </div>
 
   <div class="grid">
-    <a class="card" href="campaign-lifecycle.html">
-      <h2>Campaign Lifecycle</h2>
-      <p>Brief â†’ brand-guideline compliance â†’ budget availability (Brand-OS envelope, read-only) â†’ approval (DoA) â†’ PO/GRN â†’ execution â†’ post-campaign review.</p>
-      <div class="go">Open prototype â†’</div>
-    </a>
-    <a class="card" href="competition.html">
-      <h2>Competitor Intelligence Repository</h2>
-      <p>Custodian input of competitor registry &amp; metrics — share, SOV, share of search, price index, digital presence, threat; feeds the Competitor Intelligence view.</p>
-      <div class="go">Open repository →</div>
-    </a>
-    <a class="card" href="measurement.html">
-      <h2>Measurement</h2>
-      <p>Tracker waves â†’ measured BEI / BHI / BPI / composite â†’ RAG â†’ auto-opened decisions for every Red KPI, with wave history and data gaps.</p>
-      <div class="go">Open measurement â†’</div>
-    </a>
-    <a class="card" href="amalgamated.html">
-      <h2>Amalgamated Brand KPI Dashboard</h2>
-      <p>Merged dashboard (updated pilot + Brand KPI): 18 tabs incl. KPI Scorecard (21 KPIs, 0â€“5 scoring), Framework, Strategy Map, Growth Mechanism, Where/How to Win, Digital Benchmark, Ramp, 4P.</p>
-      <div class="go">Open amalgamated dashboard â†’</div>
-    </a>
-    <a class="card" href="brand-kpi-dashboard.html">
-      <h2>Brand KPI Dashboard</h2>
-      <p>7-dimension framework, BEI/BHI/BPI, KPI dictionary (61), SBU scorecards, revenueâ€“share reconciliation, competitor capture, 4P, YoY/QoQ ramp.</p>
-      <div class="go">Open dashboard â†’</div>
-    </a>
-    <a class="card" href="spec.md">
-      <h2>MVP Spec &amp; Data Model</h2>
-      <p>Modules, roles, API outline, data model, workflows, Phase 1â€“3 plan and the mutual-exclusivity boundary with the Brand OS.</p>
-      <div class="go">Open spec â†’</div>
-    </a>
+    <a class="card" href="campaign-lifecycle.html"><h2>Campaign Lifecycle</h2><p>Brief → brand-guideline compliance → budget availability (Brand-OS envelope) → approval (DoA) → PO/GRN → execution → post-campaign review.</p><div class="go">Open →</div></a>
+    <a class="card" href="competition.html"><h2>Competitor Intelligence Repository</h2><p>Custodian input of competitor registry, metrics and campaign activities — feeds the Competitor Intelligence view and the dashboard.</p><div class="go">Open →</div></a>
+    <a class="card" href="measurement.html"><h2>Measurement</h2><p>Tracker waves → measured BEI / BHI / BPI / composite → RAG → auto-opened decisions; wave history and data gaps.</p><div class="go">Open →</div></a>
+    <a class="card" href="amalgamated.html"><h2>Amalgamated Brand KPI Dashboard</h2><p>18 tabs incl. KPI Scorecard (21 KPIs), Framework, Strategy Map, Growth Simulator, Where/How to Win, Digital Benchmark, Ramp, 4P.</p><div class="go">Open →</div></a>
+    <a class="card" href="brand-kpi-dashboard.html"><h2>Brand KPI Dashboard (13 SBUs)</h2><p>7-dimension framework, BEI/BHI/BPI, KPI dictionary (61), SBU scorecards, revenue–share reconciliation, YoY/QoQ ramp.</p><div class="go">Open →</div></a>
+    <a class="card" href="strategy-analytics.html"><h2>Strategy &amp; Analytics</h2><p>Ethics, pricing, CLV/CAC, value &gt; price, 7P, demand vs sales, analyst roles, data sources, statistical validity, 4P position, thinking modes, incentives.</p><div class="go">Open →</div></a>
+    <a class="card" href="enovar-icp.html"><h2>ENOVAR (ALEL) ICP</h2><p>5 ICPs for Akij Light Engineering — revenue, offers, products, competitors and MD decisions.</p><div class="go">Open →</div></a>
+    <a class="card" href="positioning-4p.html"><h2>Positioning across 4P</h2><p>How ENOVAR's Product / Price / Place / Promotion positioning ladders to the 5-year strategy (402 → 2,302 Cr; 3.9% → 8.7%).</p><div class="go">Open →</div></a>
+    <a class="card" href="spec.md"><h2>MVP Spec &amp; Data Model</h2><p>Modules, roles, API outline, data model, workflows, phase plan and the Brand-OS boundary.</p><div class="go">Open →</div></a>
   </div>
 
-  <div class="boundary"><b>Boundary with the Brand OS:</b> budget envelope, price/margin, stock, COGS/P&amp;L, production and SKU mix are owned by the Brand OS and consumed here read-only. The MMS runs and governs campaigns against the approved envelope â€” it does not set, size or edit those commercial levers.</div>
-  <footer>AKIJ Resource Â· MMS (prototype) Â· Static demo â€” data persists in the browser (localStorage); production requires Postgres + API + SSO.</footer>
+  <div class="boundary"><b>Boundary with the Brand OS:</b> budget envelope, price/margin, stock, COGS/P&amp;L, production and SKU mix are owned by the Brand OS and consumed here read-only. The MMS runs and governs campaigns against the approved envelope — it does not set, size or edit those commercial levers.</div>
+  <footer>AKIJ Resource · MMS (prototype) · Static demo — data persists in the browser (localStorage); production requires Postgres + API + SSO.</footer>
 </div>
 </body>
 </html>
-
