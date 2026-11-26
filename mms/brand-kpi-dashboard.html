@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKIJ Brand KPI Dashboard — 13 SBUs</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#070c15;--panel:#0e1728;--panel2:#132036;--line:#20304a;--txt:#e7eefb;--muted:#8ba1c3;--dim:#5d7a9e;--bei:#2dd4bf;--bhi:#3b82f6;--bpi:#f59e0b;--red:#ef4444;--amber:#f59e0b;--green:#22c55e;--violet:#8b5cf6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;font-size:14px;line-height:1.45}
+header{position:sticky;top:0;z-index:20;background:rgba(7,12,21,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 22px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between}
+.hl h1{margin:0;font-size:16px}.hl .sub{color:var(--muted);font-size:11px;margin-top:2px}
+.controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.controls label{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+select{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px;min-width:230px}
+.btn{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:7px 11px;font-size:12px;cursor:pointer}
+.btn:hover{border-color:var(--bei);color:var(--bei)}
+nav.tabs{display:flex;flex-wrap:wrap;gap:2px;padding:7px 18px 0;border-bottom:1px solid var(--line);background:var(--bg)}
+nav.tabs button{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);padding:8px 10px;font-size:11px;cursor:pointer;border-radius:6px 6px 0 0}
+nav.tabs button:hover{color:var(--txt);background:var(--panel)}
+nav.tabs button.active{color:var(--bei);border-bottom-color:var(--bei);background:var(--panel)}
+main{padding:18px 22px 60px;max-width:1380px;margin:0 auto}
+h2{font-size:16px;margin:2px 0 4px}
+h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--bei);margin:18px 0 8px}
+p.note{color:var(--muted);font-size:12px;margin:6px 0}
+.grid{display:grid;gap:12px}.cards{grid-template-columns:repeat(auto-fit,minmax(165px,1fr))}
+.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){.two,.three{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:12px 14px}
+.card .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.card .v{font-size:21px;font-weight:700;margin-top:4px}.card .s{font-size:11px;color:var(--muted);margin-top:3px}
+.idxcard{border-left:4px solid var(--bei)}.idxcard.b2{border-left-color:var(--bhi)}.idxcard.b3{border-left-color:var(--bpi)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px 15px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0;background:var(--panel)}
+tbody tr:hover{background:var(--panel2)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.badge{display:inline-block;font-size:9.5px;padding:1px 6px;border-radius:20px;font-weight:600}
+.rag-green{background:rgba(34,197,94,.16);color:#4ade80;border:1px solid rgba(34,197,94,.35)}
+.rag-amber{background:rgba(245,158,11,.16);color:#fbbf24;border:1px solid rgba(245,158,11,.35)}
+.rag-red{background:rgba(239,68,68,.16);color:#f87171;border:1px solid rgba(239,68,68,.35)}
+.srcP{background:rgba(45,212,191,.14);color:#5eead4;border:1px solid rgba(45,212,191,.3)}
+.srcE{background:rgba(139,92,246,.16);color:#c4b5fd;border:1px solid rgba(139,92,246,.35)}
+.srcG{background:rgba(239,68,68,.14);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.coreC{background:rgba(45,212,191,.16);color:#5eead4;border:1px solid rgba(45,212,191,.35)}
+.coreM{background:rgba(139,161,195,.14);color:#a9bdd9;border:1px solid rgba(139,161,195,.3)}
+.met{background:rgba(34,197,94,.16);color:#4ade80;border:1px solid rgba(34,197,94,.35)}
+.partial{background:rgba(245,158,11,.16);color:#fbbf24;border:1px solid rgba(245,158,11,.35)}
+.pending{background:rgba(139,161,195,.14);color:#a9bdd9;border:1px solid rgba(139,161,195,.3)}
+.up{color:var(--green);font-weight:700}.dn{color:var(--red);font-weight:700}.flat{color:var(--amber);font-weight:700}
+.chartbox{position:relative;height:280px}.chartbox.tall{height:340px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}.dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+.scroll{max-height:600px;overflow:auto;border-radius:8px}
+.scroll::-webkit-scrollbar{width:8px;height:8px}.scroll::-webkit-scrollbar-thumb{background:#22334f;border-radius:8px}
+.flag{background:rgba(239,68,68,.08);border-left:3px solid var(--red);border-radius:6px;padding:9px 12px;margin:7px 0;font-size:12.5px}
+.ok{background:rgba(34,197,94,.08);border-left:3px solid var(--green);border-radius:6px;padding:9px 12px;margin:7px 0;font-size:12.5px}
+.objrow{display:grid;grid-template-columns:1.4fr 1.4fr 1.6fr .9fr;gap:8px;padding:8px;border-bottom:1px solid var(--line);font-size:12px}
+.objhead{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:600}
+.qbox{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:900px){.qbox{grid-template-columns:1fr 1fr}}
+.q{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px}.q b{color:var(--bei);font-size:12px}.q p{margin:4px 0 0;color:var(--muted);font-size:11.5px}
+footer{color:var(--dim);font-size:11px;text-align:center;padding:18px;border-top:1px solid var(--line);margin-top:24px}
+@media print{html,body{background:#fff!important;color:#111!important}nav.tabs,.controls{display:none!important}header{position:static;background:#fff!important}.card,.panel,.q,.objrow{background:#fff!important;border:1px solid #ccc!important;break-inside:avoid}h1,h2,h3,p,td,th,li,div,span,b,.card .v,.card .k,.card .s,.note,.sub{color:#111!important}th{background:#eef1f5!important}.badge{background:#f3f5f8!important;color:#111!important;border:1px solid #bbb!important}.scroll{max-height:none!important;overflow:visible!important}table{font-size:9.5px}.chartbox{height:220px}}
+</style>
+<style>
+:root{--bg:#F4F6FA;--panel:#FFFFFF;--panel2:#F2F5FA;--line:#E6EBF2;--txt:#15202B;--muted:#5A6B7C;--dim:#9AA9B8;--bei:#1F4E79;--bhi:#2E7D6B;--bpi:#C9A227;--red:#A61C1C;--amber:#C87E1A;--green:#1E6B3C;--violet:#6B4EA0}
+body{background:var(--bg)!important;color:var(--txt)!important;font-family:'Inter','Segoe UI',system-ui,sans-serif}
+header{background:linear-gradient(90deg,#0B1B33,#0F2A47)!important;color:#fff!important;border-bottom:0!important;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.hl h1{color:#fff!important;font-weight:800}.hl .sub{color:#9FB2C8!important}.controls label{color:#9FB2C8!important}
+select{background:#fff!important;color:#0B1B33!important;border:1px solid #2a4466!important;font-weight:700}
+.btn{background:rgba(255,255,255,.10)!important;border:1px solid rgba(255,255,255,.25)!important;color:#fff!important}
+.btn:hover{border-color:#C9A227!important;color:#C9A227!important}
+nav.tabs{background:#0B1B33!important;border-bottom:1px solid #1c3350!important}
+nav.tabs button{color:#C7D6E8!important}
+nav.tabs button:hover{background:rgba(255,255,255,.12)!important;color:#fff!important}
+nav.tabs button.active{background:#C9A227!important;color:#0B1B33!important;border-bottom-color:transparent!important;font-weight:800}
+h2{color:#0B1B33!important}h3{color:#B08A1B!important}
+.card,.panel{background:#fff!important;border:1px solid var(--line)!important;box-shadow:0 1px 3px rgba(16,42,67,.08),0 8px 24px rgba(16,42,67,.06)!important;border-radius:13px!important}
+.card .k{color:var(--muted)!important}.card .v{color:#15202B!important}.card .s{color:var(--muted)!important}
+.idxcard{border-left:4px solid var(--bei)!important}.idxcard.b2{border-left-color:var(--bhi)!important}.idxcard.b3{border-left-color:var(--bpi)!important}
+th,td{border-bottom:1px solid var(--line)!important;color:#15202B!important}
+th{background:#0B1B33!important;color:#fff!important}
+tbody tr:nth-child(even) td{background:#FAFBFD!important}
+tbody tr:hover{background:#F2F5FA!important}
+.rag-green{background:#E4F2EA!important;color:#1E6B3C!important;border:1px solid #B7DCC6!important}
+.rag-amber{background:#FCF3E2!important;color:#C87E1A!important;border:1px solid #EBD6AC!important}
+.rag-red{background:#FCEBEB!important;color:#A61C1C!important;border:1px solid #E6B3B3!important}
+.srcP{background:#E6F0FA!important;color:#1F4E79!important;border:1px solid #BBD3EA!important}
+.srcE{background:#FFF6E0!important;color:#B08A1B!important;border:1px solid #EBD9A6!important}
+.srcG{background:#FCEBEB!important;color:#A61C1C!important;border:1px solid #E6B3B3!important}
+.coreC{background:#E6F0FA!important;color:#1F4E79!important;border:1px solid #BBD3EA!important}
+.coreM{background:#EEF1F6!important;color:#5A6B7C!important;border:1px solid #DCE3EC!important}
+.met{background:#E4F2EA!important;color:#1E6B3C!important;border:1px solid #B7DCC6!important}
+.partial{background:#FCF3E2!important;color:#C87E1A!important;border:1px solid #EBD6AC!important}
+.pending{background:#EEF1F6!important;color:#5A6B7C!important;border:1px solid #DCE3EC!important}
+.up{color:#1E6B3C!important}.dn{color:#A61C1C!important}.flat{color:#C87E1A!important}
+.flag{background:#FDF0F0!important;border-left:4px solid #A61C1C!important;color:#15202B!important}
+.ok{background:#EAF5EF!important;border-left:4px solid #1E6B3C!important;color:#15202B!important}
+.q{background:#F2F5FA!important;border:1px solid var(--line)!important}.q b{color:#1F4E79!important}.q p{color:var(--muted)!important}
+.objhead{color:var(--muted)!important}
+.scroll::-webkit-scrollbar-thumb{background:#C7D2E0!important}
+footer{color:#5A6B7C!important;border-top:1px solid var(--line)!important}
+.legend{color:var(--muted)!important}
+.mbar{height:9px;background:#E6EBF2;border-radius:6px;overflow:hidden;margin-top:4px}.mbar>span{display:block;height:100%;background:linear-gradient(90deg,#C9A227,#B08A1B)}
+</style>
+</head>
+<body>
+<header>
+  <div class="hl"><h1>AKIJ Brand KPI Dashboard — <span id="hName">Group view</span></h1>
+    <div class="sub">7-dimension · BEI/BHI/BPI · strategy-linked KPIs · FY2026-27 → FY2030-31 · 13 SBUs</div></div>
+  <div class="controls"><label for="sbuSelect">Select SBU</label><select id="sbuSelect"></select>
+    <button class="btn" onclick="window.print()">Print / PDF</button></div>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<main><div id="view"></div></main>
+<footer>AKIJ Resource · Brand KPI Framework &amp; Dashboard · 13 SBUs (excl. Mediquip) · FY2026-27 → FY2030-31 · Sources: Brand Marketing Pack, Brand Maturity Audit, Brand Health dashboard, Corporate Strategy, ERP/DWH. Estimates marked E; see Data Gap Register.</footer>
+
+<script>
+const PAGES=['overview','framework','strategy','dict','scorecard','market','equity','digital','fourp','ramp','channel','mechanism','compete','matrix','wtw','sbu','insights','gaps'];
+const PLABEL={overview:'Overview',framework:'Framework & Justification',strategy:'Strategy → KPI Map',dict:'KPI Dictionary (61)',scorecard:'KPI Scorecard',market:'Market & Competition',equity:'Brand Equity & Health',digital:'Digital Benchmark',fourp:'4P Scorecard',ramp:'Quarterly & FY Ramp',channel:'ATL / BTL / Digital Shift',mechanism:'Growth Mechanism',compete:'Competitive & Share Capture',matrix:'Activity → KPI Matrix',wtw:'Where / How to Win & Share Plan',sbu:'SBU Emphasis',insights:'Insights & Actions',gaps:'Data Gaps'};
+const DIMS={D1:['Brand Equity',25,'BEI'],D2:['Brand Health',15,'BHI'],D3:['Positioning & Competitive',10,'BHI'],D4:['Market Performance',20,'BPI'],D5:['Brand Financial Value',15,'BPI'],D6:['Digital Brand Strength',5,'BHI'],D7:['Execution & Governance',10,'BPI']};
+
+const S=[
+{id:'cement',name:'Akij Cement (ACCL)',arch:'construction',tier:'A',rev27:2263,rev31:4608,shareNow:4.51,share31:8.5,shareTxt:'4.51% → 8.5%',rankNow:7,rankTgt:4,hN:62,hT:75,mat:'L1',ytd:480.8,budget:22.87,custodian:'Tariqul Hossain Tishad',businessHead:'Asadul Haque Sufyani',netProfit:[186.92,145,208,249,303,339],budgetQ:[2.12,6.80,8.70,5.35],compShares:[['Shah Cement',17.25],['Fresh',11.95],['Crown',11.51],['Seven Rings',11.51]],maturityDims:{strategy:3.0,identity:4.33,governance:2.6,cx:3.67,digital:2.33,measurement:2.5},digitalBench:[['Akij Cement','akijcement.com','FB, LinkedIn, Instagram, YouTube','Blog, calculator, careers','2.5 / 5'],['Shah Cement','shahcement.com','FB + social','Corporate site','3.0 / 5'],['Fresh','freshcement.com.bd','FB + social','Corporate site','3.0 / 5'],['Crown Cement','crowncement.com','FB, LinkedIn, YouTube','Investor portal','3.5 / 5'],['Seven Rings','sevenringscement.com','FB + social + video','Video, order form','4.0 / 5']],
+ pos:'Iron-slag premium cement; "stronger, safer construction" with technical assurance (lab, engineers, mason training).',
+ obj:['Stop share loss; return to volume growth (≥2.19 mn MT)','Lift share 4.51%→5.2% (FY27) → 8.5% (FY31)','Maturity L1→L2→L5 by 2030','Make the brand measurable (fix DWH, dashboard)','Convert price advantage into demand (leads 17→25)'],
+ prio:['Brand preference','Perceived quality','Dealer loyalty','Contractor recommendation','Market share'],
+ p4:{Product:'Strong RTB but PQ ~60; own the proof (rel. PQ→1.10)',Price:'Highest NSP; value message not discount (index 105→110)',Place:'Distribution ~38%; weak Barishal/Mymensingh — deepen dealer reach',Promotion:'ATL 57%; SOV/SOM ~2.0 — shift to BTL/trade+digital'},
+ ins:['Spend +49.9%, share −8.85% → effectiveness, not budget size','No brand dashboard + DWH down = group weakest dimension','Corporate 4,608 Cr reconciles; roadmap 2,338 Cr flagged','Lever = contractor/dealer preference + value message'],
+ acts:['Fix DWH/ERP + brand dashboard; gate ATL on measurement','Re-mix ATL 57→48; add BTL/trade+digital; SOV/SOM→1.3','Contractor/dealer loyalty + mason programme; commission tracker'],
+ comp:['Bashundhara','Crown','Seven Rings','Premier/Fresh/Meghna/Shah']},
+{id:'ispot',name:'Akij Ispat',arch:'construction',tier:'B',rev27:1973,rev31:7292,shareNow:2.9,share31:10.5,shareTxt:'2.9% → 10.5%',rankNow:7,rankTgt:5,hN:63,hT:75,mat:'L2',ytd:291.7,budget:18.91,
+ pos:'TMT rebar, BUET-tested, 100% DWR, German Thermex — seismic safety, independently proven.',
+ obj:['Grow volume 160,613→209,000 MT','Share 2.95%→~3.7% (FY27) → 10.5% (FY31)','Launch repositioning campaign','Dealers 300+→500','Reach maturity L3'],
+ prio:['Engineer/architect preference','Perceived reliability','Consideration','Market share'],
+ p4:{Product:'Proven safety (BUET/DWR) — lead with proof',Price:'Premiumise via quality; avoid price war',Place:'300+ dealers; expand to 500',Promotion:'Repositioning TVC + referral + dealer conference'},
+ ins:['Strong proof assets under-leveraged in preference','Volume growth needs distribution + specifier push','Repositioning campaign is the FY27 unlock','Peer BSRM/AKS/GPH pressure on price'],
+ acts:['Launch repositioning TVC + Boga Bangladesh proof story','Grow engineer/dealer referral; dealers 300→500','Build awareness/consideration tracker'],
+ comp:['BSRM','AKS','GPH Ispat']},
+{id:'readymix',name:'AKIJ Readymix',arch:'construction',tier:'A',rev27:584,rev31:919,shareNow:4.5,share31:20,shareTxt:'4.5% → 20%',rankNow:5,rankTgt:4,hN:60,hT:74,mat:'L2',ytd:109.2,budget:5.40,
+ pos:'Delivered, tested pour; 5 plants in the demand belt; grade-spec partner.',
+ obj:['Revenue +25–35% from volume','Open M20/3000 PSI residential segment (3%→10%)','Recover volume lost to low-price supply','Defend realisation 370→385 BDT/CFT','Build specifier preference'],
+ prio:['Specifier preference','Awareness','Penetration','Repeat accounts'],
+ p4:{Product:'Grade-wise mix; open M20 residential',Price:'Hold realisation; value not rate',Place:'Add dealer route (100% corporate today)',Promotion:'Pour trials, lab visits, engineer cohorts'},
+ ins:['Growth depends on IHB adoption of M20','Top-15 accounts = 31.8% of sales (concentration)','Dealer route is a new capability','Monsoon seasonality (−57% MoM)'],
+ acts:['Publish M20 cost-per-CFT + grade price list','Recruit 10 dealers (Narayanganj/Chattogram) + pour trials','Retention/loyalty for repeat accounts'],
+ comp:['Local unorganised RMC','Other branded RMC']},
+{id:'essential',name:'AKIJ Essential (AEL)',arch:'fmcg',tier:'A',rev27:1982,rev31:3109,shareNow:null,share31:null,shareTxt:'DATA GAP',rankNow:null,rankTgt:null,hN:64,hT:75,mat:'L2',ytd:572.2,budget:null,
+ pos:'Rice, flour, oil, dal, tea, noodles — trust in kitchen staples (Teer); FMCG scale.',
+ obj:['Grow household penetration & repeat','Lift perceived value & awareness','Launch new categories (spice, frozen, fortified atta)','Improve returns (GM 2.3%→11.5%)','Split the "Others" line into real categories'],
+ prio:['Household penetration','Repeat purchase','Perceived value','Awareness'],
+ p4:{Product:'Core staples + new categories',Price:'Perceived value; fight commodity perception',Place:'Dealer/retail; grow modern trade',Promotion:'Awareness + penetration campaigns'},
+ ins:['Largest "Others" line (1,318 Cr) is unsplit — no targeting','Share data is a gap (no market-size file)','New categories need trial→repeat KPIs','Returns improvement is the profitability lever'],
+ acts:['Split Others; build category P&L + share file','Household panel + penetration tracker','Launch spice/frozen with trial→repeat gates'],
+ comp:['Pran','Fresh','Teer (own)','Radhuni']},
+{id:'feed',name:'Akij Feed (AAFL)',arch:'agri',tier:'B',rev27:1230,rev31:4200,shareNow:2,share31:9.2,shareTxt:'2% → 9.2%',rankNow:5,rankTgt:2,hN:70,hT:85,mat:'L4',ytd:328.6,budget:null,
+ pos:'Result-driven balanced feed — the "Boro Bhai" technical adviser; agro-tech ecosystem.',
+ obj:['Grow to #2 at 9.2% share by FY31','Launch shrimp/prawn, Sonali & duck, premix','Build farmer loyalty & technical trust','Dealer preference & RTM coverage','Raise technical-service intensity'],
+ prio:['Farmer loyalty','Technical trust','Dealer preference','New-feed trial→repeat'],
+ p4:{Product:'68 SKUs; new specialised feeds + premix',Price:'Mid/premium; technical value',Place:'361 dealers; Khamari/model-farm reach',Promotion:'Khamari meets, farmer seminars, technical service'},
+ ins:['Highest health (70) but L4 — scale, don\'t rebuild','Biggest investment ask (324 Cr) needs launch gates','New feeds depend on trial→repeat, not awareness','Pack incomplete — plan must be rebuilt'],
+ acts:['Rebuild full marketing pack (objectives→KPI)','Farmer/dealer NPS + field-trial KPIs for new feeds','Stage-gate new-feed launches; protect core'],
+ comp:['CP','Nourish','Index','ACI','Quality Feed']},
+{id:'enovar',name:'Enovar (ALEL)',arch:'electrical',tier:'B',rev27:319,rev31:2302,shareNow:0.1,share31:1.0,shareTxt:'0.1% → 1.0%',rankNow:null,rankTgt:null,hN:65,hT:80,mat:'L2',ytd:70.3,budget:14.52,
+ pos:'Accessible-premium electrical & home solutions — dependable performance; Akij legacy.',
+ obj:['Revenue 330 Cr; retailers 5,000→6,000','Electrical share 3.76%→4.0%','41 retailer + 47 electrician meets','Establish awareness baseline','Maturity +1 level'],
+ prio:['Electrician preference','Dealer loyalty','Perceived quality','Market share'],
+ p4:{Product:'Lighting, accessories, HAP, pumps, tools',Price:'Accessible-premium; competitive entry SKUs',Place:'5,000+ retailers (3.5% coverage); grow coverage',Promotion:'TV + Meta + shop signs + meets'},
+ ins:['Retail coverage only 3.5% of universe','Quality complaints across sub-90% categories','Awareness baseline missing','Measurement gaps block target setting'],
+ acts:['Awareness study + MIS definitions first','Retailer/electrician meet programme','Fix quality complaints; SKU availability'],
+ comp:['SSG','Walton','RFL','Philips']},
+{id:'benzol',name:'Benzol Lubricants',arch:'b2c',tier:'C',rev27:200,rev31:326,shareNow:null,share31:null,shareTxt:'#10 → #3',rankNow:10,rankTgt:3,hN:48,hT:72,mat:'L2',ytd:16.4,budget:3.87,
+ pos:'Premium lubricants, German engineering, OEM-level credentials.',
+ obj:['Sales 27.05 Cr (pack target)','400+ branded outlets','1,000+ mechanics reached','Lift awareness & digital engagement','Maturity +1 level'],
+ prio:['Mechanic recommendation','Awareness','Distribution','Consideration'],
+ p4:{Product:'MCO/PCMO/CVO; hero 10W-40',Price:'Premium; quality/value vs low-price',Place:'230+ outlets; shop/workshop branding',Promotion:'Mechanic activation + outdoor + digital'},
+ ins:['Health 48 — mechanic recommendation is the purchase driver','Strong competitor equity/mechanic loyalty','Distribution gaps & counterfeit risk','Needs awareness + mechanic trust, not broad ATL'],
+ acts:['Mechanic activation + shop branding first','Outlet mapping + distributor KPIs','Genuine-product trust campaign; ROMI dashboard'],
+ comp:['Castrol','Shell','Total','Local brands']},
+{id:'tyres',name:'Tyres (AAIL)',arch:'b2c',tier:'C',rev27:71.4,rev31:1781.5,shareNow:0.3,share31:30,shareTxt:'0.3% → 30%',rankNow:null,rankTgt:1,hN:46,hT:70,mat:'L1',ytd:14.8,budget:null,
+ pos:'Multi-brand tyres (Birla/Aolong/Armstrong) — value & availability.',
+ obj:['Scale to #1 at ~30% share by FY31','Build dealer reach','Awareness & consideration','Premiumise mix'],
+ prio:['Awareness','Dealer reach','Consideration','Market share'],
+ p4:{Product:'Multi-brand portfolio',Price:'Value-led vs premium brands',Place:'Dealer reach is the constraint',Promotion:'Awareness + digital + dealer'},
+ ins:['Highest ambition (0.3%→30%) is distribution-led','Health 46 — near-zero brand asset today','Needs awareness + dealer network build','Protect from price-only positioning'],
+ acts:['Dealer network build + numeric distribution','Awareness campaign in priority districts','Consideration tracker; pricing discipline'],
+ comp:['CEAT','MRF','Apollo','Imported brands']},
+{id:'orca',name:'ORCA (ACEL)',arch:'retail',tier:'B',rev27:144.6,rev31:1447,shareNow:1,share31:6,shareTxt:'1% → 6%',rankNow:16,rankTgt:3,hN:54,hT:78,mat:'L1',ytd:2.24,budget:3.68,
+ pos:'Multi-brand electronics retail; Smart Care 24h after-sales promise; Akij-backed.',
+ obj:['13 showrooms; 6 Cr/month','E-commerce 5% of sales','Awareness +15 pts (Dhaka)','Service resolution 90% in 24h','Maturity +1'],
+ prio:['Consideration','Footfall/conversion','NPS','E-commerce'],
+ p4:{Product:'284 SKUs; fix 31 stock-outs & slow stock',Price:'EMI/bank offers; value vs Daraz',Place:'5→13 showrooms',Promotion:'Openings, e-com, seasonal, loyalty'},
+ ins:['Approved 125.75 Cr vs ~0.6 Cr/month run-rate','Footfall/conversion matters more than awareness','31 SKUs out of stock; 3.1 Cr slow stock','After-sales is the trust proof'],
+ acts:['Re-phase target; release budget quarterly','Fix stock mix; restock 31 SKUs','Showroom openings + e-com + service SLA'],
+ comp:['Transcom','RANGS','Daraz','Walton']},
+{id:'air',name:'AKIJ AIR',arch:'b2b',tier:'B',rev27:21.1,rev31:49.6,shareNow:0.8,share31:3,shareTxt:'0.8% → 3% GDS',rankNow:null,rankTgt:null,hN:56,hT:78,mat:'L2',ytd:2.24,budget:2.46,
+ pos:'Technology-driven OTA — reliable, convenient, competitive travel.',
+ obj:['GTV 83→180 Cr','Search→reservation 2.53%→3.2%','Reservation→ticket 35.4%→50%','Payment success 65%→85%','Awareness +10; 2× followers'],
+ prio:['Search→reservation conversion','Unaided awareness','Repeat','CSAT'],
+ p4:{Product:'Flights, visa, hotel, packages',Price:'Pay-later, not price war',Place:'Digital-first; agent channel',Promotion:'Performance + CRM + seasonal campaigns'},
+ ins:['Funnel leaks (only 2.53% search converts)','90% volume is repeat — retention matters','Payment failures (13 Cr pending)','Fix funnel before more reach'],
+ acts:['Fix payments (auto-retry + 2h SOP)','Abandoned-booking automation','Winter/Ramadan/Eid campaigns + agent slabs'],
+ comp:['ShareTrip','Flyhub','GoZayaan']},
+{id:'nextjobz',name:'Nextjobz',arch:'b2b',tier:'C',rev27:5,rev31:154.5,shareNow:2,share31:27,shareTxt:'2% → 27%',rankNow:null,rankTgt:1,hN:50,hT:70,mat:'L1',ytd:0.58,budget:1.46,
+ pos:'Career platform + employer hiring — the "Digital Boro Bhai".',
+ obj:['Learning Lab 60 lakh; Job Posting 40 lakh','Staffing 4 Cr','Grow organic base','Build awareness & maturity','Fix revenue capture'],
+ prio:['Payment success','Conversion','Awareness','NPS'],
+ p4:{Product:'Career portal, Learning Lab, staffing (planned)',Price:'Freemium → paid',Place:'Digital 96%',Promotion:'Paid social + email + SMS'},
+ ins:['No learner payment validated since 7 Jul (IPN broken)','80% of target rides on staffing with 0 contracts','Fix revenue capture before scaling spend','Brand awareness not measured'],
+ acts:['Fix payment IPN + record payments','Reactivation of 5 lakh list (test batch)','Offer/hire tracking; awareness baseline'],
+ comp:['BDJobs','LinkedIn','Shomvob']},
+{id:'pharmacy',name:'AKIJ Pharmacy (ALCL)',arch:'retail',tier:'C',rev27:217.8,rev31:2323.3,shareNow:null,share31:null,shareTxt:'25 → 600 outlets',rankNow:null,rankTgt:null,hN:46,hT:72,mat:'Growth',ytd:21.4,budget:null,
+ pos:'Pharmacy retail chain (90% franchise) — scale play.',
+ obj:['25→600 outlets (90% franchise)','Revenue 218→2,323 Cr','Awareness & retail pull','Repeat purchase','Maturity growth→defined'],
+ prio:['Numeric distribution (chemist reach)','Awareness','Retail pull','Repeat'],
+ p4:{Product:'Pharmacy retail + range',Price:'Value & convenience',Place:'Outlet expansion is the engine',Promotion:'Local awareness + retail pull'},
+ ins:['Gap is distribution-led (outlets), not equity','Health 46 — build awareness with expansion','Franchise model requires governance','Market share data gap'],
+ acts:['Outlet expansion roadmap + franchise SOP','Awareness in new catchments','Retail-pull & repeat KPIs'],
+ comp:['Lazz Pharma','Agora','Shwapno','local chemists']},
+{id:'mediplex',name:'Akij Mediplex (AMPL)',arch:'healthcare',tier:'C',rev27:14.5,rev31:40.1,shareNow:null,share31:null,shareTxt:'New entrant',rankNow:null,rankTgt:null,hN:44,hT:70,mat:'L1',ytd:0.52,budget:1.71,
+ pos:'Diagnostics — accurate, faster results; AI-assisted lab; Mirpur.',
+ obj:['Awareness +15 pts (Mirpur)','2× patient volume','≥50% online bookings','≥30% repeat; ≥100 referrers','NPS ≥50'],
+ prio:['Trust','NPS','Repeat','Referral'],
+ p4:{Product:'1,000+ tests; home collection',Price:'Accessible; value vs chains',Place:'Mirpur first; local catchment',Promotion:'Local BTL + digital + doctor CME'},
+ ins:['New brand — awareness is near zero','Trust & service quality are the differentiators','Repeat/referral drive volume','Competes with Labaid/Popular'],
+ acts:['Local awareness + health camps','Doctor engagement + CME','NPS/CSAT tracking; 24h service proof'],
+ comp:['Labaid','Popular','Diagnostic chains']}
+];
+
+// helper
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function idxNow(p){ if(p.id==='cement') return {bei:48,bhi:52,bpi:70,c:62}; const c=p.hN; return {bei:Math.round(c*0.92),bhi:Math.round(c*1.0),bpi:Math.round(clamp(c*1.12,10,90)),c:c}; }
+function idxTgt(p){ if(p.id==='cement') return {bei:65,bhi:68,bpi:82,c:73}; const c=p.hT; return {bei:Math.round(c*0.9),bhi:Math.round(c*1.0),bpi:Math.round(clamp(c*1.1,10,92)),c:c}; }
+function ratio(p){ if(p.budget&&p.rev27) return clamp(p.budget/p.rev27,0.005,0.15); const m={construction:.010,fmcg:.040,agri:.020,b2b:.060,healthcare:.030,retail:.080,electrical:.045,b2c:.030}; return m[p.arch]||.03; }
+function shareGlide(p){ if(p.shareNow==null||p.share31==null) return null; const a=[]; for(let k=1;k<=5;k++) a.push(+(p.shareNow+(p.share31-p.shareNow)*k/5).toFixed(2)); return a; }
+function revGlide(p){ const a=[]; for(let k=0;k<=4;k++) a.push(Math.round(p.rev27*Math.pow(p.rev31/p.rev27,k/4))); return a; }
+function linGlide(b,e,dec=0){ const a=[]; for(let k=1;k<=5;k++){const v=b+(e-b)*k/5; a.push(dec?+v.toFixed(dec):Math.round(v));} return a; }
+function rag(b,t,dir){ if(b==null||t==null) return ''; if(dir==='l'){if(b<=t)return'rag-green';if(b<=t*1.15)return'rag-amber';return'rag-red';} if(b>=t)return'rag-green';if(b>=t*0.9)return'rag-amber';return'rag-red'; }
+
+// KPI template
+function KT(p){
+ const c=p.hN,t=p.hT, dl=Math.max(2,t-c);
+ return [
+  ['D1','Aided awareness','Lag',25,clamp(Math.round(c*0.9),10,90),'%','E',linGlide(clamp(Math.round(c*0.9),10,90),clamp(Math.round(c*0.9+dl*1.2),0,90)),'Promotion','Brand','Bi-annual','h'],
+  ['D1','TOMA','Lead',20,clamp(Math.round(c*0.3),2,60),'%','E',linGlide(clamp(Math.round(c*0.3),2,60),clamp(Math.round(c*0.3+dl*0.6),0,70)),'Promotion','Brand','Bi-annual','h'],
+  ['D1','Perceived quality','Lead',25,c,'/100','E',linGlide(c,t),'Product','Brand','Bi-annual','h'],
+  ['D1','Brand preference','Lag',20,Math.round(c*0.65),'%','E',linGlide(Math.round(c*0.65),clamp(Math.round(c*0.65+dl*0.9),0,90)),'Promotion','Brand','Bi-annual','h'],
+  ['D1','Brand loyalty','Lag',10,Math.round(c*0.95),'/100','E',linGlide(Math.round(c*0.95),clamp(Math.round(c*0.95+dl*0.9),0,90)),'Place','Brand','Quarterly','h'],
+  ['D2',archKpi(p).n,'Lag',30,Math.round(c*0.7),'%','E',linGlide(Math.round(c*0.7),clamp(Math.round(c*0.7+dl*0.9),0,90)),'Promotion/Place','Sales','Quarterly','h'],
+  ['D2','Consideration','Lead',25,Math.round(c*0.72),'%','E',linGlide(Math.round(c*0.72),clamp(Math.round(c*0.72+dl*0.9),0,90)),'Promotion','Brand','Bi-annual','h'],
+  ['D2','NPS','Lag',25,c-40,'pts','E',linGlide(c-40,c-40+dl),'Product/Service','CRM','Quarterly','h'],
+  ['D2','CSAT','Lag',20,clamp(Math.round(c*1.15),20,92),'%','E',linGlide(clamp(Math.round(c*1.15),20,92),clamp(Math.round(c*1.15+dl*0.6),0,95)),'Service','CRM','Quarterly','h'],
+  ['D3','SOV/SOM ratio','Lead',30,2.0,'x','E',linGlide(2.0,1.3,2),'Promotion','Media','Quarterly','l'],
+  ['D3','Share of search','Lead',20,clamp(Math.round((p.shareNow||5)*1.2),2,40),'%','E',linGlide(clamp(Math.round((p.shareNow||5)*1.2),2,40),clamp(Math.round((p.share31||10)*0.8),0,60)),'Digital','Digital','Monthly','h'],
+  ['D3','Relative perceived quality','Lead',30,0.95,'ratio','E',linGlide(0.95,1.1,2),'Product','Brand','Bi-annual','h'],
+  ['D3','Market rank','Lag',20,p.rankNow,'rank','P', p.rankNow&&p.rankTgt?[Math.max(p.rankTgt,Math.round(p.rankNow-(p.rankNow-p.rankTgt)*0.2)),Math.max(p.rankTgt,Math.round(p.rankNow-(p.rankNow-p.rankTgt)*0.4)),Math.max(p.rankTgt,Math.round(p.rankNow-(p.rankNow-p.rankTgt)*0.6)),Math.max(p.rankTgt,Math.round(p.rankNow-(p.rankNow-p.rankTgt)*0.8)),p.rankTgt]:['','','','',''],'—','Strategy','Quarterly','l'],
+  ['D4','Market share (value)','Lag',35,p.shareNow,'%','P',shareGlide(p),'Place/Promotion','Sales','Monthly','h'],
+  ['D4','Volume growth','Lag',25,2,'%','E',[3,4,5,6,8],'Place','Sales','Monthly','h'],
+  ['D4','Numeric distribution','Lead',25,38,'%','E',[42,46,50,55,60],'Place','Sales','Quarterly','h'],
+  ['D4','Repeat purchase rate','Lag',15,45,'%','E',[48,51,54,58,62],'Product','Sales','Quarterly','h'],
+  ['D5','Revenue','Lag',40,p.rev27,'Cr','P',revGlide(p),'All','SBU Finance','Monthly','h'],
+  ['D5','Price premium index','Lead',25,105,'index','E',[106,107,108,109,110],'Price','Finance','Quarterly','h'],
+  ['D5','ROMI','Lag',20,1.8,'x','E',[2.0,2.2,2.5,2.8,3.0],'Promotion','Marketing','Monthly','h'],
+  ['D5','CAC','Lag',15,4500,'BDT','E',[4300,4100,3900,3700,3500],'Promotion','Marketing','Monthly','l'],
+  ['D6','Digital engagement','Lead',60,2.0,'%','E',[2.3,2.6,3.0,3.3,3.6],'Digital','Digital','Monthly','h'],
+  ['D6','Digital leads / conversion','Lag',40,17,'count','P',[20,25,30,35,40],'Digital','Digital','Monthly','h'],
+  ['D7','Guideline compliance','Lead',35,70,'%','E',[80,85,90,93,95],'—','Brand','Quarterly','h'],
+  ['D7','Campaign effectiveness','Lag',35,65,'%','E',[70,75,80,85,90],'Promotion','Brand','Monthly','h'],
+  ['D7','Marketing plan achievement','Lag',30,80,'%','E',[85,90,92,95,96],'—','Brand','Monthly','h']
+ ];
+}
+function archKpi(p){const m={construction:'Contractor recommendation',agri:'Farmer loyalty',fmcg:'Household penetration',b2b:'Client retention',healthcare:'Patient recommendation',retail:'Store NPS',electrical:'Electrician preference',b2c:'Repeat purchase'};return{n:m[p.arch]||'Recommendation rate'};}
+
+const DICT=[
+ ['D1','Aided awareness','C','% recognise when prompted','%','h','Survey','Bi-annual','Brand'],
+ ['D1','Unaided awareness / TOMA','C','% name brand first','%','h','Survey','Bi-annual','Brand'],
+ ['D1','Brand recall & recognition','M','Correct recall of brand/assets','%','h','Survey','Bi-annual','Brand'],
+ ['D1','Brand associations','M','Strength of image attributes','index','h','Survey','Annual','Brand'],
+ ['D1','Perceived quality','C','% rating quality high','%','h','Survey','Bi-annual','Brand'],
+ ['D1','Brand loyalty','C','% repeat/preferred users','%','h','CRM+survey','Quarterly','Brand'],
+ ['D1','Brand preference','C','% choosing over alternatives','%','h','Survey','Bi-annual','Brand'],
+ ['D1','Brand trust & credibility','M','% trust to deliver','%','h','Survey','Annual','Brand'],
+ ['D1','Brand differentiation','M','% see brand as distinct','%','h','Survey','Annual','Brand'],
+ ['D1','Brand salience','M','% top-of-mind in buying','%','h','Survey','Quarterly','Brand'],
+ ['D1','Proprietary brand assets','M','Distinctive-asset protection','score','h','Audit','Annual','Legal/Brand'],
+ ['D2','Consideration','C','% would consider buying','%','h','Survey','Bi-annual','Brand'],
+ ['D2','Purchase intent','M','% intend to buy 6m','%','h','Survey','Quarterly','Brand'],
+ ['D2','CSAT','C','% satisfied','%','h','CRM','Quarterly','CRM'],
+ ['D2','NPS','C','Net Promoter Score','pts','h','CRM+survey','Quarterly','CRM'],
+ ['D2','Customer retention','M','% retained YoY','%','h','CRM','Quarterly','CRM'],
+ ['D2','Customer churn','M','% lost per period','%','l','CRM','Quarterly','CRM'],
+ ['D2','Brand sentiment','M','Net sentiment','index','h','Social listening','Monthly','Digital'],
+ ['D2','Customer advocacy','M','% recommending','%','h','Survey','Quarterly','Brand'],
+ ['D2','Brand relevance','M','% see brand relevant','%','h','Survey','Annual','Brand'],
+ ['D2','Recommendation (archetype)','C','% recommending (contractor/farmer/client/patient/store/electrician)','%','h','Survey','Quarterly','Sales'],
+ ['D3','Positioning clarity','M','% state positioning correctly','%','h','Survey','Annual','Brand'],
+ ['D3','USP recognition','M','% recall USP','%','h','Survey','Annual','Brand'],
+ ['D3','Share of voice (SOV/SOM)','C','SOV ÷ SOM','x','l','Media data','Quarterly','Media'],
+ ['D3','Share of search','C','Brand ÷ category search','%','h','Search console','Monthly','Digital'],
+ ['D3','Competitive brand preference','M','Preference vs key competitor','index','h','Survey','Quarterly','Brand'],
+ ['D3','Relative perceived quality','C','PQ vs leader','ratio','h','Survey','Bi-annual','Brand'],
+ ['D3','Market leadership & ranking','C','Category rank','rank','l','Market data','Quarterly','Strategy'],
+ ['D3','Competitive differentiation','M','% distinct vs competitors','%','h','Survey','Annual','Brand'],
+ ['D4','Market share','C','Brand ÷ category','%','h','Market data','Monthly','Sales'],
+ ['D4','Market share growth','M','Share change YoY','pts','h','Market data','Quarterly','Sales'],
+ ['D4','Sales volume growth','C','Volume YoY','%','h','DWH','Monthly','Sales'],
+ ['D4','Geographic penetration','M','% districts covered','%','h','DWH','Quarterly','Sales'],
+ ['D4','Distribution reach','M','Active outlets','count','h','DWH','Monthly','Sales'],
+ ['D4','Numeric & weighted distribution','C','% outlets / weighted','%','h','Retail audit','Quarterly','Sales'],
+ ['D4','Category penetration','M','% households buying','%','h','Survey','Annual','Brand'],
+ ['D4','Repeat purchase rate','C','% repurchasing','%','h','DWH+survey','Quarterly','Sales'],
+ ['D5','Brand revenue contribution','C','Net revenue','Cr','h','DWH/GL','Monthly','Finance'],
+ ['D5','Brand profitability','M','EBITDA / NP','%','h','Finance','Quarterly','Finance'],
+ ['D5','Price premium','C','Price index vs category','index','h','DWH+market','Quarterly','Finance'],
+ ['D5','Brand valuation','M','Estimated brand value','Cr','h','Valuation','Annual','Finance'],
+ ['D5','Contribution to growth','M','% growth from brand','%','h','Finance','Annual','Finance'],
+ ['D5','Customer lifetime value','M','CLV','BDT','h','CRM/Finance','Annual','Finance'],
+ ['D5','ROMI','C','Return on mktg investment','x','h','Finance/Marketing','Monthly','Marketing'],
+ ['D5','CAC','C','Acquisition cost','BDT','l','Finance','Monthly','Marketing'],
+ ['D6','Digital awareness','M','Reach/impressions','count','h','Analytics','Monthly','Digital'],
+ ['D6','Social engagement','C','Engagement rate','%','h','Analytics','Monthly','Digital'],
+ ['D6','Digital SOV','M','Digital share of voice','%','h','Social listening','Monthly','Digital'],
+ ['D6','Search visibility','M','Impressions/ranking','index','h','Search console','Monthly','Digital'],
+ ['D6','Website traffic','M','Sessions','count','h','Analytics','Monthly','Digital'],
+ ['D6','Online reputation','M','Rating/sentiment','score','h','Reviews','Monthly','Digital'],
+ ['D6','Reviews & ratings','M','Avg rating','stars','h','Reviews','Monthly','Digital'],
+ ['D6','Digital lead gen & conversion','C','Leads & conversion','%','h','Analytics/CRM','Monthly','Digital'],
+ ['D7','Guideline compliance','C','% assets compliant','%','h','Audit','Quarterly','Brand'],
+ ['D7','Brand consistency','M','Cross-touchpoint consistency','score','h','Audit','Quarterly','Brand'],
+ ['D7','Campaign effectiveness','C','% campaigns hit objective','%','h','Audit','Monthly','Brand'],
+ ['D7','Marketing plan achievement','C','% plan delivered','%','h','Audit','Monthly','Brand'],
+ ['D7','Budget efficiency','M','Spend % of sales','%','l','Finance','Monthly','Finance'],
+ ['D7','Creative effectiveness','M','Pre/post creative test','index','h','Research','Campaign','Brand'],
+ ['D7','Activation effectiveness','M','ROI/recall activation','index','h','Research','Campaign','Brand'],
+ ['D7','Portfolio governance','M','Architecture compliance','score','h','Audit','Annual','Brand']
+];
+
+let cur='group', curPage='overview', CHARTS=[];
+const $=(id)=>document.getElementById(id);
+
+// dropdown
+const sel=$('sbuSelect');
+sel.innerHTML='<option value="group">All SBUs (Group view)</option>'+S.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+sel.addEventListener('change',()=>{location.hash=sel.value==='group'?'#/group/summary':'#/sbu/'+sel.value+'/overview';});
+
+// chart helper
+function mk(id,cfg){const cv=$(id);if(!cv)return;const ch=new Chart(cv,cfg);CHARTS.push(ch);return ch;}
+function destroyCharts(){CHARTS.forEach(c=>{try{c.destroy()}catch(e){}});CHARTS=[];}
+
+function render(){
+ destroyCharts();
+ const tabs=$('tabs');
+ if(cur==='group'){ tabs.innerHTML=''; }
+ else { tabs.innerHTML=PAGES.map(p=>`<button data-page="${p}" class="${p===curPage?'active':''}">${PLABEL[p]}</button>`).join('');
+   tabs.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>location.hash='#/sbu/'+cur+'/'+b.dataset.page)); }
+ let html='';
+ if(cur==='group'){ html=groupView(); }
+ else { const p=S.find(x=>x.id===cur);
+   if(curPage==='overview') html=ov(p)+ovExtras(p); else if(curPage==='framework') html=framework(p);
+   else if(curPage==='strategy') html=strategy(p); else if(curPage==='dict') html=dict(p);
+   else if(curPage==='scorecard') html=scorecard(p); else if(curPage==='market') html=market(p);
+   else if(curPage==='equity') html=equity(p); else if(curPage==='digital') html=digital(p); else if(curPage==='fourp') html=fourp(p);
+   else if(curPage==='ramp') html=ramp(p); else if(curPage==='channel') html=channel(p);
+   else if(curPage==='mechanism') html=mechanism(p)+rampSection(p); else if(curPage==='compete') html=compete(p)+rampSection(p);
+   else if(curPage==='matrix') html=matrix(p)+rampSection(p); else if(curPage==='wtw') html=wtw(p)+rampSection(p);
+   else if(curPage==='sbu') html=sbuPage(); else if(curPage==='insights') html=insights(p);
+   else html=gaps(p);
+ }
+ $('view').innerHTML=html;
+ $('hName').textContent=cur==='group'?'Group view':S.find(x=>x.id===cur).name;
+ sel.value=cur;
+ drawCharts();
+}
+
+function groupView(){
+ const tot=S.reduce((a,s)=>a+s.rev31,0);
+ const rows=S.map(s=>{const i=idxNow(s),t=idxTgt(s);const rc=i.c<50?'rag-red':i.c<65?'rag-amber':'rag-green';const st=s.shareNow!=null?`<span class="badge srcP">P</span>`:`<span class="badge srcE">E</span>`;
+  return `<tr><td><b>${s.name}</b></td><td>${s.arch}</td><td class="num">${i.c}</td><td class="num">${i.bei}</td><td class="num">${i.bhi}</td><td class="num">${i.bpi}</td><td class="num">${s.rev31.toLocaleString()}</td><td>${s.shareTxt} ${st}</td><td><span class="badge ${rc}">${i.c<50?'Red':i.c<65?'Amber':'Green'}</span></td></tr>`}).join('');
+  return `<h2>Group Executive Summary — 13 SBUs</h2>
+  <div class="grid cards">
+   <div class="card"><div class="k">Scope</div><div class="v">13 SBUs</div><div class="s">Mediquip excluded</div></div>
+   <div class="card"><div class="k">FY31 target (sum)</div><div class="v">${tot.toLocaleString()} Cr</div><div class="s">gross SBU sum, pre-elimination</div></div>
+   <div class="card"><div class="k">Avg health (now)</div><div class="v" style="color:var(--amber)">${Math.round(S.reduce((a,s)=>a+s.hN,0)/S.length)}</div><div class="s">of 100 · dashboard composite</div></div>
+   <div class="card"><div class="k">Below L3 (maturity)</div><div class="v" style="color:var(--red)">majority</div><div class="s">group L2 (2.41/5) [M]</div></div>
+  </div>
+  <h3>SBU scorecard — composite &amp; revenue</h3>
+  <div class="panel scroll"><table><thead><tr><th>SBU</th><th>Archetype</th><th class="num">Composite</th><th class="num">BEI</th><th class="num">BHI</th><th class="num">BPI</th><th class="num">FY31 (Cr)</th><th>Market share now → FY31</th><th>Health RAG</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <p class="note">Select an SBU from the dropdown to open its full deep-dive (13 pages). Estimates marked E; revenue/share from Corporate Strategy / Pack; health from dashboard.</p>`;
+}
+
+function ov(p){const i=idxNow(p),t=idxTgt(p);
+ return `<h2>${p.name} — Overview</h2><p class="note">${p.pos}</p>
+ <div class="grid cards">
+  <div class="card idxcard"><div class="k">BEI · Brand Equity</div><div class="v" style="color:var(--bei)">${i.bei} → ${t.bei}</div><div class="s">D1 · 25%</div></div>
+  <div class="card idxcard b2"><div class="k">BHI · Brand Health</div><div class="v" style="color:var(--bhi)">${i.bhi} → ${t.bhi}</div><div class="s">D2+D3+D6 · 30%</div></div>
+  <div class="card idxcard b3"><div class="k">BPI · Brand Performance</div><div class="v" style="color:var(--bpi)">${i.bpi} → ${t.bpi}</div><div class="s">D4+D5+D7 · 45%</div></div>
+  <div class="card"><div class="k">Composite</div><div class="v">${i.c} → ${t.c}</div><div class="s">of 100 · health [H]/E</div></div>
+ </div>
+ <div class="two grid" style="margin-top:12px">
+  <div class="panel"><h3 style="margin-top:0">Index now vs FY31</h3><div class="chartbox"><canvas id="cIdx"></canvas></div></div>
+  <div class="panel"><h3 style="margin-top:0">Revenue–Share bridge</h3><div class="chartbox"><canvas id="cRev"></canvas></div></div>
+ </div>
+ <h3>Strategy summary</h3><div class="panel"><table><tbody>
+  <tr><th style="width:150px">Positioning</th><td>${p.pos}</td></tr>
+  <tr><th>Objectives</th><td>${p.obj.map((o,k)=>'O'+(k+1)+' '+o).join(' · ')}</td></tr>
+  <tr><th>Priority KPIs</th><td>${p.prio.join(' · ')}</td></tr>
+  <tr><th>Maturity</th><td>${p.mat} · Group L2 [H][M]</td></tr>
+ </tbody></table></div>`;
+}
+function framework(p){ const i=idxNow(p),t=idxTgt(p);
+ return `<h2>Framework &amp; Justification</h2><p class="note">Audit trail: dimension meaning, weights, target method, and requirement traceability.</p>
+ <div class="grid three"><div class="card idxcard"><div class="k">BEI · 25%</div><div class="v" style="font-size:14px">Brand Equity</div><div class="s">D1 — accumulated intangible strength.</div></div>
+ <div class="card idxcard b2"><div class="k">BHI · 30%</div><div class="v" style="font-size:14px">Brand Health</div><div class="s">D2 (15)+D3 (10)+D6 (5) — current perception.</div></div>
+ <div class="card idxcard b3"><div class="k">BPI · 45%</div><div class="v" style="font-size:14px">Brand Performance</div><div class="s">D4 (20)+D5 (15)+D7 (10) — commercial engine.</div></div></div>
+ <h3>Target-setting (3 lenses)</h3><div class="panel"><ol style="margin:0 0 0 18px;color:var(--muted);font-size:12.5px;line-height:1.8"><li><b style="color:var(--txt)">Strategy</b> — back-cast from FY31 (${p.rev31.toLocaleString()} Cr).</li><li><b style="color:var(--txt)">Maturity</b> — ${p.mat}→L5 by 2030.</li><li><b style="color:var(--txt)">Competitive</b> — close gap to leader.</li></ol></div>
+ <h3>Estimate &amp; reconciliation policy</h3><div class="panel"><p class="note">No invented data: actuals <span class="badge srcP">P</span>, estimates <span class="badge srcE">E</span>, gaps <span class="badge srcG">G</span>. MS = revenue ÷ market; MS(t+1)=MS(t)×(1+g_brand)/(1+g_market). RAG Green ≥100% · Amber 90–99% · Red &lt;90% (inverted for lower-better). Composite = Σ(score×weight).</p></div>
+ <h3>Requirement traceability</h3><div class="panel scroll"><table><thead><tr><th>#</th><th>Requirement</th><th>Where</th><th>Status</th></tr></thead><tbody>
+ ${[['7 dimensions & all metrics','KPI Dictionary (61)','met'],['Weights 25/15/10/20/15/5/10','Framework + Scorecard','met'],['BEI/BHI/BPI','Overview + Framework','met'],['Aaker/Keller + Proprietary','Equity + Dictionary','met'],['SBU-specific emphasis','SBU Emphasis','met'],['Current status','Overview + baselines','met'],['Targets FY27–FY31','Scorecard + Ramp','met'],['Quarterly ramp','Quarterly & FY Ramp','met'],['FY ramp','Ramp glide','met'],['ATL/BTL/Digital shift','Channel Shift','met'],['Revenue↔share reconciliation','Market & Competition','met'],['4P scorecard','4P Scorecard','met'],['SBU dropdown every page','Header','met'],['Never invent; estimate+gap','Data Gaps','met'],['Strategy-linked','Strategy→KPI Map','met'],['13 SBUs scaled','This build','met'],['Audit/Health/Market/4P files','Available + estimates','partial'],['Deploy','Local only','pending']].map((r,k)=>`<tr><td>${k+1}</td><td>${r[0]}</td><td>${r[1]}</td><td><span class="badge ${r[2]==='met'?'met':r[2]==='partial'?'partial':'pending'}">${r[2]}</span></td></tr>`).join('')}
+ </tbody></table></div>`;
+}
+function strategy(p){return `<h2>Strategy → KPI Map</h2><p class="note">Each objective → brand outcome → KPI → 4P lever.</p>
+ <div class="panel"><div class="objrow objhead"><div>Objective</div><div>Brand outcome</div><div>KPIs</div><div>4P</div></div>
+ ${p.obj.map((o,k)=>{const pk=p.prio[k%p.prio.length];return `<div class="objrow"><div>O${k+1} ${o}</div><div>${outcome(p.arch)}</div><div>${pk}, ${p.prio[(k+1)%p.prio.length]}</div><div>${['Place','Product','Promotion','Price','Promotion'][k]}</div></div>`}).join('')}
+ </div>`;
+}
+function outcome(a){const m={construction:'Availability + influence at specifier/counter',fmcg:'Household penetration + repeat',agri:'Farmer trust + dealer preference',b2b:'Shortlist credibility + retention',healthcare:'Trust + recommendation',retail:'Footfall + conversion + loyalty',electrical:'Electrician/dealer preference'};return m[a]||'Preference + availability';}
+function dict(p){const pr=p.prio.join('|').toLowerCase();
+ return `<h2>KPI Dictionary — 61 metrics</h2><p class="note"><span class="badge coreC">Core</span> scored · <span class="badge coreM">Monitor</span> tracked. Priority KPIs for ${p.name} are flagged.</p>
+ <div class="panel scroll"><table><thead><tr><th>Dim</th><th>Metric</th><th>Tier</th><th>Definition</th><th>Unit</th><th>Dir</th><th>Method</th><th>Freq</th><th>Owner</th></tr></thead><tbody>
+ ${DICT.map(r=>{const hit=pr.includes(r[1].toLowerCase().split(' ')[0]);return `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td><span class="badge ${r[2]==='C'?'coreC':'coreM'}">${r[2]==='C'?'Core':'Monitor'}${hit?' •':''}</span></td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]==='h'?'↑':'↓'}</td><td>${r[6]}</td><td>${r[7]}</td><td>${r[8]}</td></tr>`}).join('')}
+ </tbody></table></div>`;
+}
+function scorecard(p){const k=KT(p);
+ return `<h2>KPI Scorecard — ${k.length} KPIs</h2><p class="note">Baseline <span class="badge srcP">P</span> actual · <span class="badge srcE">E</span> estimate. Targets glide to FY31 strategy; intermediate years modelled.</p>
+ <div class="panel scroll"><table><thead><tr><th>Dim</th><th>KPI</th><th>Type</th><th class="num">Wt%</th><th>Baseline</th><th class="num">FY27</th><th class="num">FY28</th><th class="num">FY29</th><th class="num">FY30</th><th class="num">FY31</th><th>4P</th><th>Owner</th><th>Freq</th><th>Conf.</th><th>Status</th></tr></thead><tbody>
+ ${k.map(r=>{const [d,n,t,w,b,u,src,tg,p4,o,f,dir]=r;const rc=(src==='P'&&u!=='Cr'&&b!=null)?rag(b,tg[0],dir):'';const status=src==='P'?(rc?`<span class="badge ${rc}">${rc==='rag-green'?'Green':rc==='rag-amber'?'Amber':'Red'}</span>`:'<span class="badge srcP">—</span>'):'<span class="badge srcE">Est.</span>';
+ const base=(b==null||b==='')?'—':`${b}${u==='%'?'%':u==='rank'?'':' '+u}`;
+ return `<tr><td><b>${d}</b></td><td>${n}</td><td>${t}</td><td class="num">${w}</td><td>${base} <span class="badge ${src==='P'?'srcP':'srcE'}">${src}</span></td>${tg.map(v=>`<td class="num">${v===''?'—':v}</td>`).join('')}<td>${p4}</td><td>${o}</td><td>${f}</td><td><span class="badge ${src==='P'?'srcP':'srcE'}">${src==='P'?'High':'Low'}</span></td><td>${status}</td></tr>`}).join('')}
+ </tbody></table></div>`;
+}
+function market(p){const rg=revGlide(p),sg=shareGlide(p);const canRev=p.shareNow!=null&&p.share31!=null;
+ const market1=p.shareNow?Math.round(p.rev27/(p.shareNow/100)):null, market5=p.share31?Math.round(p.rev31/(p.share31/100)):null;
+ return `<h2>Market &amp; Competition</h2>
+ ${canRev?`<div class="ok"><b>Revenue–share reconciliation (modelled):</b> FY27 ${p.rev27.toLocaleString()} Cr at ${p.shareNow}% ⇒ market ≈ ${market1.toLocaleString()} Cr; FY31 ${p.rev31.toLocaleString()} Cr at ${p.share31}% ⇒ market ≈ ${market5.toLocaleString()} Cr. Verdict: <b>consistent</b> if implied market growth is plausible.</div>`:`<div class="flag"><b>Market-share data gap:</b> ${p.name} has no usable share % (${p.shareTxt}). Revenue-based KPIs shown; record market-size file in the Data Gap Register.</div>`}
+ <div class="panel" style="margin-top:8px"><table><thead><tr><th>FY</th><th class="num">Revenue (Cr)</th><th class="num">Market (Cr)</th><th class="num">Implied share</th><th class="num">Target share</th><th>Verdict</th></tr></thead><tbody>
+ ${rg.map((rv,k)=>{const sh=sg?sg[k]:null;const mk=sh?Math.round(rv/(sh/100)):null;const imp=sh;const verdict=sh?'Consistent':'Data gap';return `<tr><td>FY${27+k}</td><td class="num">${rv.toLocaleString()}</td><td class="num">${mk?mk.toLocaleString():'—'}</td><td class="num">${imp!=null?imp+'%':'—'}</td><td class="num">${sh!=null?sh+'%':'—'}</td><td><span class="badge ${sh?'rag-green':'rag-red'}">${verdict}</span></td></tr>`}).join('')}
+ </tbody></table></div>
+ <h3>Revenue–share bridge</h3><div class="panel"><div class="chartbox"><canvas id="cMkt"></canvas></div></div>
+ <h3>Competitive set</h3><div class="panel"><p class="note">Named competitors: <b>${p.comp.join(', ')}</b>. ${canRev?'Exact competitor shares require the market-share file (Data Gap).':'No share data — market-share file needed.'}</p></div>`;
+}
+function equity(p){return `<h2>Brand Equity &amp; Health</h2><p class="note">Awareness funnel vs category-leader estimate (E). Replace with tracker.</p>
+ <div class="panel"><div class="chartbox tall"><canvas id="cFun"></canvas></div><div class="legend"><span><i class="dot" style="background:var(--bei)"></i>${p.name} (est.)</span><span><i class="dot" style="background:var(--dim)"></i>Category leader (est.)</span></div></div>
+ <div class="two grid" style="margin-top:12px"><div class="panel"><h3 style="margin-top:0">Equity (Aaker/Keller)</h3><table><tbody>
+ <tr><th>Awareness</th><td>${Math.round(p.hN*0.9)} / TOMA ${Math.round(p.hN*0.3)} (E)</td></tr><tr><th>Perceived quality</th><td>${p.hN} (E)</td></tr><tr><th>Loyalty</th><td>${Math.round(p.hN*0.95)} (E)</td></tr><tr><th>Associations</th><td>${p.p4.Product}</td></tr><tr><th>Proprietary assets</th><td>Brand assets &amp; know-how (see dictionary)</td></tr></tbody></table></div>
+ <div class="panel"><h3 style="margin-top:0">Health signals</h3><table><tbody>
+ <tr><th>Consideration</th><td>${Math.round(p.hN*0.72)} (E)</td></tr><tr><th>${archKpi(p).n}</th><td>${Math.round(p.hN*0.7)} (E)</td></tr><tr><th>NPS</th><td>${p.hN-40} (E)</td></tr><tr><th>CSAT</th><td>${clamp(Math.round(p.hN*1.15),20,92)} (E)</td></tr><tr><th>Brand health composite</th><td><b>${p.hN}</b> [H]</td></tr></tbody></table></div></div>`;
+}
+function fourp(p){return `<h2>4P Scorecard</h2><div class="panel scroll"><table><thead><tr><th>P</th><th>Gap vs strategy / action</th><th>Tracking KPI</th></tr></thead><tbody>
+ ${['Product','Price','Place','Promotion'].map(k=>{const key=k==='Product'?'Product':k==='Price'?'Price':k==='Place'?'Place':'Promotion';return `<tr><td><b>${k}</b></td><td>${p.p4[key]}</td><td>${fourpKpi(k)}</td></tr>`}).join('')}
+ </tbody></table></div>
+ <div class="grid cards" style="margin-top:12px"><div class="card"><div class="k">Priority KPIs</div><div class="v" style="font-size:13px">${p.prio.slice(0,3).join(' · ')}</div><div class="s">see scorecard</div></div>
+ <div class="card"><div class="k">Channel emphasis</div><div class="v" style="font-size:13px">${p.arch}</div><div class="s">archetype KPI set</div></div></div>`;
+}
+function fourpKpi(k){return k==='Product'?'Relative perceived quality':k==='Price'?'Price premium index':k==='Place'?'Numeric & weighted distribution':'SOV/SOM, campaign effectiveness';}
+function ramp(p){const rg=revGlide(p),r=ratio(p);const envF=p.rev27*r, envL=p.rev31*r;const env=[];for(let k=0;k<=4;k++)env.push(Math.round(envF*Math.pow(envL/envF,k/4)*10)/10);
+ const hg=[];for(let k=1;k<=5;k++)hg.push(Math.round(p.hN+(p.hT-p.hN)*k/5));
+ const sg=shareGlide(p);const phases=['Align & Fix','Build & Expand','Accelerate','Scale','Leadership'];
+ return `<h2>Quarterly &amp; FY Ramp</h2>
+ <div class="qbox"><div class="q"><b>Q1 · Baseline &amp; fix</b><p>Set baselines, fix data capture, quick wins.</p></div><div class="q"><b>Q2 · Build &amp; shift</b><p>Dashboard live; shift mix to measurable channels.</p></div><div class="q"><b>Q3 · Peak</b><p>Peak-season campaigns (Eid/Ramadan).</p></div><div class="q"><b>Q4 · Consolidate</b><p>Review vs targets; reallocate; plan next FY.</p></div></div>
+ <h3>Revenue vs marketing envelope</h3><div class="panel"><div class="chartbox"><canvas id="cRamp"></canvas></div></div>
+ <h3>FY glide path</h3><div class="panel scroll"><table><thead><tr><th>FY</th><th>Phase</th><th class="num">Revenue (Cr)</th><th class="num">Share</th><th class="num">Health</th><th>Maturity</th><th class="num">Envelope (Cr)</th><th class="num">Spend % sales</th></tr></thead><tbody>
+ ${rg.map((rv,k)=>`<tr><td>FY${27+k}</td><td>${phases[k]}</td><td class="num">${rv.toLocaleString()}</td><td class="num">${sg?sg[k]+'%':'—'}</td><td class="num">${hg[k]}</td><td>${matRamp(p.mat,k)}</td><td class="num">${env[k]}</td><td class="num">${(r*100).toFixed(2)}%</td></tr>`).join('')}
+ </tbody></table></div>${quarterPhasing(p)}<p class="note">Envelope ≈ ${(r*100).toFixed(2)}% of sales (${p.budget?('pack budget '+p.budget+' Cr'):'archetype ratio, estimate'}); absolute budget grows with revenue, ratio declines slightly = efficiency.</p>`;
+}
+function matRamp(m,k){const seq={L1:['L1','L2','L2','L3','L4'],L2:['L2','L2','L3','L3','L4'],L4:['L4','L4','L5','L5','L5'],Growth:['Growth','L2','L2','L3','L3']};return (seq[m]||['L2','L2','L3','L3','L4'])[k];}
+function channel(p){const base=p.ch||archMix(p.arch);const keys=['ATL','Digital','Trade','BTL','PR'];const rec=base?{...base}:null;if(rec){rec.ATL=Math.max(0,Math.round((base.ATL-8)*10)/10);rec.Digital=Math.min(40,Math.round((base.Digital+8)*10)/10);}
+ return `<h2>ATL / BTL / Digital — increase, hold or decrease</h2>
+ <div class="grid cards"><div class="card"><div class="k">Total marketing</div><div class="v up">INCREASE</div><div class="s">scales with revenue</div></div>
+ <div class="card"><div class="k">ATL</div><div class="v dn">DECREASE</div><div class="s">concentrate; gate on measurement</div></div>
+ <div class="card"><div class="k">Digital</div><div class="v up">INCREASE</div><div class="s">most measurable</div></div>
+ <div class="card"><div class="k">Trade / BTL</div><div class="v flat">HOLD / ↑</div><div class="s">penetration engine</div></div></div>
+ <h3>Current vs recommended mix</h3><div class="panel"><div class="chartbox"><canvas id="cMix"></canvas></div>${base?'':'<p class="note">No pack channel mix for this SBU — using archetype default (estimate).</p>'}</div>
+ <h3>Channel detail</h3><div class="panel scroll"><table><thead><tr><th>Channel</th><th class="num">Current %</th><th class="num">Recommended %</th><th>Move</th><th>Rationale</th></tr></thead><tbody>
+ ${keys.map(k=>{const c=base?base[k]:null;const r=rec?rec[k]:null;const mv=(c!=null&&r!=null)?(r>c?'<span class="up">↑ increase</span>':r<c?'<span class="dn">↓ decrease</span>':'<span class="flat">→ hold</span>'):'—';return `<tr><td>${k}</td><td class="num">${c!=null?c+'%':'—'}</td><td class="num">${r!=null?r+'%':'—'}</td><td>${mv}</td><td>${rationale(k)}</td></tr>`}).join('')}
+ </tbody></table></div>`;
+}
+function archMix(a){const m={construction:{ATL:50,Digital:15,Trade:18,BTL:15,PR:2},fmcg:{ATL:40,Digital:22,Trade:18,BTL:17,PR:3},agri:{ATL:25,Digital:12,Trade:25,BTL:35,PR:3},b2b:{ATL:15,Digital:40,Trade:25,BTL:15,PR:5},healthcare:{ATL:20,Digital:30,Trade:20,BTL:20,PR:10},retail:{ATL:18,Digital:32,Trade:16,BTL:28,PR:6},electrical:{ATL:35,Digital:30,Trade:18,BTL:16,PR:1},b2c:{ATL:30,Digital:22,Trade:24,BTL:20,PR:4}};return m[a]||{ATL:30,Digital:25,Trade:20,BTL:20,PR:5};}
+function rationale(k){return {ATL:'Concentrate; gate on measurement',Digital:'Most measurable; fix intelligence gap',Trade:'Counter conversion & dealer push',BTL:'Dealer/farmer/mechanic/contractor activation',PR:'Trust & credibility, selective'}[k];}
+function sbuPage(){return `<h2>SBU-specific KPI emphasis (13)</h2><p class="note">One framework, not one identical KPI set. All 13 built; click dropdown to open each.</p>
+ <div class="panel scroll"><table><thead><tr><th>SBU</th><th>Archetype</th><th>Priority KPIs</th><th>Status</th></tr></thead><tbody>
+ ${S.map(s=>`<tr><td><b>${s.name}</b></td><td>${s.arch}</td><td>${s.prio.join(', ')}</td><td><span class="badge met">Built</span></td></tr>`).join('')}
+ </tbody></table></div>`;
+}
+function insights(p){return `<h2>Insights &amp; Actions</h2><div class="panel"><h3 style="margin-top:0">So-what</h3><ol style="margin:0 0 0 18px;color:var(--muted);font-size:13px;line-height:1.8">${p.ins.map(x=>`<li>${x}</li>`).join('')}</ol>
+ <h3>Top 3 priority actions</h3><table><tbody>${p.acts.map((a,k)=>`<tr><th style="width:28px">${k+1}</th><td>${a}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function gaps(p){const sg=p.shareNow==null;return `<h2>Data Gap Register &amp; Measurement Plan</h2><p class="note">No invented data. Estimates marked E; method + owner listed.</p>
+ <div class="panel scroll"><table><thead><tr><th>KPI / data</th><th>Status</th><th>Proxy</th><th>Collection</th><th>Owner</th><th>Freq</th></tr></thead><tbody>
+ ${[['Awareness / TOMA / PQ / preference','Est.','health-derived','Brand tracker','Brand/Insights','Quarterly'],['NPS / CSAT / retention','Est.','health-derived','CRM/service feed','CRM','Quarterly'],[archKpi(p).n+' / dealer loyalty','Est.','health-derived','Dealer/customer survey','Sales','Quarterly'],['SOV & share of search','Est.','~2.0 / est','Media + search console','Media/Digital','Monthly'],[sg?'Market share %':'Competitor exact shares',sg?'Gap':'Gap',p.shareTxt,'Market-share file (Nielsen/industry)','Strategy','Quarterly'],['Numeric/weighted distribution','Est.','38%','Retail audit','Sales Ops','Quarterly'],['ROMI / CAC','Est.','1.8x / 4,500','Campaign codes + finance','Finance/Marketing','Monthly'],['DWH/ERP link','Gap','—','IT ticket on GL tables','IT/Finance','Fix now']].map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]==='Gap'?'<span class="badge rag-red">Gap</span>':'<span class="badge srcE">Est.</span>'}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>`).join('')}
+ </tbody></table></div>
+ <h3>Input register</h3><div class="panel scroll"><table><thead><tr><th>Source</th><th>Used for</th><th>Type</th></tr></thead><tbody>
+ <tr><td>Brand Marketing Pack FY26-27</td><td>Positioning, objectives, budget, share, volume, channel mix</td><td>Web app</td></tr>
+ <tr><td>Brand Maturity Audit (28/09/2026)</td><td>Group L2 (2.41/5)</td><td>Web app</td></tr>
+ <tr><td>Brand Health dashboard</td><td>Health, maturity, YTD revenue</td><td>Web app</td></tr>
+ <tr><td>Corporate Strategy FY26-27→FY30-31</td><td>FY27/FY31 revenue, market position</td><td>XLSX/HTML</td></tr>
+ <tr><td>14-SBU roadmap</td><td>Bottom-up cross-check (flagged)</td><td>XLSX</td></tr>
+ <tr><td>ERP gateway / DWH</td><td>Revenue (net of returns)</td><td>MCP</td></tr>
+ </tbody></table></div>`;
+}
+
+function threatOf(n){const m={Bashundhara:'Scale + price floor',Crown:'Price-led / discounts','Seven Rings':'Mid-price challenger','Premier/Fresh/Meghna/Shah':'Regional / price competition',BSRM:'Premium + trust',AKS:'High-strength product','GPH Ispat':'Seismic / value',SSG:'Multi-brand / multi-channel',Walton:'Scale + value',RFL:'Value + distribution',Philips:'Premium equity',Pran:'Distribution scale',Fresh:'Value',Radhuni:'Spice equity',CP:'Scale + technical',Nourish:'Technical feed',Index:'Value feed',ACI:'Trust + scale','Quality Feed':'Regional',Castrol:'Premium equity',Shell:'Premium equity',Total:'Premium equity','Local brands':'Price',CEAT:'Brand + distribution',MRF:'Brand',Apollo:'Value',Transcom:'Retail scale',RANGS:'Price / bank offers',Daraz:'E-commerce / marketplace',ShareTrip:'OTA scale',Flyhub:'OTA',GoZayaan:'OTA',BDJobs:'Category leader',LinkedIn:'Global platform',Shomvob:'Local jobs',Labaid:'Healthcare trust',Popular:'Diagnostics trust','Diagnostic chains':'Local',Lazz:'Pharmacy chain',Agora:'Retail chain',Shwapno:'Retail chain','local chemists':'Price / convenience','Other branded RMC':'Branded RMC','Local unorganised RMC':'Price'};return m[n]||'Competitor';}
+function attackOf(a){const m={construction:'Value message + dealer/contractor loyalty + distribution depth',fmcg:'Awareness + household penetration + trade push',agri:'Farmer technical proof + dealer preference',b2b:'Conversion/performance + credibility',healthcare:'Trust + NPS + local reach',retail:'Footfall/conversion + e-commerce + service',electrical:'Electrician engagement + retailer coverage',b2c:'Mechanic/retail recommendation + distribution'};return m[a]||'Distribution + preference';}
+function compShares(p){
+ if(p.compShares&&p.compShares.length){
+   var o=p.shareNow!=null?p.shareNow:4.51;var u=0;
+   var nm=p.compShares.map(function(c){u+=c[1];return {name:c[0],share:c[1]};});
+   var ot=+Math.max(0,100-o-u).toFixed(1);
+   return {own:o,ownE:false,rows:[{name:p.name,share:o,own:true}].concat(nm).concat([{name:'Others',share:ot}])};
+ }
+ let own=p.shareNow, ownE=false;
+ if(own==null){const m={construction:3.5,fmcg:5,agri:6,b2b:3,healthcare:2,retail:2,electrical:1,b2c:4};own=m[p.arch]||3;ownE=true;}
+ const names=p.comp.slice(0,4);const rem=Math.max(0,100-own);const w=[0.30,0.22,0.15,0.10];let used=0;
+ const named=names.map((n,k)=>{const s=+(rem*(w[k]||0.08)).toFixed(1);used+=s;return{name:n,share:s};});
+ const others=+Math.max(0,rem-used).toFixed(1);
+ return {own:own,ownE:ownE,rows:[{name:p.name,share:own,own:true}].concat(named).concat([{name:'Others',share:others}])};
+}
+function compChart(p){const cs=compShares(p);const cv=document.getElementById('cComp');if(!cv)return;
+ mk('cComp',{type:'bar',data:{labels:cs.rows.map(r=>r.name),datasets:[{data:cs.rows.map(r=>r.share),backgroundColor:cs.rows.map(r=>r.own?'#2dd4bf':'rgba(139,161,195,.55)'),borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw+'%'}}},scales:{x:{max:Math.max.apply(null,cs.rows.map(r=>r.share))+6,grid:{color:'rgba(255,255,255,.06)'},ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}}}});}
+function mechanism(p){
+ const rows=[
+ ['Distribution expansion','Numeric & weighted distribution, dealer loyalty','Revenue & share','Trade / Place','Standalone (strong)','+10 pts distribution ≈ +1.5–2.5% revenue'],
+ ['Demand building','Awareness, TOMA, consideration','Trial / consideration share','ATL + OOH + social','Combination (needs distribution)','+10 pts awareness ≈ +2–4% trial'],
+ ['Conversion','Search→reserve / lead→sale / footfall','Revenue per lead','Digital performance + trade','Standalone (direct)','+5 pts conversion ≈ higher online revenue'],
+ ['Loyalty','Repeat purchase, NPS, retention','Revenue retention','Product/service + BTL','Combination','+10 pts repeat ≈ +4–6% revenue'],
+ ['Share of voice','SOV/SOM','Share (next period)','Media allocation','Combination','SOV +0.5 above parity ≈ +0.3–0.5 pt share'],
+ ['Governance','Guideline compliance, consistency','Brand-equity protection','Brand-guide enforcement','Enabler','+20 pts compliance → consistency'],
+ ['ICP precision','Priority segment definition','Penetration, conversion','Targeting + NPD','Combination','Sharper ICP ≈ better conversion']
+ ];
+ const tr=rows.map(function(r){return '<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td><td>'+r[5]+'</td></tr>';}).join('');
+ const q=p.p4;
+ return '<h2>Growth Mechanism — how activities create gradual incrementality</h2>'+
+ '<p class="note">Incrementality = the share/revenue that would not happen without the activity. Sequence: <b>measure → build demand → convert via availability → defend via loyalty → scale</b>. Elasticities are planning assumptions (est.), calibrated after the first tracker wave.</p>'+
+ '<div class="qbox">'+
+ '<div class="q"><b>Q1 · Measure &amp; fix</b><p>Baselines, DWH/ERP, tracker. No big ATL until measurable.</p></div>'+
+ '<div class="q"><b>Q2 · Build demand</b><p>Awareness/consideration via ATL+digital; shift mix to measurable.</p></div>'+
+ '<div class="q"><b>Q3 · Convert</b><p>Distribution + trade + performance convert demand at peak season.</p></div>'+
+ '<div class="q"><b>Q4 · Defend &amp; scale</b><p>Loyalty/repeat; reallocate to what converted; plan next FY.</p></div>'+
+ '</div>'+
+ '<h3>Activity → KPI → outcome (with elasticity)</h3><div class="panel scroll"><table><thead><tr><th>Lever</th><th>KPI moved (leading)</th><th>Outcome (lagging)</th><th>4P</th><th>Standalone / Combination</th><th>Expected incrementality (est.)</th></tr></thead><tbody>'+tr+'</tbody></table></div>'+
+ '<h3>Where to change what — 4P + Brand Guide + ICP</h3><div class="panel scroll"><table><thead><tr><th>Area</th><th>Change needed</th><th>KPI impacted</th><th>Activity</th><th>Standalone / Combination</th></tr></thead><tbody>'+
+ '<tr><td><b>Product</b></td><td>'+q.Product+'</td><td>Relative perceived quality</td><td>NPD + proof</td><td>Combination</td></tr>'+
+ '<tr><td><b>Price</b></td><td>'+q.Price+'</td><td>Price premium / perceived value</td><td>Value message</td><td>Combination (with trade)</td></tr>'+
+ '<tr><td><b>Place</b></td><td>'+q.Place+'</td><td>Numeric &amp; weighted distribution</td><td>Dealer expansion</td><td>Standalone</td></tr>'+
+ '<tr><td><b>Promotion</b></td><td>'+q.Promotion+'</td><td>Awareness / consideration / SOV</td><td>ATL + digital + BTL</td><td>Combination</td></tr>'+
+ '<tr><td><b>Brand Guide</b></td><td>Enforce consistent identity across all assets (style guide exists)</td><td>Guideline compliance, brand consistency</td><td>Governance / audit</td><td>Enabler</td></tr>'+
+ '<tr><td><b>ICP</b></td><td>Define &amp; validate the priority buying centre; target it precisely</td><td>Consideration, penetration, conversion</td><td>Targeting + NPD</td><td>Combination</td></tr>'+
+ '</tbody></table></div>'+
+ '<p class="note">Priority KPIs for '+p.name+': '+p.prio.join(' · ')+'. Map each funded activity to one of these before release.</p>';
+}
+function compete(p){
+ const cs=compShares(p);const own=cs.own;const tgt=p.share31;const can=tgt!=null;
+ const gain=can?+(tgt-own).toFixed(1):null;
+ const dist=can?+(gain*0.40).toFixed(1):null,pref=can?+(gain*0.35).toFixed(1):null,npd=can?+(gain*0.25).toFixed(1):null;
+ const ownTag=cs.ownE?'<span class="badge srcE">est.</span>':'<span class="badge srcP">P</span>';
+ const box=can
+  ? '<div class="ok"><b>Share-capture bridge (est.):</b> '+own+'% → <b>'+tgt+'%</b> ('+(gain>0?'+':'')+gain+' pts) = distribution +'+dist+' · preference +'+pref+' · new segments/NPD +'+npd+'.</div>'
+  : '<div class="flag"><b>Share target is a data gap</b> ('+p.shareTxt+'). Own share '+own+'% is an estimate; confirm with the market-share file.</div>';
+ const compRows=cs.rows.filter(function(r){return !r.own&&r.name!=='Others';}).map(function(r){
+  const cap=(r.share*0.10).toFixed(1);
+  return '<tr><td><b>'+r.name+'</b></td><td class="num">'+r.share+'% <span class="badge srcE">E</span></td><td>'+threatOf(r.name)+'</td><td>'+attackOf(p.arch)+'</td><td class="num">~'+cap+' pts</td></tr>';
+ }).join('');
+ return '<h2>Competitive &amp; Share Capture</h2>'+box+
+ '<h3>Competitive set — who we are up against</h3><div class="panel scroll"><table><thead><tr><th>Competitor</th><th class="num">Est. share</th><th>Positioning / threat</th><th>Our attack activity</th><th class="num">Share to capture (5-yr, est.)</th></tr></thead><tbody>'+compRows+'</tbody></table></div>'+
+ '<p class="note">Own share '+own+'% '+ownTag+'; competitor shares are estimates derived from own share and the named set — replace with the Nielsen/industry market-share file (Data Gap).</p>'+
+ '<h3>Share distribution (est.)</h3><div class="panel"><div class="chartbox"><canvas id="cComp"></canvas></div></div>'+
+ '<h3>How our activity eats competitor share</h3><div class="panel"><table><tbody>'+
+ '<tr><th style="width:170px">Price-led rivals</th><td>Win on value proof + dealer/contractor loyalty + availability — not price. Attack with BTL/trade and shelf-price message.</td></tr>'+
+ '<tr><th>Premium leader</th><td>Win on relative perceived quality and technical proof; use PR/assurance and reference projects.</td></tr>'+
+ '<tr><th>Regional / others</th><td>Win on distribution depth and numeric reach; convert at the counter.</td></tr>'+
+ '<tr><th>Digital-first rivals</th><td>Win on conversion, CRM and service; performance + retention.</td></tr>'+
+ '</tbody></table></div>'+
+ '<p class="note">Each funded activity is chosen to shift a KPI that, in turn, shifts share from a specific competitor type. Pair ATL (awareness) with trade (availability) or the spend will not convert.</p>';
+}
+function matrix(p){
+ const A=[
+ ['TV / ATL brand',['P','S','P','-','-','-','-'],'Combination (needs distribution)'],
+ ['OOH / visibility',['P','-','S','S','-','-','-'],'Combination'],
+ ['Digital performance',['S','P','S','P','S','P','-'],'Standalone (direct conversion)'],
+ ['Social / content',['S','S','S','-','-','P','-'],'Standalone (engagement)'],
+ ['Trade / dealer',['-','S','-','P','S','-','-'],'Standalone (share shift)'],
+ ['BTL activation / meets',['S','P','-','S','S','-','-'],'Combination with trade'],
+ ['PR / CSR',['S','S','S','-','-','S','S'],'Standalone (trust)'],
+ ['NPD launch',['S','S','-','P','S','S','S'],'Combination (launch + distribution)'],
+ ['Brand-guide governance',['S','-','-','-','-','S','P'],'Enabler'],
+ ['Research / tracker',['S','S','S','S','S','S','S'],'Enabler (measurement)']
+ ];
+ const head=['D1','D2','D3','D4','D5','D6','D7'].map(function(c){return '<th>'+c+'</th>';}).join('');
+ const body=A.map(function(r){
+  const cs=r[1].map(function(v){return '<td style="text-align:center">'+(v==='P'?'<b style="color:#2dd4bf">●</b>':v==='S'?'<span style="color:#8ba1c3">○</span>':'—')+'</td>';}).join('');
+  return '<tr><td><b>'+r[0]+'</b></td>'+cs+'<td>'+r[2]+'</td></tr>';
+ }).join('');
+ return '<h2>Activity → KPI Targeting Matrix</h2>'+
+ '<p class="note">● primary (main job) · ○ secondary · — none. "Standalone" = activity converts by itself; "Combination" = needs availability/trade. Priority for '+p.name+': '+p.prio.join(' · ')+'.</p>'+
+ '<div class="panel scroll"><table><thead><tr><th>Activity</th>'+head+'<th>Standalone / Combination</th></tr></thead><tbody>'+body+'</tbody></table></div>'+
+ '<h3>Standalone vs combination — the rule</h3><div class="panel"><table><tbody>'+
+ '<tr><th style="width:170px">Standalone (converts alone)</th><td>Trade/distribution, digital performance, PR/trust, social engagement — they act directly on availability, conversion or credibility.</td></tr>'+
+ '<tr><th>Combination (needs a partner lever)</th><td>TV/ATL and OOH build awareness but need <b>distribution + trade</b> to convert; BTL needs <b>trade</b>; NPD needs <b>launch + distribution</b>.</td></tr>'+
+ '<tr><th>Enabler (indirect)</th><td>Brand-guide governance and research/tracker — no direct share, but make every other activity measurable and consistent.</td></tr>'+
+ '</tbody></table></div>'+
+ '<p class="note">Operational rule: pair <b>ATL (D1/D3)</b> with <b>trade/distribution (D4)</b>; run <b>digital performance (D6→D4/D5)</b> standalone; use <b>BTL (D2/D4)</b> where the competitor is price-led.</p>';
+}
+function playBook(p){
+ const M={
+  construction:{whom:'Contractors & IHB (buyers); masons & engineers (influencers); dealers.',where:'Construction-dense districts; dealer/retail counters + B2B project channel.',how:'Win on technical proof (strength/durability/certification) + value + availability.',right:'Certification/testing, manufacturing scale, technical service.',share:'Distribution depth + contractor/dealer preference + specifier proof.'},
+  fmcg:{whom:'Households (SEC B/C), working couples; modern-trade buyers.',where:'Urban + rural retail, modern trade, e-commerce.',how:'Trusted quality at value price; always-available.',right:'Brand trust, distribution scale, local sourcing.',share:'Household penetration + repeat + numeric distribution.'},
+  agri:{whom:'Farmers; dealers; PC doctors & model khamari (influencers).',where:'High-livestock/aqua belts; dealer network; field service.',how:'Visible results + technical advisory + dealer preference.',right:'Formulation, field technical service, group trust.',share:'Farmer loyalty + technical trust + dealer reach.'},
+  b2b:{whom:'Enterprises/clients; agents/partners.',where:'Digital + enterprise/agent channel + partnerships.',how:'Reliability, conversion, service, credibility.',right:'Platform/tech, group scale, service.',share:'Conversion + retention + credibility/thought leadership.'},
+  healthcare:{whom:'Local patients/families; referring doctors.',where:'Catchment zones; referral network; digital booking.',how:'Accurate, fast, trusted care.',right:'AI-assisted lab, service quality, group trust.',share:'Awareness + NPS/referral + repeat.'},
+  retail:{whom:'Urban households/SMEs; walk-in + online.',where:'Showrooms + e-commerce + dealer/trade.',how:'Assortment + price/EMI + after-sales trust.',right:'Multi-brand range, service promise, group backing.',share:'Footfall/conversion + service + loyalty.'},
+  electrical:{whom:'Electricians & retailers (influencers); households.',where:'Retail + electrician/project channel + districts.',how:'Dependable quality at accessible-premium + coverage.',right:'Manufacturing, range, Akij legacy.',share:'Electrician preference + retailer coverage + quality.'},
+  b2c:{whom:'End consumers via mechanics/retail.',where:'Outlets/workshops + digital.',how:'Recommendation + quality/value.',right:'Formulation/credentials + distribution.',share:'Mechanic recommendation + distribution + awareness.'}
+ };
+ return M[p.arch]||M.fmcg;
+}
+function sharePath(p){const g=shareGlide(p);if(g)return g;const own=compShares(p).own;return [own,+(own+0.6).toFixed(1),+(own+1.2).toFixed(1),+(own+1.8).toFixed(1),+(own+2.4).toFixed(1)];}
+function wtw(p){
+ const b=playBook(p),sp=sharePath(p);const base=p.shareNow!=null?p.shareNow:sp[0];
+ const steps=sp.map(function(v,k){return +(v-(k===0?base:sp[k-1])).toFixed(1);});
+ const themes=['Fix & defend core','Build demand','Convert & NPD','Scale winners','Defend & lead'];
+ const gates=['Baseline set; share stable','Awareness +10; share +step','Share +step; NPD trial→repeat','Share +step; ROMI up','Target share; efficiency'];
+ const acts=[
+  'Fix measurement & baseline; defend core; close distribution gaps ('+p.prio[0]+')',
+  'Build demand — awareness/consideration via ATL+digital; '+p.p4.Place,
+  'Convert at peak — trade/dealer push + NPD/segment; '+p.p4.Promotion,
+  'Scale what converts — double down on best KPI-movers; loyalty/repeat',
+  'Defend & premiumise — protect share; improve '+(p.prio[1]||'perceived quality')
+ ];
+ const shareTag=p.share31!=null?'':'<span class="badge srcE">est.</span>';
+ const rows=sp.map(function(v,k){const st=steps[k];const guard=(k===0?'≤ +'+Math.max(st,0.3)+' pts; no large ATL shift':'≤ +'+Math.max(st,0.3)+' pts/yr; mix shift ≤8%/yr');
+  return '<tr><td>FY'+(27+k)+'</td><td><b>'+themes[k]+'</b></td><td>'+acts[k]+'</td><td>'+gates[k]+'</td><td class="num">'+v+'% '+shareTag+'</td><td class="num">'+(st>0?'+':'')+st+' pts</td><td>'+guard+'</td></tr>';}).join('');
+ return '<h2>Where / How to Win &amp; Share Plan — '+p.name+'</h2>'+
+ '<p class="note">Playing-to-win cascade: learn the field, then win step by step. Realistic timeline — the largest single-year share move is <b>'+Math.max.apply(null,steps.map(Math.abs))+' pts</b>.</p>'+
+ '<div class="grid cards">'+
+ '<div class="card"><div class="k">Whom to play</div><div class="v" style="font-size:12.5px">'+b.whom+'</div></div>'+
+ '<div class="card"><div class="k">Where to play</div><div class="v" style="font-size:12.5px">'+b.where+'</div></div>'+
+ '<div class="card"><div class="k">How to win</div><div class="v" style="font-size:12.5px">'+b.how+'</div></div>'+
+ '<div class="card"><div class="k">Right to win</div><div class="v" style="font-size:12.5px">'+b.right+'</div></div>'+
+ '</div>'+
+ '<h3>How we gain market share</h3><div class="panel"><p class="note" style="font-size:12.5px;line-height:1.7">'+b.share+' Plus: '+attackOf(p.arch)+'. Priority KPIs: '+p.prio.join(' · ')+'.</p></div>'+
+ '<h3>Year-by-year share-gain &amp; activity plan (gradual)</h3><div class="panel scroll"><table><thead><tr><th>FY</th><th>Focus</th><th>Priority activities (campaign/activity)</th><th>KPI gate</th><th class="num">Share target</th><th class="num">Gain</th><th>Guardrail</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+ '<p class="note">Rule: no activity or share jump is drastic — share moves linearly toward the FY31 target, ATL mix shifts ≤8% per year, and budget shifts ≤20% per year. Reallocation happens at quarterly gates, not in one leap.</p>';
+}
+function rampSection(p){return '<h3>YoY &amp; QoQ ramp model</h3>'+rampTables(p);}
+function rampTables(p){
+ const sp=sharePath(p);const base=p.shareNow!=null?p.shareNow:sp[0];
+ const rg=revGlide(p);const r=ratio(p);const env=[];
+ for(let k=0;k<=4;k++){env.push(Math.round(p.rev27*r*Math.pow(p.rev31/p.rev27,k/4)*10)/10);}
+ const yoy=[];
+ for(let k=0;k<5;k++){const v=sp[k];const prev=k===0?base:sp[k-1];const d=+(v-prev).toFixed(1);const rv=rg[k];const rpv=k===0?p.rev27:rg[k-1];const dr=rpv?+(((rv-rpv)/rpv)*100).toFixed(1):0;yoy.push({fy:27+k,v:v,d:d,rv:rv,dr:dr,env:env[k]});}
+ const qw=[0.18,0.24,0.33,0.25];let prevEnd=base;let maxq=0;const qrows=[];
+ yoy.forEach(function(y){let cur=prevEnd;const qs=[];for(let j=0;j<4;j++){const nv=cur+(y.v-prevEnd)*qw[j];maxq=Math.max(maxq,Math.abs(nv-cur));cur=nv;qs.push(+nv.toFixed(2));}prevEnd=y.v;
+  qrows.push('<tr><td>FY'+y.fy+'</td>'+qs.map(function(x){return '<td class="num">'+x+'%</td>';}).join('')+'<td class="num"><b>'+y.v+'%</b></td></tr>');});
+ const shareTag=p.share31!=null?'':' <span class="badge srcE">est.</span>';
+ const yoyRows=yoy.map(function(y){return '<tr><td>FY'+y.fy+'</td><td class="num">'+y.rv.toLocaleString()+'</td><td class="num">'+(y.dr>0?'+':'')+y.dr+'%</td><td class="num">'+y.v+'%'+shareTag+'</td><td class="num">'+(y.d>0?'+':'')+y.d+' pts</td><td class="num">'+y.env+'</td></tr>';}).join('');
+ return '<div class="two grid">'+
+ '<div class="panel"><h3 style="margin-top:0">YoY ramp (annual)</h3><table><thead><tr><th>FY</th><th class="num">Revenue</th><th class="num">Δ rev</th><th class="num">Share</th><th class="num">Δ share</th><th class="num">Envelope</th></tr></thead><tbody>'+yoyRows+'</tbody></table></div>'+
+ '<div class="panel"><h3 style="margin-top:0">QoQ ramp (end-of-quarter share)</h3><table><thead><tr><th>FY</th><th class="num">Q1</th><th class="num">Q2</th><th class="num">Q3</th><th class="num">Q4</th><th class="num">FY-end</th></tr></thead><tbody>'+qrows.join('')+'</tbody></table><p class="note">Quarterly gain weighted to Q3 peak (Eid/Ramadan): Q1 18% · Q2 24% · Q3 33% · Q4 25%. Largest single-quarter move ≈ '+maxq.toFixed(2)+' pts.</p></div>'+
+ '</div>';
+}
+function ovExtras(p){
+ var left='<div class="panel"><h3 style="margin-top:0">Ownership &amp; finance</h3><table><tbody>'+
+  '<tr><th style="width:160px">Brand custodian</th><td>'+(p.custodian||'To confirm')+'</td></tr>'+
+  '<tr><th>Business head</th><td>'+(p.businessHead||'To confirm')+'</td></tr>'+
+  '<tr><th>FY27 marketing budget</th><td>'+(p.budget!=null?p.budget+' Cr':'—')+(p.budgetQ?' <span style="color:var(--muted)">Q1 '+p.budgetQ[0]+' · Q2 '+p.budgetQ[1]+' · Q3 '+p.budgetQ[2]+' · Q4 '+p.budgetQ[3]+'</span>':'')+'</td></tr>'+
+  (p.netProfit?'<tr><th>Net profit FY26–FY31 (Cr)</th><td>'+p.netProfit.join(' · ')+'</td></tr>':'')+
+  '</tbody></table></div>';
+ var right='<div class="panel"><h3 style="margin-top:0">Maturity dimensions (1–5)</h3>';
+ if(p.maturityDims){var names={strategy:'Strategy & Positioning',identity:'Identity & Portfolio',governance:'Governance & Organisation',cx:'Communication & CX',digital:'Digital & Data',measurement:'Measurement & Equity'};
+  right+='<table><tbody>'+Object.keys(p.maturityDims).map(function(k){var d=p.maturityDims[k];return '<tr><td>'+names[k]+'</td><td class="num"><b>'+d+'</b></td><td style="width:42%"><div class="mbar"><span style="width:'+(d/5*100)+'%"></span></div></td></tr>';}).join('')+'</tbody></table>';
+ }else{right+='<p class="note">Detailed maturity dimensions not available; overall level '+p.mat+'.</p>';}
+ right+='</div>';
+ return '<div class="sec"><h3>Ownership, finance &amp; maturity</h3><div class="two grid">'+left+right+'</div></div>';
+}
+function digital(p){
+ if(!p.digitalBench){return '<h2>Digital Brand Strength — Competitive Benchmark</h2><div class="panel"><p class="note">Competitive digital benchmark not yet available for this SBU — recorded in the Data Gap Register.</p></div>';}
+ var rows=p.digitalBench.map(function(d){var us=d[0].indexOf('Akij')===0;return '<tr'+(us?' style="background:#FFF8E6"':'')+'><td><b>'+d[0]+'</b>'+(us?' <span class="badge srcP">Ours</span>':'')+'</td><td>'+d[1]+'</td><td>'+d[2]+'</td><td>'+d[3]+'</td><td class="num"><b>'+d[4]+'</b></td></tr>';}).join('');
+ return '<h2>Digital Brand Strength — Competitive Benchmark</h2><p class="note">Web presence (website + social + content) for '+p.name+' vs named competitors. Exact follower counts require a social-listening tool (login-walled).</p><div class="panel scroll"><table><thead><tr><th>Brand</th><th>Website</th><th>Social channels</th><th>Digital content</th><th class="num">Presence</th></tr></thead><tbody>'+rows+'</tbody></table></div><p class="note">Digital &amp; Data is the weakest maturity dimension — Share-of-Search and Digital Presence are the tracked gap-closers.</p>';
+}
+function quarterPhasing(p){
+ var k=KT(p);
+ var rows=k.map(function(r){var n=r[1],b=r[4],tg=r[7],u=r[5],tgt=tg[0];var qs;
+  if(n==='Revenue'&&tgt!==''){qs=[Math.round(tgt*0.22),Math.round(tgt*0.24),Math.round(tgt*0.27),Math.round(tgt*0.27)];}
+  else if(b===''||b==null||tgt===''){qs=['—','—','—','—'];}
+  else{var st=(tgt-b)/4;qs=[b+st,b+2*st,b+3*st,tgt];}
+  return '<tr><td><b>'+n+'</b> <span style="color:var(--muted)">'+u+'</span></td>'+qs.map(function(v){return '<td class="num">'+(typeof v==='number'?(Math.round(v*100)/100):v)+'</td>';}).join('')+'<td class="num"><b>'+(tgt===''?'—':tgt)+'</b></td></tr>';
+ }).join('');
+ return '<h3>Quarterly phasing — FY27 by KPI</h3><div class="panel scroll"><table><thead><tr><th>KPI</th><th class="num">Q1</th><th class="num">Q2</th><th class="num">Q3</th><th class="num">Q4</th><th class="num">FY27</th></tr></thead><tbody>'+rows+'</tbody></table><p class="note">Revenue phased by seasonality (Q1 22% · Q2 24% · Q3 27% · Q4 27%); all other KPIs progress in four equal steps (Q4 = FY27 target).</p></div>';
+}
+function drawCharts(){
+ const p=cur==='group'?null:S.find(x=>x.id===cur);if(!p)return;
+ const grid='#EEF1F6',tick='#5A6B7C';Chart.defaults.color=tick;Chart.defaults.font.size=11;Chart.defaults.font.family='"Segoe UI",system-ui,sans-serif';
+ if(curPage==='overview'){const i=idxNow(p),t=idxTgt(p);
+  mk('cIdx',{type:'bar',data:{labels:['BEI','BHI','BPI','Composite'],datasets:[{label:'Now',data:[i.bei,i.bhi,i.bpi,i.c],backgroundColor:['#2dd4bf','#3b82f6','#f59e0b','#8b5cf6'],borderRadius:4},{label:'FY31',data:[t.bei,t.bhi,t.bpi,t.c],backgroundColor:'rgba(11,27,51,.18)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{position:'top'}},scales:{x:{max:100,grid:{color:grid}},y:{grid:{display:false}}}}});
+  revChart('cRev',p);
+ }
+ if(curPage==='market'){revChart('cMkt',p);}
+ if(curPage==='ramp'){const rg=revGlide(p),r=ratio(p),envF=p.rev27*r,envL=p.rev31*r;const env=[];for(let k=0;k<=4;k++)env.push(Math.round(envF*Math.pow(envL/envF,k/4)*10)/10);
+  mk('cRamp',{data:{labels:['FY27','FY28','FY29','FY30','FY31'],datasets:[{type:'bar',label:'Revenue (Cr)',data:rg,backgroundColor:'rgba(45,212,191,.55)',borderRadius:4,yAxisID:'y'},{type:'line',label:'Envelope (Cr)',data:env,borderColor:'#f59e0b',tension:.3,yAxisID:'y1',pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{grid:{color:grid}},y1:{position:'right',grid:{display:false}},x:{grid:{display:false}}}}});
+ }
+ if(curPage==='channel'){const base=p.ch||archMix(p.arch);const rec={...base,ATL:Math.max(0,Math.round((base.ATL-8)*10)/10),Digital:Math.min(40,Math.round((base.Digital+8)*10)/10)};
+  mk('cMix',{type:'bar',data:{labels:['ATL','Digital','Trade','BTL','PR'],datasets:[{label:'Current',data:[base.ATL,base.Digital,base.Trade,base.BTL,base.PR],backgroundColor:'rgba(139,92,246,.65)',borderRadius:4},{label:'Recommended',data:[rec.ATL,rec.Digital,rec.Trade,rec.BTL,rec.PR],backgroundColor:'rgba(45,212,191,.85)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{grid:{color:grid},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}});
+ }
+ if(curPage==='compete'){compChart(p);}
+ if(curPage==='equity'){const c=p.hN;
+  mk('cFun',{type:'bar',data:{labels:['Aware','Consider','Prefer','Purchase','Repeat','Advocate'],datasets:[{label:p.name+' (est.)',data:[Math.min(90,Math.round(c*0.9)),Math.round(c*0.72),Math.round(c*0.65),Math.round(c*0.5),Math.round(c*0.8),Math.round(c*0.35)],backgroundColor:'rgba(45,212,191,.75)',borderRadius:4},{label:'Leader (est.)',data:[Math.min(95,Math.round(c*0.9)+25),Math.min(95,Math.round(c*0.72)+28),Math.min(92,Math.round(c*0.65)+25),Math.min(90,Math.round(c*0.5)+25),Math.min(92,Math.round(c*0.8)+15),Math.min(85,Math.round(c*0.35)+22)],backgroundColor:'rgba(139,161,195,.35)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{max:100,grid:{color:grid},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}});
+ }
+}
+function revChart(id,p){const rg=revGlide(p),sg=shareGlide(p);const can=p.shareNow!=null&&p.share31!=null;const mkt=can?rg.map((rv,k)=>Math.round(rv/(sg[k]/100))):rg.map(()=>null);
+ mk(id,{data:{labels:['FY27','FY28','FY29','FY30','FY31'],datasets:[{type:'bar',label:'Revenue (Cr)',data:rg,backgroundColor:'rgba(45,212,191,.55)',borderRadius:4,yAxisID:'y'},{type:'line',label:'Market size (Cr)',data:mkt,borderColor:'#8ba1c3',borderDash:[5,4],tension:.3,yAxisID:'y',pointRadius:3,spanGaps:false},{type:'line',label:'Share %',data:sg,borderColor:'#f59e0b',tension:.3,yAxisID:'y1',pointRadius:4,spanGaps:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{position:'left',grid:{color:'rgba(255,255,255,.06)'},ticks:{callback:v=>v>=1000?v.toLocaleString():v}},y1:{position:'right',grid:{display:false},min:0,max:can?Math.max(10,Math.ceil(p.share31*1.2)):10,ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}});
+}
+
+window.buildStatic=async function(sbu){
+ const pages=PAGES.slice();const prevSbu=cur,prevPage=curPage;
+ const css=document.querySelector('style')?document.querySelector('style').textContent:'';
+ if(window.Chart){Chart.defaults.animation=false;}
+ const parts=[];
+ cur=sbu;
+ for(let i=0;i<pages.length;i++){
+  curPage=pages[i];render();
+  await new Promise(function(r){setTimeout(r,90);});
+  const v=document.getElementById('view');
+  v.querySelectorAll('canvas').forEach(function(cv){try{const img=document.createElement('img');img.src=cv.toDataURL('image/png');img.style.maxWidth='100%';cv.parentNode.replaceChild(img,cv);}catch(e){}});
+  parts.push('<section class="static-page"><div class="pagetag">'+PLABEL[pages[i]]+'</div>'+v.innerHTML+'</section>');
+ }
+ const nm=S.find(function(x){return x.id===sbu;});
+ const header='<header><div class="hl"><h1>AKIJ Brand KPI — '+(nm?nm.name:sbu)+'</h1><div class="sub">Static report · 7-dimension · BEI/BHI/BPI · FY2026-27 → FY2030-31 · MD review copy</div></div></header>';
+ const html='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>AKIJ Brand KPI — '+(nm?nm.name:'')+' (Static)</title><style>'+css+'.static-page{border-top:3px solid #2dd4bf;padding-top:18px;margin-top:34px}.pagetag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#2dd4bf;margin-bottom:6px}@media print{.static-page{break-before:page}}</style></head><body>'+header+'<main>'+parts.join('')+'</main></body></html>';
+ cur=prevSbu;curPage=prevPage;render();
+ return html;
+};
+function route(){
+ const h=(location.hash||'#/sbu/cement/overview').replace(/^#\/?/,'').split('/');
+ if(h[0]==='group'){cur='group';curPage='summary';}
+ else {cur=h[1]||'cement';curPage=h[2]||'overview';if(!S.find(x=>x.id===cur)){cur='group';curPage='summary';}}
+ render();
+ window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+route();
+</script>
+</body>
+</html>

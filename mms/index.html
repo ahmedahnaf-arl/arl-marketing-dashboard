@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKIJ Resource — Marketing Management System</title>
+<style>
+:root{--navy:#0B1B33;--navy2:#0F2A47;--blue:#1F4E79;--gold:#C9A227;--gold2:#B08A1B;--bg:#F4F6FA;--card:#fff;--ink:#15202B;--mut:#5A6B7C;--line:#E6EBF2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+.topbar{background:linear-gradient(90deg,var(--navy),var(--navy2));color:#fff;padding:14px 26px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.topbar .brand{font-weight:800;font-size:16px}.topbar .brand b{color:var(--gold)}
+.topbar .pill{font-size:10px;font-weight:800;background:var(--gold);color:var(--navy);padding:3px 9px;border-radius:20px;letter-spacing:.4px}
+.wrap{max-width:1100px;margin:0 auto;padding:26px 24px 80px}
+.banner{background:linear-gradient(120deg,var(--navy),var(--blue));color:#fff;border-radius:16px;padding:26px 28px;margin-bottom:18px;position:relative;overflow:hidden}
+.banner::after{content:'';position:absolute;right:-40px;top:-40px;width:210px;height:210px;border-radius:50%;background:rgba(201,162,39,.14)}
+.banner h1{font-size:24px;font-weight:800;letter-spacing:-.4px}.banner .sub{font-size:13px;color:#C7D6E8;margin-top:8px;line-height:1.6;max-width:900px}
+.pills{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}.pill2{font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;background:rgba(255,255,255,.14)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+a.card{display:block;background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;text-decoration:none;color:inherit;box-shadow:0 1px 3px rgba(16,42,67,.08),0 8px 24px rgba(16,42,67,.06);border-top:3px solid var(--gold);transition:.15s}
+a.card:hover{transform:translateY(-2px);border-color:var(--gold)}
+.card h2{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:6px}
+.card p{font-size:12.5px;color:var(--mut);line-height:1.55}
+.card .go{margin-top:12px;font-size:12px;font-weight:800;color:var(--gold2)}
+.boundary{background:#FFF8E6;border:1px solid #EBD9A6;border-left:4px solid var(--gold);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#5A4A14;margin-top:18px;line-height:1.55}
+footer{color:var(--mut);font-size:11px;text-align:center;padding:18px;border-top:1px solid var(--line);margin-top:26px}
+</style>
+</head>
+<body>
+<div class="topbar"><span class="brand">AKIJ <b>Resource</b> · MMS</span><span class="pill">MARKETING MANAGEMENT SYSTEM</span></div>
+<div class="wrap">
+  <div class="banner">
+    <h1>Marketing Management System</h1>
+    <div class="sub">Plan → Execute → Measure → Govern. The marketing execution layer — mutually exclusive with the Brand OS (which owns price, stock, COGS/P&amp;L, production, budget sizing and SKU mix).</div>
+    <div class="pills"><span class="pill2">13 SBUs</span><span class="pill2">BEI / BHI / BPI</span><span class="pill2">Campaign lifecycle</span><span class="pill2">Brand compliance</span><span class="pill2">Decision queue</span></div>
+  </div>
+
+  <div class="grid">
+    <a class="card" href="campaign-lifecycle.html">
+      <h2>Campaign Lifecycle</h2>
+      <p>Brief → brand-guideline compliance → budget availability (Brand-OS envelope, read-only) → approval (DoA) → PO/GRN → execution → post-campaign review.</p>
+      <div class="go">Open prototype →</div>
+    </a>
+    <a class="card" href="brand-kpi-dashboard.html">
+      <h2>Brand KPI Dashboard</h2>
+      <p>7-dimension framework, BEI/BHI/BPI, KPI dictionary (61), SBU scorecards, revenue–share reconciliation, competitor capture, 4P, YoY/QoQ ramp.</p>
+      <div class="go">Open dashboard →</div>
+    </a>
+    <a class="card" href="spec.md">
+      <h2>MVP Spec &amp; Data Model</h2>
+      <p>Modules, roles, API outline, data model, workflows, Phase 1–3 plan and the mutual-exclusivity boundary with the Brand OS.</p>
+      <div class="go">Open spec →</div>
+    </a>
+  </div>
+
+  <div class="boundary"><b>Boundary with the Brand OS:</b> budget envelope, price/margin, stock, COGS/P&amp;L, production and SKU mix are owned by the Brand OS and consumed here read-only. The MMS runs and governs campaigns against the approved envelope — it does not set, size or edit those commercial levers.</div>
+  <footer>AKIJ Resource · MMS (prototype) · Static demo — data persists in the browser (localStorage); production requires Postgres + API + SSO.</footer>
+</div>
+</body>
+</html>

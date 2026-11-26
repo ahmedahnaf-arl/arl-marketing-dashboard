@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKIJ MMS — Campaign Lifecycle (Prototype)</title>
+<style>
+:root{--navy:#0B1B33;--navy2:#0F2A47;--blue:#1F4E79;--gold:#C9A227;--gold2:#B08A1B;--bg:#F4F6FA;--card:#fff;--ink:#15202B;--mut:#5A6B7C;--line:#E6EBF2;--green:#1E6B3C;--amber:#C87E1A;--red:#A61C1C;--teal:#2E7D6B;--shadow:0 1px 3px rgba(16,42,67,.08),0 8px 24px rgba(16,42,67,.06)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+.topbar{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,var(--navy),var(--navy2));color:#fff;padding:12px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.topbar .brand{font-weight:800;font-size:15px;white-space:nowrap}.topbar .brand b{color:var(--gold)}
+.topbar .pill{font-size:10px;font-weight:800;background:var(--gold);color:var(--navy);padding:3px 9px;border-radius:20px;letter-spacing:.4px}
+.topbar .spacer{flex:1}
+.topbar label{font-size:10px;color:#9FB2C8;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+select{background:#fff;border:1px solid #2a4466;color:var(--navy);border-radius:8px;padding:7px 10px;font-size:12.5px;font-weight:700;min-width:190px}
+.btn{background:#fff;border:1px solid var(--line);color:var(--navy);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.btn:hover{border-color:var(--gold);color:var(--gold2)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.btn.gold:hover{background:var(--gold2);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.wrap{max-width:1360px;margin:0 auto;padding:20px 24px 80px}
+.banner{background:linear-gradient(120deg,var(--navy),var(--blue));border-radius:14px;color:#fff;padding:18px 22px;margin-bottom:14px}
+.banner h1{font-size:19px;font-weight:800}.banner .sub{font-size:12px;color:#C7D6E8;margin-top:5px;line-height:1.55}
+.boundary{background:#FFF8E6;border:1px solid #EBD9A6;border-left:4px solid var(--gold);border-radius:10px;padding:11px 14px;font-size:12px;color:#5A4A14;margin-bottom:16px}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:16px}
+@media(max-width:980px){.layout{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow)}
+.panel{padding:14px 16px}
+.h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.h h2{font-size:13px;font-weight:800;color:var(--navy)}.h .cap{font-size:11px;color:var(--mut);font-weight:600}
+.list{max-height:70vh;overflow:auto}
+.camp{padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+.camp:hover{background:#F2F5FA}.camp.on{background:#FFF8E6;box-shadow:inset 3px 0 0 var(--gold)}
+.camp b{font-size:12.5px}.camp .m{font-size:11px;color:var(--mut);margin-top:3px}
+.chip{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:11px;text-transform:uppercase;letter-spacing:.3px}
+.s-brief{background:#EEF1F6;color:#5A6B7C}.s-compliance{background:#FCF3E2;color:var(--amber)}.s-approval{background:#E6F0FA;color:var(--blue)}.s-live{background:#E4F2EA;color:var(--green)}.s-review{background:#F3ECFB;color:#6B4EA0}.s-closed{background:#DCE3EC;color:#33475B}
+.stepper{display:flex;gap:4px;margin:6px 0 16px;flex-wrap:wrap}
+.step{flex:1;min-width:90px;text-align:center;font-size:10.5px;font-weight:800;padding:8px 6px;border-radius:8px;background:#EEF1F6;color:var(--mut)}
+.step.done{background:#E4F2EA;color:var(--green)}.step.on{background:var(--navy);color:#fff}.step.blocked{background:#FCEBEB;color:var(--red)}
+.kv{width:100%;border-collapse:collapse;font-size:12px}.kv td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}.kv td:first-child{width:34%;color:var(--mut);font-weight:700;font-size:11px}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}.tbl th,.tbl td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.tbl th{background:var(--navy);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.4px}.tbl td.num,.tbl th.num{text-align:right}
+.badge{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:11px}
+.b-green{background:#E4F2EA;color:var(--green)}.b-amber{background:#FCF3E2;color:var(--amber)}.b-red{background:#FCEBEB;color:var(--red)}.b-blue{background:#E6F0FA;color:var(--blue)}.b-gray{background:#EEF1F6;color:#5A6B7C}
+.mbar{height:9px;background:#E6EBF2;border-radius:6px;overflow:hidden}.mbar>span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.sec{margin:18px 0}.sec-h{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:8px;display:flex;align-items:center;gap:10px}.sec-h .rule{flex:1;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+.field{margin-bottom:10px}.field label{display:block;font-size:10.5px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+input[type=text],input[type=number],input[type=date],textarea,.field select{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px;font-family:inherit;color:var(--ink);background:#fff}
+textarea{min-height:60px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:700px){.row{grid-template-columns:1fr}}
+.mixrow{display:grid;grid-template-columns:90px 1fr 64px;gap:8px;align-items:center;font-size:12px;margin:5px 0}
+.mixrow input{width:64px;text-align:right}
+.gate{background:#FDF0F0;border:1px solid #E6B3B3;border-left:4px solid var(--red);border-radius:8px;padding:10px 12px;font-size:12px;color:#5A1C1C;margin:8px 0}
+.okbox{background:#EAF5EF;border:1px solid #B7DCC6;border-left:4px solid var(--green);border-radius:8px;padding:10px 12px;font-size:12px;color:#1E4A32;margin:8px 0}
+.envbox{background:#F2F5FA;border:1px dashed #C7D2E0;border-radius:8px;padding:10px 12px;font-size:12px;color:#33475B}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.note{font-size:11px;color:var(--mut);margin-top:8px;line-height:1.5}
+footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top:1px solid var(--line);margin-top:24px}
+@media print{.topbar{position:static}.actions,.sidebar-new{display:none!important}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="brand">AKIJ <b>Resource</b> · MMS</span>
+  <span class="pill">PROTOTYPE · CAMPAIGN LIFECYCLE</span>
+  <span class="spacer"></span>
+  <label for="sbu">Select SBU</label>
+  <select id="sbu" onchange="switchSbu(this.value)"></select>
+  <button class="btn" onclick="window.print()">Print / PDF</button>
+</div>
+<div class="wrap">
+  <div class="banner">
+    <h1>Campaign Lifecycle — Brand-aligned execution</h1>
+    <div class="sub">Brief → Brand-guideline compliance → Budget availability → Approval (DoA) → PO/GRN → Execution → Post-campaign review. This is the <b>marketing execution layer</b> only.</div>
+  </div>
+  <div class="boundary"><b>Boundary with the Brand OS:</b> the marketing budget envelope, price/margin, stock, COGS/P&amp;L, production and SKU mix are owned by the Brand OS and shown here <b>read-only</b>. The MMS does not set, size or edit any of them — it only runs and governs campaigns against the approved envelope.</div>
+
+  <div class="layout">
+    <!-- sidebar -->
+    <div class="card">
+      <div class="panel h"><h2>Campaigns</h2><button class="btn gold sidebar-new" onclick="newCampaign()">+ New</button></div>
+      <div id="campList" class="list"></div>
+    </div>
+    <!-- detail -->
+    <div id="detail"></div>
+  </div>
+</div>
+<footer>AKIJ Resource · Marketing Management System (prototype) · Data persists in your browser (localStorage) — no backend. Brand OS boundary enforced.</footer>
+
+<script>
+const SBUS=[['cement','Akij Cement (ACCL)'],['ispot','Akij Ispat'],['readymix','AKIJ Readymix'],['essential','AKIJ Essential'],['feed','Akij Feed'],['enovar','Enovar'],['benzol','Benzol Lubricants'],['tyres','Tyres (AAIL)'],['orca','ORCA'],['air','AKIJ AIR'],['nextjobz','Nextjobz'],['pharmacy','AKIJ Pharmacy'],['mediplex','Akij Mediplex']];
+const ENV={cement:{fy:'FY26-27',total:22.87,src:'Brand OS'},ispot:{fy:'FY26-27',total:18.91,src:'Brand OS'},readymix:{fy:'FY26-27',total:5.40,src:'Brand OS'},enovar:{fy:'FY26-27',total:14.52,src:'Brand OS'},benzol:{fy:'FY26-27',total:3.87,src:'Brand OS'},orca:{fy:'FY26-27',total:3.68,src:'Brand OS'},air:{fy:'FY26-27',total:2.46,src:'Brand OS'},nextjobz:{fy:'FY26-27',total:1.46,src:'Brand OS'},mediplex:{fy:'FY26-27',total:1.71,src:'Brand OS'}};
+const KPIS=['Aided awareness','TOMA','Perceived quality','Brand preference','Dealer loyalty','Contractor recommendation','Consideration','NPS','CSAT','SOV/SOM','Share of search','Market share','Numeric distribution','Repeat purchase','Digital engagement','Search conversion','Guideline compliance','Campaign effectiveness'];
+const STAGES=['brief','compliance','approval','live','review','closed'];
+const DOA_CBDO=5.0; // BDT Cr
+
+function env(sbu){return ENV[sbu]||{fy:'FY26-27',total:5.0,src:'Brand OS (est.)'};}
+function load(){try{const s=localStorage.getItem('akij_mms_camps_v1');if(s)return JSON.parse(s);}catch(e){}return seed();}
+function save(){try{localStorage.setItem('akij_mms_camps_v1',JSON.stringify(CAMPS));}catch(e){}}
+function uid(){return 'C'+(Math.floor(Math.random()*9000)+1000);}
+
+function seed(){return [
+ {id:'C1042',sbu:'cement',name:'Safe Build — contractor & mason activation',objective:'Win contractor/dealer preference; lift brand preference +6 pts',kpis:['Brand preference','Contractor recommendation','Dealer loyalty'],mix:{ATL:30,Digital:20,Trade:25,BTL:25,PR:0},spend:4.2,start:'2026-11-01',end:'2027-03-31',stage:'approval',
+  assets:[{name:'TVC 30s — stronger/safer',guide:'V5',score:88},{name:'OOH creative set (12)',guide:'V5',score:72}],
+  approvals:{head:'approved',cbdo:'na'},po:'',grn:'',review:null},
+ {id:'C1043',sbu:'cement',name:'Shelf-price value OOH wave',objective:'Convert price advantage into demand; defend share',kpis:['Brand preference','Market share'],mix:{ATL:60,Digital:15,Trade:15,BTL:10,PR:0},spend:3.0,start:'2026-12-01',end:'2027-02-28',stage:'compliance',
+  assets:[{name:'OOH set (8)',guide:'V4',score:64}],approvals:{head:'pending',cbdo:'na'},po:'',grn:'',review:null},
+ {id:'C1044',sbu:'cement',name:'Digital leads sprint — Q3',objective:'Grow qualified dealer/contractor leads',kpis:['Digital engagement','Search conversion'],mix:{ATL:0,Digital:80,Trade:10,BTL:10,PR:0},spend:1.5,start:'2027-01-10',end:'2027-03-25',stage:'live',
+  assets:[{name:'Performance ads + landing page',guide:'V5',score:91}],approvals:{head:'approved',cbdo:'na'},po:'PO-2026-0142',grn:'partial',review:null},
+ {id:'C1050',sbu:'ispot',name:'Seismic proof TVC — repositioning',objective:'Build engineer/contractor preference on BUET-proof safety',kpis:['Perceived quality','Consideration','Engineer preference'],mix:{ATL:45,Digital:15,Trade:20,BTL:20,PR:0},spend:6.4,start:'2026-12-15',end:'2027-04-30',stage:'brief',
+  assets:[],approvals:{head:'pending',cbdo:'pending'},po:'',grn:'',review:null}
+];}
+
+let CAMPS=load();
+let curSbu='cement';
+let curId=null;
+
+function campsFor(sbu){return CAMPS.filter(c=>c.sbu===sbu);}
+function committed(sbu,exceptId){return campsFor(sbu).filter(c=>c.id!==exceptId).reduce((a,c)=>a+(Number(c.spend)||0),0);}
+function available(sbu,exceptId){return +(env(sbu).total-committed(sbu,exceptId)).toFixed(2);}
+
+function switchSbu(s){curSbu=s;const l=campsFor(s);curId=l.length?l[0].id:null;localStorage.setItem('akij_mms_sbu',s);render();}
+
+function badge(st){const m={brief:['s-brief','Draft'],compliance:['s-compliance','Compliance'],approval:['s-approval','Approval'],live:['s-live','Live'],review:['s-review','Review'],closed:['s-closed','Closed']};const x=m[st]||m.brief;return '<span class="chip '+x[0]+'">'+x[1]+'</span>';}
+
+function render(){
+ document.getElementById('sbu').innerHTML=SBUS.map(function(s){return '<option value="'+s[0]+'"'+(s[0]===curSbu?' selected':'')+'>'+s[1]+'</option>';}).join('');
+ const l=campsFor(curSbu);
+ document.getElementById('campList').innerHTML=l.length?l.map(function(c){return '<div class="camp'+(c.id===curId?' on':'')+'" onclick="selectCamp(\''+c.id+'\')"><b>'+esc(c.name)+'</b><div class="m">'+badge(c.stage)+' &nbsp; '+c.spend+' Cr · '+esc(c.objective).slice(0,48)+'…</div></div>';}).join(''):'<div class="panel"><p class="note">No campaigns for this SBU yet. Click + New.</p></div>';
+ const c=CAMPS.filter(function(x){return x.id===curId;})[0];
+ document.getElementById('detail').innerHTML=c?detail(c):'<div class="card panel"><p class="note">Select a campaign, or create a new one.</p></div>';
+}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function complianceOk(c){return c.assets.length>0 && c.assets.every(function(a){return a.score>=70;});}
+function minScore(c){return c.assets.length?Math.min.apply(null,c.assets.map(function(a){return a.score;})):0;}
+function budgetOk(c){return Number(c.spend)<=available(curSbu,c.id);}
+function needCbdo(c){return Number(c.spend)>DOA_CBDO;}
+function approvalsOk(c){if(!c.approvals)return false;const head=c.approvals.head==='approved';const cb=c.approvals.cbdo==='approved'||!needCbdo(c)||c.approvals.cbdo==='na';return head&&cb;}
+
+function stepper(c){const idx=STAGES.indexOf(c.stage);return '<div class="stepper">'+STAGES.map(function(s,i){var cls='step';if(i<idx)cls+=' done';else if(i===idx)cls+=' on';return '<div class="'+cls+'">'+s.toUpperCase()+'</div>';}).join('')+'</div>';}
+
+function detail(c){
+ var e=env(curSbu);
+ var avail=available(curSbu,c.id);
+ var h='<div class="card">';
+ h+='<div class="panel">'+stepper(c);
+ h+='<div class="h"><h2>'+esc(c.name)+' <span class="chip s-'+c.stage+'">'+c.stage.toUpperCase()+'</span></h2><span class="cap">'+c.id+'</span></div>';
+ h+='</div>';
+
+ // Brief
+ h+=sec('1 · Brief & objective');
+ h+='<div class="panel"><div class="row"><div class="field"><label>Campaign name</label><input type="text" value="'+esc(c.name)+'" onchange="upd(\''+c.id+'\',\'name\',this.value)"></div><div class="field"><label>Planned spend (Cr) — must fit Brand-OS envelope</label><input type="number" step="0.01" value="'+c.spend+'" onchange="upd(\''+c.id+'\',\'spend\',this.value)"></div></div>';
+ h+='<div class="field"><label>Objective</label><textarea onchange="upd(\''+c.id+'\',\'objective\',this.value)">'+esc(c.objective)+'</textarea></div>';
+ h+='<div class="field"><label>Target KPIs (brand-side)</label><select multiple size="6" style="height:auto" onchange="updMulti(\''+c.id+'\',this)">'+KPIS.map(function(k){return '<option'+(c.kpis.indexOf(k)>=0?' selected':'')+'>'+esc(k)+'</option>';}).join('')+'</select><div class="note">Ctrl/Cmd-click to multi-select. These are the brand KPIs this campaign must move.</div></div>';
+ h+='</div>';
+
+ // Compliance
+ h+=sec('2 · Brand-guideline compliance');
+ h+='<div class="panel"><table class="tbl"><tr><th>Asset</th><th>Style guide</th><th class="num">Score /100</th><th>Status</th></tr>'+(c.assets.length?c.assets.map(function(a,i){return '<tr><td>'+esc(a.name)+'</td><td>'+esc(a.guide)+'</td><td class="num"><b>'+a.score+'</b></td><td>'+(a.score>=70?'<span class="badge b-green">Pass</span>':'<span class="badge b-red">Below 70 — fix</span>')+'</td></tr>';}).join(''):'<tr><td colspan="4" class="note">No assets attached.</td></tr>')+'</table>';
+ h+='<div class="note">Gate: every asset must score ≥ 70 against the style guide to advance.</div>';
+ h+='<div class="actions"><button class="btn" onclick="addAsset(\''+c.id+'\')">+ Add asset</button></div>';
+ h+=(complianceOk(c)?'<div class="okbox">Compliance passed (min score '+minScore(c)+').</div>':'<div class="gate">Blocked: '+(c.assets.length?'min asset score '+minScore(c)+' is below 70.':'no assets attached.')+'</div>');
+ h+='</div>';
+
+ // Budget
+ h+=sec('3 · Budget availability (Brand OS → read-only)');
+ h+='<div class="panel"><div class="envbox"><b>'+e.fy+' envelope ('+e.src+', read-only): '+e.total.toFixed(2)+' Cr</b><div class="mbar" style="margin:8px 0"><span style="width:'+Math.min(100,(committed(curSbu,c.id)/e.total*100))+'%"></span></div>Committed by other campaigns: '+committed(curSbu,c.id).toFixed(2)+' Cr · Available before this campaign: <b>'+avail.toFixed(2)+' Cr</b> · This campaign: <b>'+Number(c.spend).toFixed(2)+' Cr</b></div>';
+ h+=(budgetOk(c)?'<div class="okbox">Fits within the approved envelope.</div>':'<div class="gate">Exceeds the available envelope (short by '+(Number(c.spend)-avail).toFixed(2)+' Cr). MMS cannot re-size the envelope — request a reallocation in the Brand OS.</div>');
+ h+='<div class="note">The MMS does not size budgets; it only checks availability against what the Brand OS approved.</div></div>';
+
+ // Approval
+ h+=sec('4 · Approval (Delegation of Authority)');
+ var steps=[['Brand Custodian','submitted'],['SBU Head',c.approvals.head],['CBDO',needCbdo(c)?c.approvals.cbdo:'na (≤ '+DOA_CBDO+' Cr)']];
+ h+='<div class="panel"><table class="tbl"><tr><th>Step</th><th>Approver</th><th>Status</th></tr>'+steps.map(function(s,i){return '<tr><td>'+(i+1)+'</td><td>'+s[0]+'</td><td>'+(s[1]==='approved'?'<span class="badge b-green">Approved</span>':s[1]==='pending'?'<span class="badge b-amber">Pending</span>':'<span class="badge b-gray">'+s[1]+'</span>')+'</td></tr>';}).join('')+'</table>';
+ if(c.approvals.head!=='approved'||(needCbdo(c)&&c.approvals.cbdo!=='approved')){
+   h+='<div class="actions">'+(c.approvals.head!=='approved'?'<button class="btn gold" onclick="approve(\''+c.id+'\',\'head\')">Approve — SBU Head</button>':'')+(needCbdo(c)&&c.approvals.cbdo!=='approved'?'<button class="btn gold" onclick="approve(\''+c.id+'\',\'cbdo\')">Approve — CBDO</button>':'')+'</div>';
+ }
+ h+='<div class="note">CBDO approval required above '+DOA_CBDO+' Cr.</div></div>';
+
+ // Live
+ h+=sec('5 · Execution — PO / GRN');
+ h+='<div class="panel"><div class="row"><div class="field"><label>PO number (ERP)</label><input type="text" value="'+esc(c.po||'')+'" onchange="upd(\''+c.id+'\',\'po\',this.value)"></div><div class="field"><label>GRN status</label><select onchange="upd(\''+c.id+'\',\'grn\',this.value)"><option value=""'+(c.grn===''?' selected':'')+'>—</option><option'+(c.grn==='partial'?' selected':'')+'>partial</option><option'+(c.grn==='complete'?' selected':'')+'>complete</option></select></div></div><div class="note">PO/GRN are read from ERP; the MMS links them to the campaign for commitment tracking.</div></div>';
+
+ // Review
+ h+=sec('6 · Post-campaign review');
+ if(c.review){h+='<div class="panel"><table class="kv"><tr><td>Result</td><td><b>'+esc(c.review.result)+'</b></td></tr><tr><td>KPI delta</td><td>'+esc(c.review.delta||'—')+'</td></tr><tr><td>Learning</td><td>'+esc(c.review.learning||'—')+'</td></tr></table></div>';}
+ else{h+='<div class="panel"><div class="field"><label>Result</label><select id="rv-result"><option>Hit</option><option>Partial</option><option>Missed</option></select></div><div class="field"><label>KPI delta (actual vs target)</label><input type="text" id="rv-delta" placeholder="e.g. Brand preference +4.2 pts vs +4.0 target"></div><div class="field"><label>Learning</label><textarea id="rv-learn" placeholder="What worked, what to change"></textarea></div><div class="actions"><button class="btn gold" onclick="closeReview(\''+c.id+'\')">Save review</button></div></div>';}
+
+ // advance actions
+ h+='<div class="panel actions">'+nextBtn(c)+'<button class="btn" onclick="window.print()">Print / PDF</button></div>';
+ h+='</div>';
+ return h;
+}
+function sec(t){return '<div class="sec"><div class="sec-h"><span>'+t+'</span><div class="rule"></div></div></div>';}
+function nextBtn(c){
+ if(c.stage==='brief')return '<button class="btn gold" onclick="advance(\''+c.id+'\')">Submit for compliance →</button>';
+ if(c.stage==='compliance')return '<button class="btn gold" '+(complianceOk(c)?'':'disabled')+' onclick="advance(\''+c.id+'\')">Send for approval →</button>';
+ if(c.stage==='approval')return '<button class="btn gold" '+((complianceOk(c)&&budgetOk(c)&&approvalsOk(c))?'':'disabled')+' onclick="advance(\''+c.id+'\')">Approve &amp; go live →</button>';
+ if(c.stage==='live')return '<button class="btn gold" '+(c.po?'':'disabled')+' onclick="advance(\''+c.id+'\')">Mark executed → review</button>';
+ if(c.stage==='review')return '<button class="btn gold" '+(c.review?'':'disabled')+' onclick="advance(\''+c.id+'\')">Close campaign</button>';
+ return '<span class="badge b-gray">Closed</span>';
+}
+
+function selectCamp(id){curId=id;render();}
+function upd(id,k,v){const c=CAMPS.filter(function(x){return x.id===id;})[0];if(!c)return;c[k]=(k==='spend')?Number(v):v;save();render();}
+function updMulti(id,sel){const c=CAMPS.filter(function(x){return x.id===id;})[0];c.kpis=Array.from(sel.selectedOptions).map(function(o){return o.value;});save();render();}
+function approve(id,who){const c=CAMPS.filter(function(x){return x.id===id;})[0];c.approvals[who]='approved';if(who==='head'&&!needCbdo(c))c.approvals.cbdo='na';save();render();}
+function addAsset(id){const c=CAMPS.filter(function(x){return x.id===id;})[0];const name=prompt('Asset name','New creative');if(!name)return;const score=Number(prompt('Style-guide compliance score (0-100)','75'))||0;c.assets.push({name:name,guide:'V5',score:Math.max(0,Math.min(100,score))});save();render();}
+function advance(id){const c=CAMPS.filter(function(x){return x.id===id;})[0];const i=STAGES.indexOf(c.stage);
+ if(c.stage==='brief'){c.stage='compliance';}
+ else if(c.stage==='compliance'){if(!complianceOk(c))return;c.stage='approval';}
+ else if(c.stage==='approval'){if(!(complianceOk(c)&&budgetOk(c)&&approvalsOk(c)))return;c.stage='live';}
+ else if(c.stage==='live'){if(!c.po)return;c.stage='review';}
+ else if(c.stage==='review'){if(!c.review)return;c.stage='closed';}
+ save();render();}
+function closeReview(id){const c=CAMPS.filter(function(x){return x.id===id;})[0];c.review={result:(document.getElementById('rv-result')||{}).value||'Partial',delta:(document.getElementById('rv-delta')||{}).value||'',learning:(document.getElementById('rv-learn')||{}).value||''};save();render();}
+function newCampaign(){const name=prompt('Campaign name','New campaign');if(!name)return;const c={id:uid(),sbu:curSbu,name:name,objective:'',kpis:[],mix:{ATL:40,Digital:20,Trade:20,BTL:20,PR:0},spend:1.0,start:'',end:'',stage:'brief',assets:[],approvals:{head:'pending',cbdo:'pending'},po:'',grn:'',review:null};CAMPS.push(c);save();curId=c.id;render();}
+
+// init
+const savedSbu=localStorage.getItem('akij_mms_sbu');if(savedSbu&&ENV[savedSbu]!==undefined||savedSbu==='essential'||savedSbu==='feed'||savedSbu==='tyres'||savedSbu==='pharmacy'){curSbu=savedSbu;}
+const first=campsFor(curSbu);curId=first.length?first[0].id:null;
+render();
+</script>
+</body>
+</html>
