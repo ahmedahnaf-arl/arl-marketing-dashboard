@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AKIJ Resource — Marketing Management System</title>
+<title>AKIJ Resource â€” Marketing Management System</title>
 <style>
 :root{--navy:#0B1B33;--navy2:#0F2A47;--blue:#1F4E79;--gold:#C9A227;--gold2:#B08A1B;--bg:#F4F6FA;--card:#fff;--ink:#15202B;--mut:#5A6B7C;--line:#E6EBF2}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -27,44 +27,52 @@ footer{color:var(--mut);font-size:11px;text-align:center;padding:18px;border-top
 </style>
 </head>
 <body>
-<div class="topbar"><span class="brand">AKIJ <b>Resource</b> · MMS</span><span class="pill">MARKETING MANAGEMENT SYSTEM</span></div>
+<style>.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}</style>
+<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./spec.md">Spec</a></div>
+<div class="topbar"><span class="brand">AKIJ <b>Resource</b> Â· MMS</span><span class="pill">MARKETING MANAGEMENT SYSTEM</span></div>
 <div class="wrap">
   <div class="banner">
     <h1>Marketing Management System</h1>
-    <div class="sub">Plan → Execute → Measure → Govern. The marketing execution layer — mutually exclusive with the Brand OS (which owns price, stock, COGS/P&amp;L, production, budget sizing and SKU mix).</div>
+    <div class="sub">Plan â†’ Execute â†’ Measure â†’ Govern. The marketing execution layer â€” mutually exclusive with the Brand OS (which owns price, stock, COGS/P&amp;L, production, budget sizing and SKU mix).</div>
     <div class="pills"><span class="pill2">13 SBUs</span><span class="pill2">BEI / BHI / BPI</span><span class="pill2">Campaign lifecycle</span><span class="pill2">Brand compliance</span><span class="pill2">Decision queue</span></div>
   </div>
 
   <div class="grid">
     <a class="card" href="campaign-lifecycle.html">
       <h2>Campaign Lifecycle</h2>
-      <p>Brief → brand-guideline compliance → budget availability (Brand-OS envelope, read-only) → approval (DoA) → PO/GRN → execution → post-campaign review.</p>
-      <div class="go">Open prototype →</div>
+      <p>Brief â†’ brand-guideline compliance â†’ budget availability (Brand-OS envelope, read-only) â†’ approval (DoA) â†’ PO/GRN â†’ execution â†’ post-campaign review.</p>
+      <div class="go">Open prototype â†’</div>
+    </a>
+    <a class="card" href="competition.html">
+      <h2>Competitor Intelligence Repository</h2>
+      <p>Custodian input of competitor registry &amp; metrics — share, SOV, share of search, price index, digital presence, threat; feeds the Competitor Intelligence view.</p>
+      <div class="go">Open repository →</div>
     </a>
     <a class="card" href="measurement.html">
       <h2>Measurement</h2>
-      <p>Tracker waves → measured BEI / BHI / BPI / composite → RAG → auto-opened decisions for every Red KPI, with wave history and data gaps.</p>
-      <div class="go">Open measurement →</div>
+      <p>Tracker waves â†’ measured BEI / BHI / BPI / composite â†’ RAG â†’ auto-opened decisions for every Red KPI, with wave history and data gaps.</p>
+      <div class="go">Open measurement â†’</div>
     </a>
     <a class="card" href="amalgamated.html">
       <h2>Amalgamated Brand KPI Dashboard</h2>
-      <p>Merged dashboard (updated pilot + Brand KPI): 18 tabs incl. KPI Scorecard (21 KPIs, 0–5 scoring), Framework, Strategy Map, Growth Mechanism, Where/How to Win, Digital Benchmark, Ramp, 4P.</p>
-      <div class="go">Open amalgamated dashboard →</div>
+      <p>Merged dashboard (updated pilot + Brand KPI): 18 tabs incl. KPI Scorecard (21 KPIs, 0â€“5 scoring), Framework, Strategy Map, Growth Mechanism, Where/How to Win, Digital Benchmark, Ramp, 4P.</p>
+      <div class="go">Open amalgamated dashboard â†’</div>
     </a>
     <a class="card" href="brand-kpi-dashboard.html">
       <h2>Brand KPI Dashboard</h2>
-      <p>7-dimension framework, BEI/BHI/BPI, KPI dictionary (61), SBU scorecards, revenue–share reconciliation, competitor capture, 4P, YoY/QoQ ramp.</p>
-      <div class="go">Open dashboard →</div>
+      <p>7-dimension framework, BEI/BHI/BPI, KPI dictionary (61), SBU scorecards, revenueâ€“share reconciliation, competitor capture, 4P, YoY/QoQ ramp.</p>
+      <div class="go">Open dashboard â†’</div>
     </a>
     <a class="card" href="spec.md">
       <h2>MVP Spec &amp; Data Model</h2>
-      <p>Modules, roles, API outline, data model, workflows, Phase 1–3 plan and the mutual-exclusivity boundary with the Brand OS.</p>
-      <div class="go">Open spec →</div>
+      <p>Modules, roles, API outline, data model, workflows, Phase 1â€“3 plan and the mutual-exclusivity boundary with the Brand OS.</p>
+      <div class="go">Open spec â†’</div>
     </a>
   </div>
 
-  <div class="boundary"><b>Boundary with the Brand OS:</b> budget envelope, price/margin, stock, COGS/P&amp;L, production and SKU mix are owned by the Brand OS and consumed here read-only. The MMS runs and governs campaigns against the approved envelope — it does not set, size or edit those commercial levers.</div>
-  <footer>AKIJ Resource · MMS (prototype) · Static demo — data persists in the browser (localStorage); production requires Postgres + API + SSO.</footer>
+  <div class="boundary"><b>Boundary with the Brand OS:</b> budget envelope, price/margin, stock, COGS/P&amp;L, production and SKU mix are owned by the Brand OS and consumed here read-only. The MMS runs and governs campaigns against the approved envelope â€” it does not set, size or edit those commercial levers.</div>
+  <footer>AKIJ Resource Â· MMS (prototype) Â· Static demo â€” data persists in the browser (localStorage); production requires Postgres + API + SSO.</footer>
 </div>
 </body>
 </html>
+

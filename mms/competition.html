@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKIJ MMS â€” Competitor Intelligence Repository</title>
+<style>
+:root{--navy:#0B1B33;--navy2:#0F2A47;--blue:#1F4E79;--gold:#C9A227;--gold2:#B08A1B;--bg:#F4F6FA;--card:#fff;--ink:#15202B;--mut:#5A6B7C;--line:#E6EBF2;--green:#1E6B3C;--amber:#C87E1A;--red:#A61C1C;--teal:#2E7D6B;--shadow:0 1px 3px rgba(16,42,67,.08),0 8px 24px rgba(16,42,67,.06)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+.topbar{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,var(--navy),var(--navy2));color:#fff;padding:12px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.topbar .brand{font-weight:800;font-size:15px}.topbar .brand b{color:var(--gold)}
+.topbar .pill{font-size:10px;font-weight:800;background:var(--gold);color:var(--navy);padding:3px 9px;border-radius:20px;letter-spacing:.4px}
+.topbar .spacer{flex:1}.topbar label{font-size:10px;color:#9FB2C8;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+select,input[type=text],input[type=number]{border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:12.5px;font-family:inherit;background:#fff}
+.topbar select{min-width:200px;font-weight:700}
+.btn{background:#fff;border:1px solid var(--line);color:var(--navy);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.btn.danger{background:#FCEBEB;border-color:#E6B3B3;color:var(--red)}
+.wrap{max-width:1360px;margin:0 auto;padding:20px 24px 80px}
+.banner{background:linear-gradient(120deg,var(--navy),var(--blue));border-radius:14px;color:#fff;padding:18px 22px;margin-bottom:14px}
+.banner h1{font-size:19px;font-weight:800}.banner .sub{font-size:12px;color:#C7D6E8;margin-top:5px;line-height:1.55}
+.boundary{background:#FFF8E6;border:1px solid #EBD9A6;border-left:4px solid var(--gold);border-radius:10px;padding:11px 14px;font-size:12px;color:#5A4A14;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);padding:14px 16px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:16px}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{border-left:4px solid var(--gold)}
+.kpi .k{font-size:10.5px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.kpi .v{font-size:25px;font-weight:800;letter-spacing:-1px;margin-top:4px}.kpi .s{font-size:11px;color:var(--mut);margin-top:3px}
+.sec{margin:18px 0}.sec-h{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:8px;display:flex;align-items:center;gap:10px}.sec-h .rule{flex:1;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}.sec-h .cap{font-size:11px;color:var(--mut);font-weight:600}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}.tbl th,.tbl td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}.tbl th{background:var(--navy);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.4px}.tbl td.num,.tbl th.num{text-align:right}
+.tbl input[type=number]{width:88px;text-align:right}.tbl input[type=text]{width:100%;min-width:150px}
+.badge{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:11px}
+.b-red{background:#FCEBEB;color:var(--red)}.b-amber{background:#FCF3E2;color:var(--amber)}.b-green{background:#E4F2EA;color:var(--green)}.b-gray{background:#EEF1F6;color:#5A6B7C}
+.note{font-size:11px;color:var(--mut);margin-top:8px;line-height:1.5}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top:1px solid var(--line);margin-top:24px}
+</style>
+</head>
+<body>
+<style>.portal-nav{display:flex;gap:6px;flex-wrap:wrap;background:#0B1B33;padding:8px 18px;border-bottom:1px solid #1c3350}.portal-nav a{color:#C7D6E8;text-decoration:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px}.portal-nav a:hover{background:rgba(255,255,255,.12);color:#fff}</style>
+<div class="portal-nav"><a href="./index.html">Hub</a><a href="./measurement.html">Measurement</a><a href="./competition.html">Competitor Repository</a><a href="./campaign-lifecycle.html">Campaign Lifecycle</a><a href="./amalgamated.html">Brand KPI Dashboard</a><a href="./brand-kpi-dashboard.html">13-SBU Dashboard</a><a href="./spec.md">Spec</a></div>
+<div class="topbar">
+  <span class="brand">AKIJ <b>Resource</b> Â· MMS</span>
+  <span class="pill">COMPETITOR INTELLIGENCE REPOSITORY</span>
+  <span class="spacer"></span>
+  <label for="sbu">Select SBU</label>
+  <select id="sbu" onchange="switchSbu(this.value)"></select>
+  <button class="btn" onclick="window.print()">Print / PDF</button>
+</div>
+<div class="wrap">
+  <div class="banner"><h1>Competitor Intelligence Repository</h1>
+    <div class="sub">Custodian-entered competitor registry and metrics â€” share, SOV, share of search, price index, digital presence and threat. The same data feeds the Competitor Intelligence view and the dashboard.</div></div>
+  <div class="boundary"><b>Boundary with the Brand OS:</b> this is market/brand intelligence (competitor shares, SOV, price index, digital). Operational price/cost/stock/COGS stay in the Brand OS.</div>
+
+  <div id="sum" class="kpis"></div>
+
+  <div class="sec"><div class="sec-h"><span>Competitor registry &amp; metrics</span><div class="rule"></div><span class="cap" id="cap"></span></div></div>
+  <div class="card" style="overflow:auto"><table class="tbl" id="reg"></table></div>
+  <p class="note">Edit any cell and it saves automatically to this browser (same origin as the Measurement portal and dashboard). Share and SOV are %; price index 100 = category average; digital is 0â€“5.</p>
+
+  <div class="sec"><div class="sec-h"><span>Add competitor</span><div class="rule"></div></div></div>
+  <div class="card" style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+    <div><label style="display:block;font-size:10.5px;color:var(--mut);font-weight:800;text-transform:uppercase;margin-bottom:4px">Name</label><input type="text" id="newName" placeholder="Competitor name" style="min-width:220px"></div>
+    <div><label style="display:block;font-size:10.5px;color:var(--mut);font-weight:800;text-transform:uppercase;margin-bottom:4px">Share %</label><input type="number" id="newShare" step="0.01" placeholder="0" style="width:110px;text-align:right"></div>
+    <div><label style="display:block;font-size:10.5px;color:var(--mut);font-weight:800;text-transform:uppercase;margin-bottom:4px">Threat</label><select id="newThreat"><option value="low">low</option><option value="med" selected>med</option><option value="high">high</option></select></div>
+    <button class="btn gold" onclick="addCompetitor()">Add</button>
+  </div>
+
+  <div class="sec"><div class="sec-h"><span>Intelligence read</span><div class="rule"></div><span class="cap">auto-computed</span></div></div>
+  <div class="grid2">
+    <div class="card"><div class="sec-h" style="margin-bottom:6px"><span>Concentration &amp; SOV</span></div><div id="ins1" class="note" style="font-size:12.5px;line-height:1.7"></div></div>
+    <div class="card"><div class="sec-h" style="margin-bottom:6px"><span>Threat ranking</span></div><div id="ins2" class="note" style="font-size:12.5px;line-height:1.7"></div></div>
+  </div>
+</div>
+<footer>AKIJ Resource Â· MMS Competitor Intelligence Repository (prototype) Â· Data persists in your browser (localStorage, same origin as Measurement & Dashboard).</footer>
+<script>
+const SBUS=[['cement','Akij Cement (ACCL)'],['ispot','Akij Ispat'],['readymix','AKIJ Readymix'],['essential','AKIJ Essential'],['feed','Akij Feed'],['enovar','Enovar'],['benzol','Benzol Lubricants'],['tyres','Tyres (AAIL)'],['orca','ORCA'],['air','AKIJ AIR'],['nextjobz','Nextjobz'],['pharmacy','AKIJ Pharmacy'],['mediplex','Akij Mediplex']];
+const KEY='akij_mms_competitors_v1';
+const OWN={cement:4.51,ispot:2.9,readymix:4.5,enovar:0.1,benzol:2,orca:1,air:0.8,nextjobz:2,tyres:0.3,essential:5,feed:2,pharmacy:2,mediplex:1};
+function seedCement(){return {competitors:[
+ {id:'shah',name:'Shah Cement',share:17.25,sov:20,shareOfSearch:9,priceIndex:98,digital:3.0,threat:'high',positioning:'Market leader / scale'},
+ {id:'fresh',name:'Fresh',share:11.95,sov:14,shareOfSearch:7,priceIndex:101,digital:3.0,threat:'med',positioning:'Technical assurance'},
+ {id:'crown',name:'Crown',share:11.51,sov:13,shareOfSearch:6,priceIndex:99,digital:3.5,threat:'med',positioning:'Price-led / discounts'},
+ {id:'seven',name:'Seven Rings',share:11.51,sov:12,shareOfSearch:6,priceIndex:102,digital:4.0,threat:'high',positioning:'Mid-price challenger'}
+]};}
+function load(){try{var s=localStorage.getItem(KEY);if(s)return JSON.parse(s);}catch(e){}var o={cement:seedCement()};return o;}
+let STORE=load();
+function ensure(k){if(!STORE[k])STORE[k]={competitors:[]};return STORE[k];}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(STORE));}catch(e){}}
+let cur=localStorage.getItem('akij_mms_comp_sbu')||'cement';ensure(cur);
+function switchSbu(k){cur=k;ensure(k);localStorage.setItem('akij_mms_comp_sbu',k);render();}
+function measurement(k){try{var s=localStorage.getItem('akij_mms_measure_v2')||localStorage.getItem('akij_mms_measure_v1');var o=JSON.parse(s||'{}');var m=o[k];return m&&m.actuals?m.actuals:null;}catch(e){return null;}}
+function ownShare(k){var m=measurement(k);if(m&&m.msh!=null)return Number(m.msh);return OWN[k]!=null?OWN[k]:null;}
+function ownSov(k){var m=measurement(k);if(m&&m.sov!=null)return Number(m.sov);return null;}
+function hhi(k){var own=ownShare(k)||0;var arr=(ensure(k).competitors||[]).map(function(c){return Number(c.share)||0;}).concat([own]);return Math.round(arr.reduce(function(a,s){return a+s*s;},0));}
+function card(v,l,s,c){return '<div class="card kpi" style="border-left-color:'+(c||'#C9A227')+'"><div class="k">'+l+'</div><div class="v">'+v+'</div><div class="s">'+s+'</div></div>';}
+function render(){
+  document.getElementById('sbu').innerHTML=SBUS.map(function(x){return '<option value="'+x[0]+'"'+(x[0]===cur?' selected':'')+'>'+x[1]+'</option>';}).join('');
+  var own=ownShare(cur), osov=ownSov(cur), comps=ensure(cur).competitors||[];
+  var high=comps.filter(function(c){return c.threat==='high';}).length;
+  var top=comps.slice().sort(function(a,b){return (b.share||0)-(a.share||0);})[0];
+  document.getElementById('sum').innerHTML=
+    card(own!=null?own.toFixed(2)+'%':'â€”','Our share','from Measurement / estimate','#C9A227')+
+    card(comps.length,'Competitors','tracked in repository','#1F4E79')+
+    card(hhi(cur),'Concentration (HHI)','own + listed shares Â· 0â€“10,000','#2E7D6B')+
+    card(high,'High-threat','need active response','#A61C1C')+
+    card(top?top.name:'â€”','Largest listed','share '+(top?(Number(top.share)||0).toFixed(1)+'%':'â€”'),'#7C5CBF');
+  document.getElementById('cap').textContent=comps.length+' competitors Â· edits auto-save';
+  var h='<tr><th>Competitor</th><th class="num">Share %</th><th class="num">SOV %</th><th class="num">Share of search %</th><th class="num">Price index</th><th class="num">Digital /5</th><th>Threat</th><th>Positioning</th><th></th></tr>';
+  comps.forEach(function(c){
+    h+='<tr>'+
+      '<td><input type="text" value="'+esc(c.name)+'" onchange="upd(\''+c.id+'\',\'name\',this.value)"></td>'+
+      '<td class="num"><input type="number" step="0.01" value="'+(c.share!=null?c.share:'')+'" onchange="upd(\''+c.id+'\',\'share\',this.value)"></td>'+
+      '<td class="num"><input type="number" step="0.1" value="'+(c.sov!=null?c.sov:'')+'" onchange="upd(\''+c.id+'\',\'sov\',this.value)"></td>'+
+      '<td class="num"><input type="number" step="0.1" value="'+(c.shareOfSearch!=null?c.shareOfSearch:'')+'" onchange="upd(\''+c.id+'\',\'shareOfSearch\',this.value)"></td>'+
+      '<td class="num"><input type="number" step="0.1" value="'+(c.priceIndex!=null?c.priceIndex:'')+'" onchange="upd(\''+c.id+'\',\'priceIndex\',this.value)"></td>'+
+      '<td class="num"><input type="number" step="0.1" value="'+(c.digital!=null?c.digital:'')+'" onchange="upd(\''+c.id+'\',\'digital\',this.value)"></td>'+
+      '<td><select onchange="upd(\''+c.id+'\',\'threat\',this.value)"><option value="low"'+(c.threat==='low'?' selected':'')+'>low</option><option value="med"'+(c.threat==='med'?' selected':'')+'>med</option><option value="high"'+(c.threat==='high'?' selected':'')+'>high</option></select></td>'+
+      '<td><input type="text" value="'+esc(c.positioning||'')+'" onchange="upd(\''+c.id+'\',\'positioning\',this.value)"></td>'+
+      '<td><button class="btn danger" onclick="removeC(\''+c.id+'\')">âœ•</button></td></tr>';
+  });
+  document.getElementById('reg').innerHTML=h;
+  // insights
+  var sovSom = (osov!=null&&own!=null)? (osov-own):null;
+  var aggression = comps.slice().sort(function(a,b){return ((Number(b.sov)||0)/(Number(b.share)||1))-((Number(a.sov)||0)/(Number(a.share)||1));})[0];
+  document.getElementById('ins1').innerHTML=
+    'Own SOVâˆ’SOM: <b style="color:'+(sovSom!=null&&sovSom<0?'#A61C1C':'#1E6B3C')+'">'+(sovSom!=null?(sovSom>0?'+':'')+sovSom.toFixed(1)+'pp':'â€” (enter SOV in Measurement)')+'</b><br>'+
+    (sovSom!=null&&sovSom<0?'Spending below share â€” raise SOV / shift to measurable channels.':'SOV at/above share â€” defend efficiency.')+'<br>'+
+    'Listed HHI '+hhi(cur)+' (own + listed competitors).';
+  document.getElementById('ins2').innerHTML= comps.length? comps.slice().sort(function(a,b){return ({high:3,med:2,low:1}[b.threat]||0)-({high:3,med:2,low:1}[a.threat]||0)||(b.share||0)-(a.share||0);}).map(function(c){var cls=c.threat==='high'?'b-red':c.threat==='med'?'b-amber':'b-green';return '<div style="margin:3px 0"><span class="badge '+cls+'">'+c.threat+'</span> <b>'+esc(c.name)+'</b> â€” share '+(Number(c.share)||0).toFixed(1)+'%, SOV '+(Number(c.sov)||0).toFixed(1)+'%</div>';}).join('') : 'No competitors yet.';
+  if(aggression){var ratio=(Number(aggression.sov)||0)/(Number(aggression.share)||1);document.getElementById('ins1').innerHTML+='<br>Most aggressive (SOVÃ·share): <b>'+esc(aggression.name)+'</b> Ã—'+ratio.toFixed(2);}
+}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function upd(id,field,val){var c=ensure(cur).competitors.filter(function(x){return x.id===id;})[0];if(!c)return;c[field]=(field==='name'||field==='positioning'||field==='threat')?val:Number(val);persist();render();}
+function addCompetitor(){var n=document.getElementById('newName').value.trim();if(!n)return;var sh=Number(document.getElementById('newShare').value)||0;var th=document.getElementById('newThreat').value;ensure(cur).competitors.push({id:'c'+Date.now(),name:n,share:sh,sov:null,shareOfSearch:null,priceIndex:null,digital:null,threat:th,positioning:''});document.getElementById('newName').value='';document.getElementById('newShare').value='';persist();render();}
+function removeC(id){ensure(cur).competitors=ensure(cur).competitors.filter(function(x){return x.id!==id;});persist();render();}
+render();
+</script>
+</body>
+</html>
+
