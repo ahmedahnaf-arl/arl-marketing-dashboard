@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKIJ MMS — Measurement (Prototype)</title>
+<style>
+:root{--navy:#0B1B33;--navy2:#0F2A47;--blue:#1F4E79;--gold:#C9A227;--gold2:#B08A1B;--bg:#F4F6FA;--card:#fff;--ink:#15202B;--mut:#5A6B7C;--line:#E6EBF2;--green:#1E6B3C;--amber:#C87E1A;--red:#A61C1C;--teal:#2E7D6B;--shadow:0 1px 3px rgba(16,42,67,.08),0 8px 24px rgba(16,42,67,.06)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+.topbar{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,var(--navy),var(--navy2));color:#fff;padding:12px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.topbar .brand{font-weight:800;font-size:15px}.topbar .brand b{color:var(--gold)}
+.topbar .pill{font-size:10px;font-weight:800;background:var(--gold);color:var(--navy);padding:3px 9px;border-radius:20px;letter-spacing:.4px}
+.topbar .spacer{flex:1}.topbar label{font-size:10px;color:#9FB2C8;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+select{background:#fff;border:1px solid #2a4466;color:var(--navy);border-radius:8px;padding:7px 10px;font-size:12.5px;font-weight:700;min-width:190px}
+.btn{background:#fff;border:1px solid var(--line);color:var(--navy);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.btn:hover{border-color:var(--gold);color:var(--gold2)}.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}.btn.gold:hover{background:var(--gold2);color:#fff}
+.wrap{max-width:1360px;margin:0 auto;padding:20px 24px 80px}
+.banner{background:linear-gradient(120deg,var(--navy),var(--blue));border-radius:14px;color:#fff;padding:18px 22px;margin-bottom:14px}
+.banner h1{font-size:19px;font-weight:800}.banner .sub{font-size:12px;color:#C7D6E8;margin-top:5px;line-height:1.55}
+.boundary{background:#FFF8E6;border:1px solid #EBD9A6;border-left:4px solid var(--gold);border-radius:10px;padding:11px 14px;font-size:12px;color:#5A4A14;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow)}
+.panel{padding:14px 16px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px 16px;box-shadow:var(--shadow);border-left:4px solid var(--gold)}
+.kpi .k{font-size:10.5px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.kpi .v{font-size:27px;font-weight:800;letter-spacing:-1px;margin-top:4px}.kpi .s{font-size:11px;color:var(--mut);margin-top:3px}
+.h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px}
+.h h2{font-size:13px;font-weight:800;color:var(--navy)}.h .cap{font-size:11px;color:var(--mut);font-weight:600}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th,.tbl td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.tbl th{background:var(--navy);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.4px}
+.tbl td.num,.tbl th.num{text-align:right}
+.tbl tr.dimhead td{background:#F2F5FA;font-weight:800;color:var(--navy);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+input.act{width:92px;text-align:right;border:1px solid var(--line);border-radius:7px;padding:5px 7px;font-size:12px;font-family:inherit}
+.badge{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:11px;white-space:nowrap}
+.b-green{background:#E4F2EA;color:var(--green)}.b-amber{background:#FCF3E2;color:var(--amber)}.b-red{background:#FCEBEB;color:var(--red)}.b-gray{background:#EEF1F6;color:#5A6B7C}
+.mbar{height:8px;background:#E6EBF2;border-radius:6px;overflow:hidden;margin-top:4px}.mbar>span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.sec{margin:20px 0}.sec-h{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:8px;display:flex;align-items:center;gap:10px}.sec-h .rule{flex:1;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+.dec{display:grid;grid-template-columns:1fr 130px 120px;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);font-size:12px}
+.dec:last-child{border-bottom:none}
+.dec .t b{color:var(--navy)}
+.note{font-size:11px;color:var(--mut);margin-top:8px;line-height:1.5}
+.gap{background:#FDF0F0;border-left:3px solid var(--red);border-radius:6px;padding:7px 10px;margin:5px 0;font-size:12px}
+.okbox{background:#EAF5EF;border-left:4px solid var(--green);border-radius:8px;padding:9px 12px;font-size:12px;margin:6px 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.trend{display:flex;gap:10px;align-items:flex-end;height:90px;margin-top:8px}
+.trend .col{flex:1;text-align:center}.trend .bar{width:60%;margin:0 auto;background:var(--blue);border-radius:3px 3px 0 0}
+.trend .lb{font-size:9px;color:var(--mut);font-weight:700;margin-top:3px}.trend .vl{font-size:10.5px;font-weight:800}
+footer{text-align:center;color:var(--mut);font-size:11px;padding:18px;border-top:1px solid var(--line);margin-top:24px}
+@media print{.topbar{position:static}.actions{display:none!important}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="brand">AKIJ <b>Resource</b> · MMS</span>
+  <span class="pill">PROTOTYPE · MEASUREMENT</span>
+  <span class="spacer"></span>
+  <label for="sbu">Select SBU</label>
+  <select id="sbu" onchange="switchSbu(this.value)"></select>
+  <button class="btn" onclick="window.print()">Print / PDF</button>
+</div>
+<div class="wrap">
+  <div class="banner"><h1>Brand Measurement — waves → BEI / BHI / BPI → decisions</h1>
+    <div class="sub">Enter each tracker wave's measured KPIs; the system computes dimension scores, the three indices and the composite, flags RAG, and auto-opens a decision for every Red KPI.</div></div>
+  <div class="boundary"><b>Boundary with the Brand OS:</b> the MMS measures <b>brand &amp; marketing</b> KPIs (awareness, quality, preference, loyalty, consideration, NPS, SOV, share, digital, execution). Price, stock, COGS/P&amp;L, production, budget sizing and SKU mix remain in the Brand OS — not edited here.</div>
+
+  <div id="sum" class="kpis"></div>
+
+  <div class="card"><div class="panel h"><h2>KPI measurement — current wave</h2><span class="cap" id="wavecap"></span></div>
+    <div class="panel" style="padding-top:0"><div style="overflow:auto"><table class="tbl" id="ktab"></table></div>
+      <div class="actions"><button class="btn gold" onclick="saveWave()">Save wave &amp; recompute</button><button class="btn" onclick="resetWave()">Reset to last saved</button><button class="btn" onclick="window.print()">Print / PDF</button></div>
+      <p class="note">Score = achievement vs FY27 target (capped at 1.2) ÷ 1.2 × 100. RAG: Green ≥100% · Amber 90–99% · Red &lt;90% (inverted for lower-is-better). Estimates/actuals carry a source label.</p>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sec-h"><span>Decision queue — auto-opened from Red KPIs</span><div class="rule"></div></div></div>
+  <div class="card" id="decisions"></div>
+
+  <div class="sec"><div class="sec-h"><span>Wave history</span><div class="rule"></div></div></div>
+  <div class="card" id="history"></div>
+
+  <div class="sec"><div class="sec-h"><span>Data gaps (unmeasured)</span><div class="rule"></div></div></div>
+  <div class="card" id="gaps"></div>
+</div>
+<footer>AKIJ Resource · MMS Measurement (prototype) · Data persists in your browser (localStorage). No backend.</footer>
+
+<script>
+const SBUS=[['cement','Akij Cement (ACCL)'],['ispot','Akij Ispat'],['readymix','AKIJ Readymix'],['essential','AKIJ Essential'],['feed','Akij Feed'],['enovar','Enovar'],['benzol','Benzol Lubricants'],['tyres','Tyres (AAIL)'],['orca','ORCA'],['air','AKIJ AIR'],['nextjobz','Nextjobz'],['pharmacy','AKIJ Pharmacy'],['mediplex','Akij Mediplex']];
+const DIMS={D1:{n:'Brand Equity',w:25,idx:'BEI'},D2:{n:'Brand Health',w:15,idx:'BHI'},D3:{n:'Positioning & Competitive',w:10,idx:'BHI'},D4:{n:'Market Performance',w:20,idx:'BPI'},D5:{n:'Brand Financial Value',w:15,idx:'BPI'},D6:{n:'Digital Brand Strength',w:5,idx:'BHI'},D7:{n:'Execution & Governance',w:10,idx:'BPI'}};
+const KPI=[
+ ['aided','D1','Aided awareness','%','h',25,55,58,'Brand'],
+ ['toma','D1','TOMA','%','h',20,18,20,'Brand'],
+ ['pq','D1','Perceived quality','/100','h',25,60,62,'Brand'],
+ ['pref','D1','Brand preference','%','h',20,40,44,'Brand'],
+ ['dloy','D1','Dealer loyalty','/100','h',10,62,66,'Sales'],
+ ['cont','D2','Contractor recommendation','%','h',30,42,46,'Sales'],
+ ['cons','D2','Consideration','%','h',25,45,48,'Brand'],
+ ['nps','D2','NPS','pts','h',25,22,26,'CRM'],
+ ['csat','D2','CSAT','%','h',20,72,74,'CRM'],
+ ['sov','D3','SOV/SOM ratio','x','l',30,2.0,1.8,'Media'],
+ ['sos','D3','Share of search','%','h',20,6,8,'Digital'],
+ ['rpq','D3','Relative perceived quality','ratio','h',30,0.95,1.00,'Brand'],
+ ['rank','D3','Market rank','rank','l',20,7,7,'Strategy'],
+ ['msh','D4','Market share','%','h',35,4.51,5.31,'Sales'],
+ ['vol','D4','Volume growth','%','h',25,-8.85,3,'Sales'],
+ ['dist','D4','Numeric distribution','%','h',25,38,42,'Sales'],
+ ['rep','D4','Repeat purchase','%','h',15,45,48,'Sales'],
+ ['rev','D5','Revenue','Cr','h',40,1923,2263,'Finance'],
+ ['price','D5','Price premium index','index','h',25,105,106,'Finance'],
+ ['romi','D5','ROMI','x','h',20,1.8,2.0,'Marketing'],
+ ['cac','D5','CAC','BDT','l',15,4500,4300,'Marketing'],
+ ['eng','D6','Digital engagement','%','h',60,2.0,2.3,'Digital'],
+ ['leads','D6','Digital leads / conversion','count','h',40,17,20,'Digital'],
+ ['guide','D7','Guideline compliance','%','h',35,70,80,'Brand'],
+ ['camp','D7','Campaign effectiveness','%','h',35,65,70,'Brand'],
+ ['plan','D7','Marketing plan achievement','%','h',30,80,85,'Brand']
+].map(function(r){return {id:r[0],dim:r[1],name:r[2],unit:r[3],dir:r[4],w:r[5],base:r[6],tgt:r[7],owner:r[8]};});
+function seedActuals(){return {aided:56,toma:17,pq:61,pref:42,dloy:64,cont:43,cons:46,nps:24,csat:73,sov:1.9,sos:7.2,rpq:0.96,rank:7,msh:4.51,vol:-8.85,dist:39,rep:44,rev:1923,price:105,romi:1.7,cac:4700,eng:2.0,leads:17,guide:68,camp:63,plan:78};}
+
+const KEY='akij_mms_measure_v1';
+function loadAll(){try{var s=localStorage.getItem(KEY);if(s)return JSON.parse(s);}catch(e){}return {};}
+let STORE=loadAll();
+function ensure(sbu){if(!STORE[sbu]){STORE[sbu]={actuals:seedActuals(),waves:[],actions:[]};persist();}return STORE[sbu];}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(STORE));}catch(e){}}
+let curSbu=localStorage.getItem('akij_mms_measure_sbu')||'cement';ensure(curSbu);
+let WORK=Object.assign({},STORE[curSbu].actuals);
+let editWave=false;
+
+function switchSbu(s){curSbu=s;ensure(s);WORK=Object.assign({},STORE[curSbu].actuals);localStorage.setItem('akij_mms_measure_sbu',s);render();}
+function setAct(id,v){WORK[id]=v===''?'':Number(v);editWave=true;render();}
+function resetWave(){WORK=Object.assign({},STORE[curSbu].actuals);editWave=false;render();}
+
+function ach(k,a){if(a===''||a==null||isNaN(a))return null;var t=k.tgt;var r=k.dir==='l'?(a===0?1.2:t/a):(a/t);return Math.max(0,Math.min(1.2,r));}
+function scoreOf(k){var r=ach(k,WORK[k.id]);return r==null?null:r/1.2*100;}
+function ragOf(k){var r=ach(k,WORK[k.id]);if(r==null)return 'b-gray';return r>=1?'b-green':r>=0.9?'b-amber':'b-red';}
+function ragText(k){var c=ragOf(k);return c==='b-green'?'Green':c==='b-amber'?'Amber':c==='b-red'?'Red':'—';}
+
+function dimScore(d){var ws=0,ss=0;KPI.forEach(function(k){if(k.dim===d){var s=scoreOf(k);if(s!=null){ss+=s*k.w;ws+=k.w;}}});return ws?ss/ws:null;}
+function indices(){var ds={};Object.keys(DIMS).forEach(function(d){ds[d]=dimScore(d);});
+ var bei=ds.D1;
+ var bhi=(ds.D2!=null&&ds.D3!=null&&ds.D6!=null)?((ds.D2*15+ds.D3*10+ds.D6*5)/30):null;
+ var bpi=(ds.D4!=null&&ds.D5!=null&&ds.D7!=null)?((ds.D4*20+ds.D5*15+ds.D7*10)/45):null;
+ var num=0,den=0;Object.keys(DIMS).forEach(function(d){if(ds[d]!=null){num+=ds[d]*DIMS[d].w;den+=DIMS[d].w;}});
+ var comp=den?num/den:null;
+ return {ds:ds,bei:bei,bhi:bhi,bpi:bpi,comp:comp};}
+
+function fmtVal(k,v){if(v===''||v==null)return '—';return v;}
+
+function render(){
+ document.getElementById('sbu').innerHTML=SBUS.map(function(s){return '<option value="'+s[0]+'"'+(s[0]===curSbu?' selected':'')+'>'+s[1]+'</option>';}).join('');
+ var ix=indices();
+ var st=STORE[curSbu];var last=st.waves[st.waves.length-1];
+ document.getElementById('wavecap').textContent=editWave?'Unsaved edits':(last?('Last saved: '+last.name+' · '+last.date):'No wave saved yet');
+ var cards=[
+  ['BEI · Brand Equity',ix.bei,'D1 · 25%'],['BHI · Brand Health',ix.bhi,'D2+D3+D6 · 30%'],['BPI · Brand Performance',ix.bpi,'D4+D5+D7 · 45%'],['Composite',ix.comp,'of 100 · weighted']
+ ];
+ document.getElementById('sum').innerHTML=cards.map(function(c){var v=c[1]==null?'—':c[1].toFixed(1);var col=c[1]==null?'var(--mut)':c[1]>=80?'var(--green)':c[1]>=60?'var(--amber)':'var(--red)';return '<div class="kpi"><div class="k">'+c[0]+'</div><div class="v" style="color:'+col+'">'+v+'</div><div class="s">'+c[2]+'</div></div>';}).join('');
+
+ // KPI table
+ var h='<tr><th>KPI</th><th class="num">Wt</th><th class="num">Baseline</th><th class="num">FY27 target</th><th class="num">Actual (edit)</th><th class="num">Score /100</th><th>RAG</th><th>Owner</th></tr>';
+ var lastDim='';
+ KPI.forEach(function(k){if(k.dim!==lastDim){lastDim=k.dim;h+='<tr class="dimhead"><td colspan="8">'+k.dim+' · '+DIMS[k.dim].n+' ('+DIMS[k.dim].w+'% · '+DIMS[k.dim].idx+')</td></tr>';}
+  var sc=scoreOf(k);var rc=ragOf(k);
+  h+='<tr><td>'+k.name+' <span style="color:var(--mut)">('+k.unit+')</span></td><td class="num">'+k.w+'</td><td class="num">'+k.base+'</td><td class="num">'+k.tgt+'</td><td class="num"><input class="act" type="number" step="any" value="'+(WORK[k.id]===''?'':WORK[k.id])+'" onchange="setAct(\''+k.id+'\',this.value)"></td><td class="num"><b>'+(sc==null?'—':sc.toFixed(0))+'</b></td><td><span class="badge '+rc+'">'+ragText(k)+'</span></td><td>'+k.owner+'</td></tr>';
+ });
+ document.getElementById('ktab').innerHTML=h;
+
+ // decisions (derived from reds)
+ var reds=KPI.filter(function(k){return ragOf(k)==='b-red';});
+ var dc=document.getElementById('decisions');
+ if(!reds.length){dc.innerHTML='<div class="panel"><div class="okbox">No Red KPIs — no decisions auto-opened.</div></div>';}
+ else{dc.innerHTML='<div class="panel"><p class="note">'+reds.length+' Red KPI(s). Auto-opened in the decision queue (owner + 14-day deadline). In production these push to the CBDO Decision Engine (L0–L4).</p>'+reds.map(function(k){var sc=scoreOf(k);var lvl=(k.dim==='D1'||k.dim==='D4')?'L2':'L1';return '<div class="dec"><div class="t"><b>'+k.name+'</b> is Red (score '+sc.toFixed(0)+' vs target '+k.tgt+k.unit+')<div class="note">Suggested: review driver, reallocate activity, re-measure next wave.</div></div><div><span class="badge b-red">'+lvl+'</span> '+k.owner+'</div><div style="text-align:right"><button class="btn" onclick="logAction(\''+k.id+'\')">Log action</button></div></div>';}).join('')+'</div>';}
+
+ // history
+ var hist=st.waves.slice().reverse();
+ document.getElementById('history').innerHTML=hist.length?'<div class="panel"><table class="tbl"><tr><th>Wave</th><th>Date</th><th class="num">BEI</th><th class="num">BHI</th><th class="num">BPI</th><th class="num">Composite</th></tr>'+hist.map(function(w){return '<tr><td><b>'+w.name+'</b></td><td>'+w.date+'</td><td class="num">'+(w.bei==null?'—':w.bei.toFixed(1))+'</td><td class="num">'+(w.bhi==null?'—':w.bhi.toFixed(1))+'</td><td class="num">'+(w.bpi==null?'—':w.bpi.toFixed(1))+'</td><td class="num"><b>'+(w.comp==null?'—':w.comp.toFixed(1))+'</b></td></tr>';}).join('')+'</table><div class="note">Composite trend: '+trend(st.waves)+'</div></div>':'<div class="panel"><p class="note">No waves saved yet. Edit actuals and click “Save wave &amp; recompute”.</p></div>';
+
+ // data gaps
+ var gaps=KPI.filter(function(k){return WORK[k.id]===''||WORK[k.id]==null;});
+ document.getElementById('gaps').innerHTML='<div class="panel">'+(gaps.length?gaps.map(function(k){return '<div class="gap"><b>'+k.name+'</b> — no measured value this wave ('+DIMS[k.dim].idx+'). Collect via '+(k.dim==='D2'?'CRM/service / tracker':(k.dim==='D4'?'DWH + retail audit':(k.dim==='D6'?'analytics':'brand tracker')))+'.</div>';}).join(''):'<div class="okbox">All KPIs measured this wave.</div>')+'</div>';
+
+ // actions log
+ if(st.actions&&st.actions.length){dc.innerHTML+='<div class="panel"><h2 style="font-size:12px;margin-bottom:8px">Action log</h2>'+st.actions.slice().reverse().slice(0,6).map(function(a){return '<div class="note">• '+a.ts+' — '+a.kpi+': '+a.text+'</div>';}).join('')+'</div>';}
+}
+function trend(waves){if(waves.length<2)return '—';return waves.map(function(w){return w.comp==null?'—':w.comp.toFixed(0);}).join(' → ');}
+
+function saveWave(){
+ var ix=indices();
+ var st=STORE[curSbu];
+ var n=st.waves.length+1;
+ st.actuals=Object.assign({},WORK);
+ st.waves.push({name:'Wave '+n,date:new Date().toISOString().slice(0,10),actuals:Object.assign({},WORK),bei:ix.bei,bhi:ix.bhi,bpi:ix.bpi,comp:ix.comp});
+ persist();editWave=false;render();
+}
+function logAction(id){var k=KPI.filter(function(x){return x.id===id;})[0];var txt=prompt('Action for '+k.name,'Review driver; reallocate activity; re-measure next wave');if(!txt)return;var st=STORE[curSbu];st.actions=st.actions||[];st.actions.push({kpi:k.name,text:txt,owner:k.owner,ts:new Date().toISOString().slice(0,16).replace('T',' ')});persist();render();}
+
+render();
+</script>
+</body>
+</html>
